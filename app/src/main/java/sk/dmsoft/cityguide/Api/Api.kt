@@ -18,6 +18,7 @@ import sk.dmsoft.cityguide.Commons.AccountManager
 import sk.dmsoft.cityguide.Models.*
 import sk.dmsoft.cityguide.Models.Account.Login
 import sk.dmsoft.cityguide.Models.Account.Registration
+import sk.dmsoft.cityguide.Models.Account.Registration1
 import java.util.concurrent.TimeUnit
 
 /**
@@ -70,6 +71,10 @@ class Api constructor(private val activity : Activity? = null) {
         return api.registration(model)
     }
 
+    fun registration1(model: Registration1): Call<ResponseBody> {
+        return api.registration1(model)
+    }
+
     fun getCountries(): Call<ArrayList<Country>> {
         return api.getCountries()
     }
@@ -100,10 +105,10 @@ class AuthenticationInterceptor(private val accessToken: String) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
-        Log.e("Interceptor", "ACCESS TOKEN $accessToken")
+        Log.e("Interceptor", "ACCESS TOKEN bearer $accessToken")
         // Add authorization header with updated authorization value to intercepted request
         val authorisedRequest = originalRequest.newBuilder()
-                .header("Authorization", accessToken)
+                .header("Authorization", "bearer " +accessToken)
                 .build()
         return chain.proceed(authorisedRequest)
     }

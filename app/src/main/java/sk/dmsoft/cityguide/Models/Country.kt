@@ -11,5 +11,5 @@ class Country {
     constructor()
 
     var id: Int = 0
-    lateinit var name: String
+    var name: String = ""
 }

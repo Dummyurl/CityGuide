@@ -71,15 +71,13 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun CloseSplashScreen(){
-        if (!placesDownloaded && !countriesDownloaded)
-            return
-
-        else if (AccountManager.isLoggedIn && AccountManager.isRegistrationCompleted)
-            startActivity(Intent(this, MainActivity::class.java))
-
-        else {
-            startActivity(Intent(this, RegistrationActivity::class.java))
-            finish()
+        if (placesDownloaded && countriesDownloaded) {
+            if (AccountManager.isLoggedIn && AccountManager.isRegistrationCompleted)
+                startActivity(Intent(this, MainActivity::class.java))
+            else {
+                startActivity(Intent(this, RegistrationActivity::class.java))
+                finish()
+            }
         }
     }
 

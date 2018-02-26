@@ -46,7 +46,7 @@ object AccountManager {
 
     // Methods
     fun LogIn(accessToken: String){
-        _sharedPreferences.edit().putString("ACCESS_TOKEN", accessToken).apply()
+        _sharedPreferences.edit().putString("ACCESS_TOKEN", accessToken).commit()
     }
 
     fun LogOut(){

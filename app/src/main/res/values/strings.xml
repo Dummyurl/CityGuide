@@ -10,7 +10,6 @@
     <string name="next">Next</string>
     <string name="countryPrompt">Select country</string>
     <string name="cityPrompt">Select city</string>
-    <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
     <string name="birth_date">Birth date</string>
     <string name="tourist">Tourist</string>
@@ -18,8 +17,10 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="login">Login</string>
     <string name="be_a_guru">Be a guru</string>
-    <string name="login_text">Alredy have an account?</string>
+    <string name="login_text">Already have an account?</string>
     <string name="sign_up">SIGN UP</string>
     <string name="i_want_to_be_a_guru">I WANT TO BE A GURU</string>
+    <string name="first_name">First name</string>
+    <string name="second_name">Second name</string>
 
 </resources>

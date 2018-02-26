@@ -9,17 +9,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintStart_toStartOf="parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -35,13 +33,13 @@
                 android:text="@string/login_text" />
 
             <Button
+                android:id="@+id/login"
                 android:layout_width="113dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
                 android:layout_gravity="end"
-                android:text="@string/login"
-                android:id="@+id/login" />
+                android:text="@string/login" />
 
         </RelativeLayout>
 
@@ -49,8 +47,8 @@
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-            android:text="@string/be_a_guru" />
+            android:text="@string/be_a_guru"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -74,8 +72,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/password"
-                android:text="Heslo123*"
-                android:inputType="textVisiblePassword" />
+                android:inputType="textVisiblePassword"
+                android:text="Heslo123*" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -87,25 +85,25 @@
                 android:id="@+id/confirm_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Heslo123*"
                 android:hint="@string/confirm_password"
-                android:inputType="textVisiblePassword" />
+                android:inputType="textVisiblePassword"
+                android:text="Heslo123*" />
 
         </android.support.design.widget.TextInputLayout>
 
-            <Button
-                android:id="@+id/register"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/sign_up" />
+        <Button
+            android:id="@+id/register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/sign_up" />
 
-            <Button
-                android:id="@+id/guide_registration"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/i_want_to_be_a_guru" />
+        <Button
+            android:id="@+id/guide_registration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/i_want_to_be_a_guru" />
 
 
     </LinearLayout>
