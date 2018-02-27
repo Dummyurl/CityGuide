@@ -96,7 +96,7 @@ class RegisterStep1Fragment : Fragment(), DatePickerDialog.OnDateSetListener {
         if (context is Step1Listener) {
             mListener = context
         } else {
-//            throw RuntimeException(context!!.toString() + " must implement OnFragmentInteractionListener")
+//            throw RuntimeException(context!!.toString() + " must implement Step2Listener")
         }
     }
 

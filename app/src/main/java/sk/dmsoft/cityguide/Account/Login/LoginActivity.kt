@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_registration.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import sk.dmsoft.cityguide.Account.Registration.RegistrationActivity
 import sk.dmsoft.cityguide.Api.Api
 import sk.dmsoft.cityguide.Commons.AccountManager
 import sk.dmsoft.cityguide.MainActivity
@@ -41,8 +42,12 @@ class LoginActivity : AppCompatActivity() {
                         Snackbar.make(findViewById(android.R.id.content), "Bad login", Snackbar.LENGTH_LONG).show()
                         return
                     }
-                    AccountManager.LogIn(response.body()!!.token)
-                    startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                    AccountManager.LogIn(response.body()!!)
+
+                    if (!AccountManager.isRegistrationCompleted)
+                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                    else
+                        startActivity(Intent(this@LoginActivity, RegistrationActivity::class.java))
                 }
 
             })

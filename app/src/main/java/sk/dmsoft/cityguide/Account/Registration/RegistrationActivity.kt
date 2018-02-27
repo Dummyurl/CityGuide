@@ -28,10 +28,13 @@ import sk.dmsoft.cityguide.Models.Account.Registration
 import android.R.array
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import sk.dmsoft.cityguide.Account.Registration.Step.RegisterStep2Fragment
+import sk.dmsoft.cityguide.MainActivity
 import sk.dmsoft.cityguide.Models.Account.Registration1
+import sk.dmsoft.cityguide.Models.Account.Registration2
 
 
-class RegistrationActivity : AppCompatActivity(), RegisterTouristFragment.OnRegistration, RegisterStep1Fragment.Step1Listener {
+class RegistrationActivity : AppCompatActivity(), RegisterTouristFragment.OnRegistration, RegisterStep1Fragment.Step1Listener, RegisterStep2Fragment.Step2Listener {
 
     val touristSteps: ArrayList<Fragment> = ArrayList()
     val guideSteps: ArrayList<Fragment> = ArrayList()
@@ -48,7 +51,7 @@ class RegistrationActivity : AppCompatActivity(), RegisterTouristFragment.OnRegi
 
             override fun onResponse(call: Call<AccessToken>?, response: Response<AccessToken>) {
                 if (response.code() == 200) {
-                    AccountManager.LogIn(response.body()!!.token)
+                    AccountManager.LogIn(response.body()!!)
                     AccountManager.registrationStep = 1
                     pager.setCurrentItem(1, true)
                 }
@@ -72,6 +75,24 @@ class RegistrationActivity : AppCompatActivity(), RegisterTouristFragment.OnRegi
         })
     }
 
+    override fun onStep2Completed(model: Registration2) {
+        api.registration2(model).enqueue(object: Callback<ResponseBody>{
+            override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
+                if (response.code() == 200){
+                    AccountManager.registrationStep = 3
+                    //pager.setCurrentItem(3, true)
+                    startActivity(Intent(this@RegistrationActivity, MainActivity::class.java))
+                    finish()
+                }
+            }
+
+        })
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)
@@ -81,6 +102,8 @@ class RegistrationActivity : AppCompatActivity(), RegisterTouristFragment.OnRegi
 
         touristSteps.add(RegisterTouristFragment())
         touristSteps.add(RegisterStep1Fragment())
+        touristSteps.add(RegisterStep2Fragment())
+
         pager.adapter = PagerAdapter(supportFragmentManager)
         pager.setCurrentItem(AccountManager.registrationStep, true)
     }
