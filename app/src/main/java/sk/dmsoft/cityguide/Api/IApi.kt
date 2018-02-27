@@ -10,6 +10,7 @@ import sk.dmsoft.cityguide.Models.*
 import sk.dmsoft.cityguide.Models.Account.Login
 import sk.dmsoft.cityguide.Models.Account.Registration
 import sk.dmsoft.cityguide.Models.Account.Registration1
+import sk.dmsoft.cityguide.Models.Account.Registration2
 
 /**
  * Created by Daniel on 13. 11. 2017.
@@ -24,6 +25,9 @@ interface IApi {
 
     @POST("account/register/1")
     fun registration1(@Body model: Registration1): Call<ResponseBody>
+
+    @POST("account/register/2")
+    fun registration2(@Body model: Registration2): Call<ResponseBody>
 
     @GET("countries")
     fun getCountries(): Call<ArrayList<Country>>

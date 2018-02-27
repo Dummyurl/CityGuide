@@ -41,7 +41,7 @@ class LoginActivity : AppCompatActivity() {
                         Snackbar.make(findViewById(android.R.id.content), "Bad login", Snackbar.LENGTH_LONG).show()
                         return
                     }
-                    AccountManager.LogIn(response.body()!!.token)
+                    AccountManager.LogIn(response.body()!!)
                     startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                 }
 

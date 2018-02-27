@@ -19,6 +19,7 @@ import sk.dmsoft.cityguide.Models.*
 import sk.dmsoft.cityguide.Models.Account.Login
 import sk.dmsoft.cityguide.Models.Account.Registration
 import sk.dmsoft.cityguide.Models.Account.Registration1
+import sk.dmsoft.cityguide.Models.Account.Registration2
 import java.util.concurrent.TimeUnit
 
 /**
@@ -73,6 +74,10 @@ class Api constructor(private val activity : Activity? = null) {
 
     fun registration1(model: Registration1): Call<ResponseBody> {
         return api.registration1(model)
+    }
+
+    fun registration2(model: Registration2): Call<ResponseBody> {
+        return api.registration2(model)
     }
 
     fun getCountries(): Call<ArrayList<Country>> {

@@ -3,6 +3,7 @@ package sk.dmsoft.cityguide.Commons
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import sk.dmsoft.cityguide.Models.AccessToken
 import java.util.*
 
 @SuppressLint("StaticFieldLeak")
@@ -45,8 +46,13 @@ object AccountManager {
         }
 
     // Methods
-    fun LogIn(accessToken: String){
-        _sharedPreferences.edit().putString("ACCESS_TOKEN", accessToken).commit()
+    fun LogIn(accessToken: AccessToken){
+        val editor = _sharedPreferences.edit()
+        editor.putString("ACCESS_TOKEN", accessToken.token)
+        editor.putString("USER_EMAIL", accessToken.email)
+        editor.putInt("ACCOUNT_TYPE", accessToken.accountType)
+        editor.putInt("REGISTRATION_STEP", accessToken.registrationStep)
+        editor.commit()
     }
 
     fun LogOut(){
