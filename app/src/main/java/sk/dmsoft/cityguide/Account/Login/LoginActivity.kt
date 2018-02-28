@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_registration.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import sk.dmsoft.cityguide.Account.Registration.RegistrationActivity
 import sk.dmsoft.cityguide.Api.Api
 import sk.dmsoft.cityguide.Commons.AccountManager
 import sk.dmsoft.cityguide.MainActivity
@@ -42,7 +43,11 @@ class LoginActivity : AppCompatActivity() {
                         return
                     }
                     AccountManager.LogIn(response.body()!!)
-                    startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+
+                    if (!AccountManager.isRegistrationCompleted)
+                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                    else
+                        startActivity(Intent(this@LoginActivity, RegistrationActivity::class.java))
                 }
 
             })

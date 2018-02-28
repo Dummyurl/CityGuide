@@ -29,6 +29,7 @@ import android.R.array
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import sk.dmsoft.cityguide.Account.Registration.Step.RegisterStep2Fragment
+import sk.dmsoft.cityguide.MainActivity
 import sk.dmsoft.cityguide.Models.Account.Registration1
 import sk.dmsoft.cityguide.Models.Account.Registration2
 
@@ -83,7 +84,9 @@ class RegistrationActivity : AppCompatActivity(), RegisterTouristFragment.OnRegi
             override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
                 if (response.code() == 200){
                     AccountManager.registrationStep = 3
-                    pager.setCurrentItem(3, true)
+                    //pager.setCurrentItem(3, true)
+                    startActivity(Intent(this@RegistrationActivity, MainActivity::class.java))
+                    finish()
                 }
             }
 

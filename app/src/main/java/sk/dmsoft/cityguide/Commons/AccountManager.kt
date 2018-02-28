@@ -52,10 +52,12 @@ object AccountManager {
         editor.putString("USER_EMAIL", accessToken.email)
         editor.putInt("ACCOUNT_TYPE", accessToken.accountType)
         editor.putInt("REGISTRATION_STEP", accessToken.registrationStep)
-        editor.commit()
+        editor.apply()
     }
 
     fun LogOut(){
-        _sharedPreferences.edit().remove("ACCESS_TOKEN").apply()
+        val editor = _sharedPreferences.edit()
+        editor.clear()
+        editor.apply()
     }
 }

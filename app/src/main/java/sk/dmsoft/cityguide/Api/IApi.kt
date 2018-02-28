@@ -11,6 +11,7 @@ import sk.dmsoft.cityguide.Models.Account.Login
 import sk.dmsoft.cityguide.Models.Account.Registration
 import sk.dmsoft.cityguide.Models.Account.Registration1
 import sk.dmsoft.cityguide.Models.Account.Registration2
+import sk.dmsoft.cityguide.Models.Proposal.Proposal
 
 /**
  * Created by Daniel on 13. 11. 2017.
@@ -34,4 +35,8 @@ interface IApi {
 
     @GET("places")
     fun getPlaces(): Call<ArrayList<Place>>
+
+    @GET("proposals")
+    fun getProposals(): Call<ArrayList<Proposal>>
+
 }

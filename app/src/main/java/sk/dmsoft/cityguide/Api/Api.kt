@@ -20,6 +20,7 @@ import sk.dmsoft.cityguide.Models.Account.Login
 import sk.dmsoft.cityguide.Models.Account.Registration
 import sk.dmsoft.cityguide.Models.Account.Registration1
 import sk.dmsoft.cityguide.Models.Account.Registration2
+import sk.dmsoft.cityguide.Models.Proposal.Proposal
 import java.util.concurrent.TimeUnit
 
 /**
@@ -86,6 +87,10 @@ class Api constructor(private val activity : Activity? = null) {
 
     fun getPlaces(): Call<ArrayList<Place>> {
         return api.getPlaces()
+    }
+
+    fun getProposals(): Call<ArrayList<Proposal>> {
+        return api.getProposals()
     }
 
 
