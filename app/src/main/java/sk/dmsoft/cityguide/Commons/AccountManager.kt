@@ -27,8 +27,9 @@ object AccountManager {
     val accessToken: String
         get() = _sharedPreferences.getString("ACCESS_TOKEN", "")
 
-    val accountType: EAccountType?
+    var accountType: EAccountType?
         get() = EAccountType.fromInt(_sharedPreferences.getInt("ACCOUNT_TYPE", -1))
+        set(value) { _sharedPreferences.edit().putInt("ACCOUNT_TYPE", value!!.value).apply() }
 
     val isRegistrationCompleted: Boolean
         get() {

@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="sk.dmsoft.cityguide.MainActivity"
     android:fitsSystemWindows="true"
+    tools:context="sk.dmsoft.cityguide.MainActivity"
     tools:openDrawer="start">
 
 
@@ -14,13 +14,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true" >
+        android:fitsSystemWindows="true">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Logout"
-            android:id="@+id/logout"/>
 
     </android.support.design.widget.NavigationView>
 
@@ -37,10 +32,13 @@
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/proposals_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+
+        <Button
+            android:id="@+id/logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="Logout" />
 
 
         <android.support.design.widget.FloatingActionButton
@@ -49,9 +47,19 @@
             android:layout_marginBottom="16dp"
             android:layout_marginEnd="16dp"
             android:src="@android:drawable/ic_menu_search"
+            android:tint="#fff"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:tint="#fff"/>
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/proposals_recycler"
+            android:layout_width="368dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/logout"
+            tools:layout_editor_absoluteX="8dp" />
 
     </android.support.constraint.ConstraintLayout>
 

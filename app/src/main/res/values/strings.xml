@@ -22,5 +22,6 @@
     <string name="i_want_to_be_a_guru">I WANT TO BE A GURU</string>
     <string name="first_name">First name</string>
     <string name="second_name">Second name</string>
+    <string name="select_photo">Select photo</string>
 
 </resources>

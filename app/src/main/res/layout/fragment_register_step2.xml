@@ -23,6 +23,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/photo_image"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="20dp"/>
+
+                <Button
+                    android:id="@+id/select_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/select_photo"/>
+
+            </LinearLayout>
+
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/textInputLayout2"
                 android:layout_width="match_parent"

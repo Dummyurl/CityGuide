@@ -1,11 +1,10 @@
 package sk.dmsoft.cityguide.Api
 
 
+import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 import sk.dmsoft.cityguide.Models.*
 import sk.dmsoft.cityguide.Models.Account.Login
 import sk.dmsoft.cityguide.Models.Account.Registration
@@ -27,8 +26,9 @@ interface IApi {
     @POST("account/register/1")
     fun registration1(@Body model: Registration1): Call<ResponseBody>
 
+    @Multipart
     @POST("account/register/2")
-    fun registration2(@Body model: Registration2): Call<ResponseBody>
+    fun registration2(@Part aboutMe: MultipartBody.Part, @Part profilePhoto: MultipartBody.Part): Call<ResponseBody>
 
     @GET("countries")
     fun getCountries(): Call<ArrayList<Country>>

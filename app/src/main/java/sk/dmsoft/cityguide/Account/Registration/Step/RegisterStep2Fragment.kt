@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_register_step2.*
+import sk.dmsoft.cityguide.Commons.load
 import sk.dmsoft.cityguide.Models.Account.Registration2
 
 import sk.dmsoft.cityguide.R
@@ -35,7 +36,12 @@ class RegisterStep2Fragment : Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        select_photo.setOnClickListener { listener?.onPhotoSelect() }
         next.setOnClickListener { CompleteStep2() }
+    }
+
+    fun loadPhoto(uri: String){
+        photo_image.load(uri)
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -72,6 +78,7 @@ class RegisterStep2Fragment : Fragment() {
      */
     interface Step2Listener {
         // TODO: Update argument type and name
+        fun onPhotoSelect()
         fun onStep2Completed(model: Registration2)
     }
 

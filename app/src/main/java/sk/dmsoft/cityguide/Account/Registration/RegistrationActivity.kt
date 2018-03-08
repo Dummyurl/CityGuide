@@ -1,8 +1,8 @@
 package sk.dmsoft.cityguide.Account.Registration
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
@@ -10,40 +10,62 @@ import sk.dmsoft.cityguide.R
 
 import kotlinx.android.synthetic.main.activity_registration.*
 import android.support.v4.app.FragmentStatePagerAdapter
-import kotlinx.android.synthetic.main.fragment_register_step1.*
-import kotlinx.android.synthetic.main.fragment_register_tourist.*
+import android.util.Log
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import sk.dmsoft.cityguide.Account.Login.LoginActivity
 import sk.dmsoft.cityguide.Account.Registration.Step.RegisterStep1Fragment
 import sk.dmsoft.cityguide.Account.Registration.Step.RegisterTouristFragment
 import sk.dmsoft.cityguide.Api.Api
-import sk.dmsoft.cityguide.Api.DB
 import sk.dmsoft.cityguide.Commons.AccountManager
 import sk.dmsoft.cityguide.Commons.EAccountType
 import sk.dmsoft.cityguide.Models.AccessToken
 import sk.dmsoft.cityguide.Models.Account.Registration
-import android.R.array
-import android.widget.ArrayAdapter
-import android.widget.Spinner
+import sk.dmsoft.cityguide.Account.Registration.Step.RegisterGuideFragment
 import sk.dmsoft.cityguide.Account.Registration.Step.RegisterStep2Fragment
 import sk.dmsoft.cityguide.MainActivity
 import sk.dmsoft.cityguide.Models.Account.Registration1
 import sk.dmsoft.cityguide.Models.Account.Registration2
 
 
-class RegistrationActivity : AppCompatActivity(), RegisterTouristFragment.OnRegistration, RegisterStep1Fragment.Step1Listener, RegisterStep2Fragment.Step2Listener {
+class RegistrationActivity : AppCompatActivity(),
+        RegisterTouristFragment.OnRegistration,
+        RegisterGuideFragment.OnRegistrationGuide,
+        RegisterStep1Fragment.Step1Listener,
+        RegisterStep2Fragment.Step2Listener {
 
-    val touristSteps: ArrayList<Fragment> = ArrayList()
-    val guideSteps: ArrayList<Fragment> = ArrayList()
+    override fun onSwitchToGuide() {
+        AccountManager.accountType = EAccountType.guide
+        registrationSteps[0] = RegisterGuideFragment()
+        pager.adapter = PagerAdapter(supportFragmentManager)
+    }
 
+    val registrationSteps: ArrayList<Fragment> = ArrayList()
+    val REQUEST_SELECT_IMAGE_IN_ALBUM = 1
+    val step2Fragment: RegisterStep2Fragment = RegisterStep2Fragment()
+    var profilePhotoUri: Uri = Uri.EMPTY
 
-    var registrationMode = EAccountType.tourist
     lateinit var api: Api
 
     override fun onRegistrationComplete(model: Registration) {
+        api.registration(model).enqueue(object: Callback<AccessToken>{
+            override fun onFailure(call: Call<AccessToken>?, t: Throwable?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onResponse(call: Call<AccessToken>?, response: Response<AccessToken>) {
+                if (response.code() == 200) {
+                    AccountManager.LogIn(response.body()!!)
+                    AccountManager.registrationStep = 1
+                    pager.setCurrentItem(1, true)
+                }
+            }
+
+        })
+    }
+
+    override fun onRegistrationGuideComplete(model: Registration) {
         api.registration(model).enqueue(object: Callback<AccessToken>{
             override fun onFailure(call: Call<AccessToken>?, t: Throwable?) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -75,8 +97,16 @@ class RegistrationActivity : AppCompatActivity(), RegisterTouristFragment.OnRegi
         })
     }
 
+    override fun onPhotoSelect() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.type = "image/*"
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivityForResult(intent, REQUEST_SELECT_IMAGE_IN_ALBUM)
+        }
+    }
+
     override fun onStep2Completed(model: Registration2) {
-        api.registration2(model).enqueue(object: Callback<ResponseBody>{
+        api.registration2(model, profilePhotoUri).enqueue(object: Callback<ResponseBody>{
             override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
@@ -93,6 +123,12 @@ class RegistrationActivity : AppCompatActivity(), RegisterTouristFragment.OnRegi
         })
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        super.onActivityResult(requestCode, resultCode, data)
+        profilePhotoUri = data.data
+        step2Fragment.loadPhoto(data.data.toString())
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)
@@ -100,9 +136,9 @@ class RegistrationActivity : AppCompatActivity(), RegisterTouristFragment.OnRegi
 
         api = Api(this)
 
-        touristSteps.add(RegisterTouristFragment())
-        touristSteps.add(RegisterStep1Fragment())
-        touristSteps.add(RegisterStep2Fragment())
+        registrationSteps.add(RegisterTouristFragment())
+        registrationSteps.add(RegisterStep1Fragment())
+        registrationSteps.add(step2Fragment)
 
         pager.adapter = PagerAdapter(supportFragmentManager)
         pager.setCurrentItem(AccountManager.registrationStep, true)
@@ -112,11 +148,11 @@ class RegistrationActivity : AppCompatActivity(), RegisterTouristFragment.OnRegi
     private inner class PagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
 
         override fun getItem(position: Int): Fragment {
-            return if (registrationMode == EAccountType.tourist) touristSteps[position] else guideSteps[position]
+            return registrationSteps[position]
         }
 
         override fun getCount(): Int {
-            return if (registrationMode == EAccountType.tourist) touristSteps.size else guideSteps.size
+            return registrationSteps.size
         }
     }
 

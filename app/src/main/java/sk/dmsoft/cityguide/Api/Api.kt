@@ -5,11 +5,9 @@ import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
+import android.net.Uri
 import android.util.Log
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import okhttp3.Response
-import okhttp3.ResponseBody
+import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -21,7 +19,12 @@ import sk.dmsoft.cityguide.Models.Account.Registration
 import sk.dmsoft.cityguide.Models.Account.Registration1
 import sk.dmsoft.cityguide.Models.Account.Registration2
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
+import java.io.File
 import java.util.concurrent.TimeUnit
+import android.provider.MediaStore
+import android.provider.DocumentsContract
+
+
 
 /**
  * Created by Daniel on 13. 11. 2017.
@@ -77,8 +80,31 @@ class Api constructor(private val activity : Activity? = null) {
         return api.registration1(model)
     }
 
-    fun registration2(model: Registration2): Call<ResponseBody> {
-        return api.registration2(model)
+    fun registration2(model: Registration2, photoUri: Uri): Call<ResponseBody> {
+        val wholeID = DocumentsContract.getDocumentId(photoUri)
+        val id = wholeID.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
+        val column = arrayOf(MediaStore.Images.Media.DATA)
+        val sel = MediaStore.Images.Media._ID + "=?"
+
+        val cursor = activity?.contentResolver?.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                column, sel, arrayOf(id), null)
+
+        var filePath = ""
+
+        val columnIndex = cursor?.getColumnIndex(column[0])
+
+        if (cursor!!.moveToFirst()) {
+            filePath = cursor.getString(columnIndex!!)
+        }
+
+        cursor.close()
+        val image = File(filePath)
+
+        val imageBody : RequestBody = RequestBody.create(MediaType.parse("image/*"), image)
+        val imagePart = MultipartBody.Part.createFormData("profilePhoto", image.name, imageBody)
+
+        val aboutMePart = MultipartBody.Part.createFormData("aboutMe", model.aboutMe)
+        return api.registration2(aboutMePart, imagePart)
     }
 
     fun getCountries(): Call<ArrayList<Country>> {

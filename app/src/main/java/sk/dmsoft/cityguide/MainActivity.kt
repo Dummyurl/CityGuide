@@ -3,6 +3,7 @@ package sk.dmsoft.cityguide
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import kotlinx.android.synthetic.main.activity_main.*
 import sk.dmsoft.cityguide.Api.Api
 import sk.dmsoft.cityguide.Commons.AccountManager
@@ -17,10 +18,10 @@ class MainActivity : AppCompatActivity() {
 
         api = Api(this)
 
-        logout.setOnClickListener({
+        logout.setOnClickListener {
             AccountManager.LogOut()
             finish()
-        })
+        }
     }
 
 
