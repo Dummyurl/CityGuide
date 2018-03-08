@@ -23,5 +23,8 @@
     <string name="first_name">First name</string>
     <string name="second_name">Second name</string>
     <string name="select_photo">Select photo</string>
+    <string name="salary">Per hour</string>
+    <string name="finish">Finish</string>
+    <string name="search_hint">Search people and places</string>
 
 </resources>

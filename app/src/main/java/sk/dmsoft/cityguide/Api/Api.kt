@@ -14,16 +14,14 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import sk.dmsoft.cityguide.Commons.AccountManager
 import sk.dmsoft.cityguide.Models.*
-import sk.dmsoft.cityguide.Models.Account.Login
-import sk.dmsoft.cityguide.Models.Account.Registration
-import sk.dmsoft.cityguide.Models.Account.Registration1
-import sk.dmsoft.cityguide.Models.Account.Registration2
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
 import java.io.File
 import java.util.concurrent.TimeUnit
 import android.provider.MediaStore
 import android.provider.DocumentsContract
-
+import sk.dmsoft.cityguide.Models.Account.*
+import sk.dmsoft.cityguide.Models.Search.SearchRequest
+import sk.dmsoft.cityguide.Models.Search.SearchResluts
 
 
 /**
@@ -107,6 +105,10 @@ class Api constructor(private val activity : Activity? = null) {
         return api.registration2(aboutMePart, imagePart)
     }
 
+    fun registrationGuideInfo(model: RegistrationGuideInfo): Call<ResponseBody>{
+        return api.registrationGuideInfo(model)
+    }
+
     fun getCountries(): Call<ArrayList<Country>> {
         return api.getCountries()
     }
@@ -117,6 +119,10 @@ class Api constructor(private val activity : Activity? = null) {
 
     fun getProposals(): Call<ArrayList<Proposal>> {
         return api.getProposals()
+    }
+
+    fun search(model: SearchRequest): Call<SearchResluts> {
+        return api.search(model)
     }
 
 

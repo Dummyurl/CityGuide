@@ -34,7 +34,8 @@
         <activity
             android:name=".Account.Registration.RegistrationActivity"
             android:label="@string/title_activity_registration"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Search.SearchActivity"></activity>
     </application>
 
 </manifest>

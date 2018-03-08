@@ -15,25 +15,24 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import sk.dmsoft.cityguide.Account.Registration.Step.RegisterStep1Fragment
-import sk.dmsoft.cityguide.Account.Registration.Step.RegisterTouristFragment
+import sk.dmsoft.cityguide.Account.Registration.Step.*
 import sk.dmsoft.cityguide.Api.Api
 import sk.dmsoft.cityguide.Commons.AccountManager
 import sk.dmsoft.cityguide.Commons.EAccountType
 import sk.dmsoft.cityguide.Models.AccessToken
 import sk.dmsoft.cityguide.Models.Account.Registration
-import sk.dmsoft.cityguide.Account.Registration.Step.RegisterGuideFragment
-import sk.dmsoft.cityguide.Account.Registration.Step.RegisterStep2Fragment
 import sk.dmsoft.cityguide.MainActivity
 import sk.dmsoft.cityguide.Models.Account.Registration1
 import sk.dmsoft.cityguide.Models.Account.Registration2
+import sk.dmsoft.cityguide.Models.Account.RegistrationGuideInfo
 
 
 class RegistrationActivity : AppCompatActivity(),
         RegisterTouristFragment.OnRegistration,
         RegisterGuideFragment.OnRegistrationGuide,
         RegisterStep1Fragment.Step1Listener,
-        RegisterStep2Fragment.Step2Listener {
+        RegisterStep2Fragment.Step2Listener,
+        RegisterGuideInfoFragment.OnRegistrationGuideInfo{
 
     override fun onSwitchToGuide() {
         AccountManager.accountType = EAccountType.guide
@@ -57,6 +56,7 @@ class RegistrationActivity : AppCompatActivity(),
             override fun onResponse(call: Call<AccessToken>?, response: Response<AccessToken>) {
                 if (response.code() == 200) {
                     AccountManager.LogIn(response.body()!!)
+                    api = Api(this@RegistrationActivity)
                     AccountManager.registrationStep = 1
                     pager.setCurrentItem(1, true)
                 }
@@ -114,7 +114,29 @@ class RegistrationActivity : AppCompatActivity(),
             override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
                 if (response.code() == 200){
                     AccountManager.registrationStep = 3
-                    //pager.setCurrentItem(3, true)
+
+                    if (AccountManager.accountType == EAccountType.guide)
+                        pager.setCurrentItem(3, true)
+
+                    else {
+                        startActivity(Intent(this@RegistrationActivity, MainActivity::class.java))
+                        finish()
+                    }
+                }
+            }
+
+        })
+    }
+
+    override fun onRegistrationGuideInfoCompleted(model: RegistrationGuideInfo) {
+        api.registrationGuideInfo(model).enqueue(object: Callback<ResponseBody>{
+            override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
+                if (response?.code() == 200) {
+                    AccountManager.registrationStep = 4
                     startActivity(Intent(this@RegistrationActivity, MainActivity::class.java))
                     finish()
                 }
@@ -139,6 +161,9 @@ class RegistrationActivity : AppCompatActivity(),
         registrationSteps.add(RegisterTouristFragment())
         registrationSteps.add(RegisterStep1Fragment())
         registrationSteps.add(step2Fragment)
+
+        if (AccountManager.accountType == EAccountType.guide)
+            registrationSteps.add(RegisterGuideInfoFragment())
 
         pager.adapter = PagerAdapter(supportFragmentManager)
         pager.setCurrentItem(AccountManager.registrationStep, true)
