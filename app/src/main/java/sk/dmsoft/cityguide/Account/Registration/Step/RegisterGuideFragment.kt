@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_register_tourist.*
 import sk.dmsoft.cityguide.Account.Login.LoginActivity
+import sk.dmsoft.cityguide.Commons.EAccountType
 import sk.dmsoft.cityguide.Models.Account.Registration
 
 import sk.dmsoft.cityguide.R
@@ -16,24 +17,22 @@ import sk.dmsoft.cityguide.R
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [RegisterTouristFragment.OnRegistration] interface
+ * [RegisterGuideFragment.OnRegistrationGuide] interface
  * to handle interaction events.
  */
-class RegisterTouristFragment : Fragment() {
+class RegisterGuideFragment : Fragment() {
 
-    private var mListener: OnRegistration? = null
+    private var mListener: OnRegistrationGuide? = null
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater!!.inflate(R.layout.fragment_register_tourist, container, false)
+        return inflater!!.inflate(R.layout.fragment_register_guide, container, false)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        login.setOnClickListener { startActivity(Intent(context, LoginActivity::class.java)) }
-        guide_registration.setOnClickListener { mListener?.onSwitchToGuide() }
         register.setOnClickListener {
             CompleteRegistration()
         }
@@ -46,13 +45,14 @@ class RegisterTouristFragment : Fragment() {
             model.email = email.text.toString()
             model.password = password.text.toString()
             model.confirmPassword = confirm_password.text.toString()
-            mListener!!.onRegistrationComplete(model)
+            model.accountType = EAccountType.guide
+            mListener!!.onRegistrationGuideComplete(model)
         }
     }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if (context is OnRegistration) {
+        if (context is OnRegistrationGuide) {
             mListener = context
         } else {
             throw RuntimeException(context!!.toString() + " must implement OnRegistrationGuide")
@@ -73,9 +73,8 @@ class RegisterTouristFragment : Fragment() {
      *
      * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
      */
-    interface OnRegistration {
+    interface OnRegistrationGuide {
         // TODO: Update argument type and name
-        fun onRegistrationComplete(model: Registration)
-        fun onSwitchToGuide()
+        fun onRegistrationGuideComplete(model: Registration)
     }
 }// Required empty public constructor
