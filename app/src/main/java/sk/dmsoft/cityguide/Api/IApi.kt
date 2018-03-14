@@ -7,6 +7,7 @@ import retrofit2.Call
 import retrofit2.http.*
 import sk.dmsoft.cityguide.Models.*
 import sk.dmsoft.cityguide.Models.Account.*
+import sk.dmsoft.cityguide.Models.Guides.GuideDetails
 import sk.dmsoft.cityguide.Models.Guides.GuideListItem
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
 import sk.dmsoft.cityguide.Models.Search.SearchInCity
@@ -48,5 +49,8 @@ interface IApi {
 
     @POST("guides")
     fun searchInCity(@Body model: SearchInCity): Call<ArrayList<GuideListItem>>
+
+    @GET("guides/{id}")
+    fun getGuideDetails(@Path("id") id: String): Call<GuideDetails>
 
 }

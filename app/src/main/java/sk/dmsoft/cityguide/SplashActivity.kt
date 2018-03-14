@@ -58,7 +58,6 @@ class SplashActivity : AppCompatActivity() {
         db.Drop(Place())
         api.getPlaces().enqueue(object: Callback<ArrayList<Place>> {
             override fun onFailure(call: Call<ArrayList<Place>>?, t: Throwable?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onResponse(call: Call<ArrayList<Place>>?, response: Response<ArrayList<Place>>?) {

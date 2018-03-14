@@ -16,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.fragment_search_request.*
+import sk.dmsoft.cityguide.Api.DB
 import sk.dmsoft.cityguide.Commons.GridSpacingItemDecoration
 import sk.dmsoft.cityguide.Commons.PlacesAdapter
 import sk.dmsoft.cityguide.Models.Place
@@ -52,7 +53,7 @@ class SearchRequestFragment : Fragment() {
         places_list.layoutManager = GridLayoutManager(activity, 2)
         places_list.addItemDecoration(GridSpacingItemDecoration(2, 30, true))
 
-        placesAdapter = PlacesAdapter(activity, ArrayList<Place>(), { place: Place, position: Int ->
+        placesAdapter = PlacesAdapter(activity, DB(activity).GetPlaces(), { place: Place, position: Int ->
             mListener?.onCitySelected(place)
         })
 
@@ -69,7 +70,7 @@ class SearchRequestFragment : Fragment() {
                 timer = Timer()
                 timer!!.schedule(object : TimerTask() {
                     override fun run() {
-                        activity.runOnUiThread {
+                        activity?.runOnUiThread {
                             val model = SearchRequest(search_text.text.toString())
                             mListener?.onSearch(model)
                         }

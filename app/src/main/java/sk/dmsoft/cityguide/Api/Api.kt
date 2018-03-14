@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit
 import android.provider.MediaStore
 import android.provider.DocumentsContract
 import sk.dmsoft.cityguide.Models.Account.*
+import sk.dmsoft.cityguide.Models.Guides.GuideDetails
 import sk.dmsoft.cityguide.Models.Guides.GuideListItem
 import sk.dmsoft.cityguide.Models.Search.SearchInCity
 import sk.dmsoft.cityguide.Models.Search.SearchRequest
@@ -129,6 +130,10 @@ class Api constructor(private val activity : Activity? = null) {
 
     fun searchInCity(model: SearchInCity): Call<ArrayList<GuideListItem>>{
         return api.searchInCity(model)
+    }
+
+    fun guideDetails(id: String): Call<GuideDetails> {
+        return api.getGuideDetails(id)
     }
 
 

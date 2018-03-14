@@ -29,13 +29,15 @@
         </activity>
         <activity
             android:name=".Account.Login.LoginActivity"
-            android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_login" />
         <activity
             android:name=".Account.Registration.RegistrationActivity"
-            android:label="@string/title_activity_registration"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Search.SearchActivity"></activity>
+            android:label="@string/title_activity_registration" />
+        <activity android:name=".Search.SearchActivity" />
+        <activity
+            android:name=".Guide.GuideDetailsActivity"
+            android:label="@string/title_activity_guide_details"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

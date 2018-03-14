@@ -3,7 +3,10 @@ package sk.dmsoft.cityguide.Search
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.util.Log
+import android.view.View
+import kotlinx.android.synthetic.main.activity_search.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -44,8 +47,10 @@ class SearchActivity : AppCompatActivity(), SearchRequestFragment.OnSearchTextIn
             }
 
             override fun onResponse(call: Call<ArrayList<GuideListItem>>?, response: Response<ArrayList<GuideListItem>>?) {
-
-                replaceFragment(searchResultsFragment, R.id.fragment_holder)
+                if (response?.code() == 200) {
+                    replaceFragment(searchResultsFragment, R.id.fragment_holder, true)
+                    searchResultsFragment.updateGuides(response.body()!!)
+                }
             }
 
         })
@@ -82,7 +87,7 @@ class SearchActivity : AppCompatActivity(), SearchRequestFragment.OnSearchTextIn
 
         api = Api(this)
         db = DB(this)
-
+        
         addFragment(searchRequestFragment, R.id.fragment_holder)
     }
 }
