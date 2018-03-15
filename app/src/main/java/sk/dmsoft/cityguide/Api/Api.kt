@@ -31,7 +31,7 @@ import sk.dmsoft.cityguide.Models.Search.SearchResluts
  * Created by Daniel on 13. 11. 2017.
  */
 
-class Api constructor(private val activity : Activity? = null) {
+class Api constructor(private val activity : Context? = null) {
 
     private val api : IApi
     private val domain = "http://cityguide.dmsoft.sk/"
@@ -124,6 +124,18 @@ class Api constructor(private val activity : Activity? = null) {
         return api.getProposals()
     }
 
+    fun getUnconfirmedProposals(): Call<ArrayList<Proposal>> {
+        return api.getUnconfirmedProposals()
+    }
+
+    fun editProposal(model: Proposal): Call<ResponseBody>{
+        return api.editProposal(model.id, model)
+    }
+
+    fun confirmProposal(model: Proposal): Call<ResponseBody>{
+        return api.confirmProposal(model.id)
+    }
+
     fun search(model: SearchRequest): Call<SearchResluts> {
         return api.search(model)
     }
@@ -136,6 +148,13 @@ class Api constructor(private val activity : Activity? = null) {
         return api.getGuideDetails(id)
     }
 
+    fun registerFcm(model: RegisterFcm): Call<ResponseBody>{
+        return api.registerFcm(model)
+    }
+
+    fun createProposal(model: Proposal): Call<ResponseBody> {
+        return api.createProposal(model)
+    }
 
     //fun uploadImages(image: NoteImage) : Call<ResponseBody> {
     //    val file : RequestBody = RequestBody.create(MediaType.parse("image/*"), image.image)

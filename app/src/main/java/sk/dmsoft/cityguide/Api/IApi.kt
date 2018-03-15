@@ -44,6 +44,27 @@ interface IApi {
     @GET("proposals")
     fun getProposals(): Call<ArrayList<Proposal>>
 
+    @GET("proposals/unconfirmed")
+    fun getUnconfirmedProposals(): Call<ArrayList<Proposal>>
+
+    @POST("proposals")
+    fun createProposal(@Body model: Proposal): Call<ResponseBody>
+
+    @PUT("proposals/{id}")
+    fun editProposal(@Path("id") id: Int, proposal: Proposal): Call<ResponseBody>
+
+    @POST("proposals/confirm/{id}")
+    fun confirmProposal(@Path("id") id: Int): Call<ResponseBody>
+
+    @DELETE("proposals/{id}")
+    fun deleteProposal(@Path("id") id: Int): Call<ResponseBody>
+
+    @POST("proposals/start/{id}")
+    fun startProposal(@Path("id") id: Int): Call<ResponseBody>
+
+    @POST("proposals/end/{id}")
+    fun endProposal(@Path("id") id: Int): Call<ResponseBody>
+
     @POST("search")
     fun search(@Body model: SearchRequest): Call<SearchResluts>
 
@@ -52,5 +73,8 @@ interface IApi {
 
     @GET("guides/{id}")
     fun getGuideDetails(@Path("id") id: String): Call<GuideDetails>
+
+    @POST("account/register/fcm")
+    fun registerFcm(@Body model: RegisterFcm): Call<ResponseBody>
 
 }

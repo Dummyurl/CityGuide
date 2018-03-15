@@ -27,5 +27,10 @@
     <string name="finish">Finish</string>
     <string name="search_hint">Search people and places</string>
     <string name="title_activity_guide_details">GuideDetailsActivity</string>
+    <string name="create_proposal">Create proposal</string>
+    <string name="notification_click">Tap here to proceed</string>
+    <string name="notifications">Notifications</string>
+    <string name="change_proposal">Edit</string>
+    <string name="confirm_proposal">Confirm</string>
 
 </resources>

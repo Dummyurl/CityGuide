@@ -26,8 +26,10 @@ class ProposalsAdapter(val activity: Activity, val proposals: ArrayList<Proposal
     class ViewHolder(val activity: Activity, itemView: View) : RecyclerView.ViewHolder(itemView){
 
         fun bind(item: Proposal, listener: (Proposal, Int) -> Unit) = with(itemView) {
+            city_image.load("https://zlavomat.sgcdn.cz/images/t/1280x640c/32/22/3222366-31a2f0.webp")
             guide_name.text = item.guideId
-
+            start_date.text = item.start
+            guide_photo.loadCircle("http://cityguide.dmsoft.sk/users/photo/${item.guideId}")
 
             setOnClickListener {
 

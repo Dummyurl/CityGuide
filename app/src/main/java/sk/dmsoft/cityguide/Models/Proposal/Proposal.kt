@@ -9,10 +9,10 @@ class Proposal {
     var id = 0
     var touristId = ""
     var guideId = ""
-    var start = DateTime()
-    var realStart = DateTime()
-    var end = DateTime()
-    var realEnd = DateTime()
+    var start = ""
+    var realStart = ""
+    var end = ""
+    var realEnd = ""
     var placeId = 0
 
     var touristStart = false
@@ -21,8 +21,5 @@ class Proposal {
     var touristEnd = false
     var guideEnd = false
 
-    var isConfirmed = false
-    var isInProgress = false
-    var isChanged = false
-    var isCompleted  = false
+    var state : ProposalState = ProposalState.New
 }
