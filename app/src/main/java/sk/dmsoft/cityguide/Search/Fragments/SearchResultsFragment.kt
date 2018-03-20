@@ -2,7 +2,6 @@ package sk.dmsoft.cityguide.Search.Fragments
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -10,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_search_results.*
-import sk.dmsoft.cityguide.Commons.GuidesAdapter
+import sk.dmsoft.cityguide.Commons.Adapters.GuidesAdapter
 import sk.dmsoft.cityguide.Commons.load
 import sk.dmsoft.cityguide.Guide.GuideDetailsActivity
 import sk.dmsoft.cityguide.Models.Guides.GuideListItem
@@ -63,7 +62,7 @@ class SearchResultsFragment : Fragment() {
         if (context is OnSearchResultsInteraction) {
             mListener = context
         } else {
-            throw RuntimeException(context!!.toString() + " must implement OnFragmentInteractionListener")
+            throw RuntimeException(context!!.toString() + " must implement OnChatInteractionListener")
         }
     }
 

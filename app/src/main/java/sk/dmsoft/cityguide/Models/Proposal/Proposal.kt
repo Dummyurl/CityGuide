@@ -1,6 +1,7 @@
 package sk.dmsoft.cityguide.Models.Proposal
 
 import org.joda.time.DateTime
+import sk.dmsoft.cityguide.Models.Account.UserInfo
 
 /**
  * Created by Daniel on 27. 2. 2018.
@@ -21,5 +22,9 @@ class Proposal {
     var touristEnd = false
     var guideEnd = false
 
-    var state : ProposalState = ProposalState.New
+    var canChange = false
+
+    var state : Int = 0
+
+    var user: UserInfo = UserInfo()
 }

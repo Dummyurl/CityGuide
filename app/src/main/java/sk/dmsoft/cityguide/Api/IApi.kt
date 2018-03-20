@@ -10,6 +10,7 @@ import sk.dmsoft.cityguide.Models.Account.*
 import sk.dmsoft.cityguide.Models.Guides.GuideDetails
 import sk.dmsoft.cityguide.Models.Guides.GuideListItem
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
+import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
 import sk.dmsoft.cityguide.Models.Search.SearchInCity
 import sk.dmsoft.cityguide.Models.Search.SearchRequest
 import sk.dmsoft.cityguide.Models.Search.SearchResluts
@@ -48,12 +49,12 @@ interface IApi {
     fun getUnconfirmedProposals(): Call<ArrayList<Proposal>>
 
     @POST("proposals")
-    fun createProposal(@Body model: Proposal): Call<ResponseBody>
+    fun createProposal(@Body model: ProposalRequest): Call<ResponseBody>
 
     @PUT("proposals/{id}")
-    fun editProposal(@Path("id") id: Int, proposal: Proposal): Call<ResponseBody>
+    fun editProposal(@Path("id") id: Int, @Body model: ProposalRequest): Call<ResponseBody>
 
-    @POST("proposals/confirm/{id}")
+    @PUT("proposals/confirm/{id}")
     fun confirmProposal(@Path("id") id: Int): Call<ResponseBody>
 
     @DELETE("proposals/{id}")

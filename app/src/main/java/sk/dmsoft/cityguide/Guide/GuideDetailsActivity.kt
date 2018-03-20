@@ -14,7 +14,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import sk.dmsoft.cityguide.Api.Api
 import sk.dmsoft.cityguide.Models.Guides.GuideDetails
-import sk.dmsoft.cityguide.Models.Proposal.Proposal
+import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
 
 class GuideDetailsActivity : AppCompatActivity() {
 
@@ -45,11 +45,9 @@ class GuideDetailsActivity : AppCompatActivity() {
         })
 
         send_proposal.setOnClickListener {
-            val model = Proposal()
+            val model = ProposalRequest()
             model.start = DateTime(2018, 3, 15, 12, 0).toString()
             model.end = DateTime(2018, 3, 15, 13, 0).toString()
-            model.realStart = DateTime().toString()
-            model.realEnd = DateTime().toString()
             model.guideId = guideId
 
             api.createProposal(model).enqueue(object: Callback<ResponseBody>{

@@ -1,24 +1,18 @@
 package sk.dmsoft.cityguide.Search.Fragments
 
-import android.content.AbstractThreadedSyncAdapter
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.fragment_search_request.*
 import sk.dmsoft.cityguide.Api.DB
 import sk.dmsoft.cityguide.Commons.GridSpacingItemDecoration
-import sk.dmsoft.cityguide.Commons.PlacesAdapter
+import sk.dmsoft.cityguide.Commons.Adapters.PlacesAdapter
 import sk.dmsoft.cityguide.Models.Place
 import sk.dmsoft.cityguide.Models.Search.SearchRequest
 import sk.dmsoft.cityguide.Models.Search.SearchResluts

@@ -22,6 +22,7 @@ import android.provider.DocumentsContract
 import sk.dmsoft.cityguide.Models.Account.*
 import sk.dmsoft.cityguide.Models.Guides.GuideDetails
 import sk.dmsoft.cityguide.Models.Guides.GuideListItem
+import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
 import sk.dmsoft.cityguide.Models.Search.SearchInCity
 import sk.dmsoft.cityguide.Models.Search.SearchRequest
 import sk.dmsoft.cityguide.Models.Search.SearchResluts
@@ -128,8 +129,8 @@ class Api constructor(private val activity : Context? = null) {
         return api.getUnconfirmedProposals()
     }
 
-    fun editProposal(model: Proposal): Call<ResponseBody>{
-        return api.editProposal(model.id, model)
+    fun editProposal(id: Int, model: ProposalRequest): Call<ResponseBody>{
+        return api.editProposal(id, model)
     }
 
     fun confirmProposal(model: Proposal): Call<ResponseBody>{
@@ -152,7 +153,7 @@ class Api constructor(private val activity : Context? = null) {
         return api.registerFcm(model)
     }
 
-    fun createProposal(model: Proposal): Call<ResponseBody> {
+    fun createProposal(model: ProposalRequest): Call<ResponseBody> {
         return api.createProposal(model)
     }
 

@@ -87,7 +87,11 @@ class SearchActivity : AppCompatActivity(), SearchRequestFragment.OnSearchTextIn
 
         api = Api(this)
         db = DB(this)
-        
+
+        test1.setOnClickListener {
+            Snackbar.make(it, "aaaaaa", Snackbar.LENGTH_LONG).show()
+        }
+
         addFragment(searchRequestFragment, R.id.fragment_holder)
     }
 }

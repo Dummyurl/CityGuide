@@ -32,5 +32,6 @@
     <string name="notifications">Notifications</string>
     <string name="change_proposal">Edit</string>
     <string name="confirm_proposal">Confirm</string>
+    <string name="title_activity_chat">ChatActivity</string>
 
 </resources>

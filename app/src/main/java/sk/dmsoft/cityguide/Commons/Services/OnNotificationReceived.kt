@@ -1,6 +1,5 @@
-package sk.dmsoft.cityguide.Commons
+package sk.dmsoft.cityguide.Commons.Services
 
-import android.app.Notification
 import com.google.firebase.messaging.FirebaseMessagingService
 import android.content.ContentValues.TAG
 import android.util.Log
@@ -34,7 +33,7 @@ class OnNotificationReceived: FirebaseMessagingService(){
 
         // Check if message contains a notification payload.
         if (remoteMessage.notification != null) {
-            Log.d(TAG, "Message Notification Body: " + remoteMessage.notification.body!!)
+            Log.d(TAG, "Message Notification Body: " + remoteMessage.notification?.body!!)
             showNotification(remoteMessage)
         }
 
@@ -49,8 +48,8 @@ class OnNotificationReceived: FirebaseMessagingService(){
                 PendingIntent.FLAG_ONE_SHOT)
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationBuilder = NotificationCompat.Builder(this)
-                .setContentTitle(remoteMessage.notification.title)
-                .setContentText(remoteMessage.notification.body)
+                .setContentTitle(remoteMessage.notification?.title)
+                .setContentText(remoteMessage.notification?.body)
                 .setAutoCancel(true)
                 .setChannelId("sk.dmsoft.cityguide")
                 .setSmallIcon(R.mipmap.ic_launcher)

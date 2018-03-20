@@ -1,4 +1,4 @@
-package sk.dmsoft.cityguide.Commons
+package sk.dmsoft.cityguide.Commons.Services
 
 import android.util.Log
 import com.google.firebase.iid.FirebaseInstanceId
@@ -8,6 +8,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import sk.dmsoft.cityguide.Api.Api
+import sk.dmsoft.cityguide.Commons.AccountManager
 import sk.dmsoft.cityguide.Models.Account.RegisterFcm
 
 /**

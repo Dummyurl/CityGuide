@@ -1,10 +1,12 @@
-package sk.dmsoft.cityguide.Commons
+package sk.dmsoft.cityguide.Commons.Adapters
 
 import android.app.Activity
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.place_item.view.*
+import sk.dmsoft.cityguide.Commons.inflate
+import sk.dmsoft.cityguide.Commons.load
 import sk.dmsoft.cityguide.Models.Place
 import sk.dmsoft.cityguide.R
 

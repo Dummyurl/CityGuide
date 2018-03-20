@@ -37,21 +37,28 @@
         <activity
             android:name=".Guide.GuideDetailsActivity"
             android:label="@string/title_activity_guide_details"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
 
-
-        <service
-            android:name=".Commons.FirebaseRegistration">
+        <service android:name=".Commons.Services.FirebaseRegistration">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <service
-            android:name=".Commons.OnNotificationReceived">
+        <service android:name=".Commons.Services.OnNotificationReceived">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <activity
+            android:name=".Chat.ChatActivity"
+            android:label="@string/title_activity_chat"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sk.dmsoft.cityguide.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

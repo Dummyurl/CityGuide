@@ -4,21 +4,19 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
-import android.widget.Button
-import com.google.firebase.iid.FirebaseInstanceId
+import android.view.Gravity
+import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import sk.dmsoft.cityguide.Api.Api
-import sk.dmsoft.cityguide.Commons.AccountManager
-import sk.dmsoft.cityguide.Commons.ProposalsAdapter
-import sk.dmsoft.cityguide.Commons.UnconfirmedProposalsAdapter
-import sk.dmsoft.cityguide.Commons.addFragment
-import sk.dmsoft.cityguide.Models.Account.RegisterFcm
+import sk.dmsoft.cityguide.Commons.*
+import sk.dmsoft.cityguide.Commons.Adapters.ProposalsAdapter
+import sk.dmsoft.cityguide.Commons.Adapters.UnconfirmedProposalsAdapter
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
+import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
 import sk.dmsoft.cityguide.Proposal.Fragments.EditProposalFragment
 import sk.dmsoft.cityguide.Search.SearchActivity
 
@@ -29,8 +27,8 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
     lateinit var unconfirmedProposalsAdapter: UnconfirmedProposalsAdapter
     val editProposalFragment = EditProposalFragment()
 
-    override fun onProposalChange(proposal: Proposal) {
-        api.editProposal(proposal).enqueue(object: Callback<ResponseBody>{
+    override fun onProposalChange(id: Int, proposal: ProposalRequest) {
+        api.editProposal(id, proposal).enqueue(object: Callback<ResponseBody>{
             override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
@@ -71,12 +69,37 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
             finish()
         }
 
-        open_search.setOnClickListener {
-            val intent = Intent(this, SearchActivity::class.java)
-            startActivity(intent)
+        open_drawer.setOnClickListener {
+            drawer_layout.openDrawer(Gravity.START)
         }
 
-        addFragment(editProposalFragment, R.id.main)
+        swipe_refresh_confirmed.setColorSchemeResources(R.color.colorPrimary)
+        swipe_refresh_unconfirmed.setColorSchemeResources(R.color.colorPrimary)
+
+        swipe_refresh_confirmed.setOnRefreshListener {
+            reloadProposals()
+        }
+
+        swipe_refresh_unconfirmed.setOnRefreshListener {
+            reloadProposals()
+        }
+
+        if (AccountManager.accountType == EAccountType.guide)
+            open_search.visibility = View.GONE
+        else
+            open_search.setOnClickListener {
+                val intent = Intent(this, SearchActivity::class.java)
+                startActivity(intent)
+            }
+
+        addFragment(editProposalFragment, R.id.bottom_sheet_wrapper)
+    }
+
+    override fun onBackPressed() {
+        if (editProposalFragment.isSheetVisible)
+            editProposalFragment.hide()
+        else
+            super.onBackPressed()
     }
 
     override fun onResume() {
@@ -85,19 +108,23 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
     }
 
     private fun initProposals(proposals: ArrayList<Proposal>) {
-        proposalsAdapter = ProposalsAdapter(this, proposals, {_, _ -> })
+        proposalsAdapter = ProposalsAdapter(this, proposals, { _, _ -> })
         proposals_recycler.setHasFixedSize(true)
         proposals_recycler.layoutManager = LinearLayoutManager(this)
         proposals_recycler.adapter = proposalsAdapter
     }
 
     private fun initUnconfirmedProposals(proposals: ArrayList<Proposal>){
-        unconfirmedProposalsAdapter = UnconfirmedProposalsAdapter(this, proposals, {proposal, _ ->
+        unconfirmedProposalsAdapter = UnconfirmedProposalsAdapter(this, proposals, { proposal, position ->
             editProposalFragment.setProposal(proposal)
+            editProposalFragment.show()
+            drawer_layout.closeDrawer(Gravity.START)
         })
         unconfirmed_proposals_list.setHasFixedSize(true)
         unconfirmed_proposals_list.layoutManager = LinearLayoutManager(this)
         unconfirmed_proposals_list.adapter = unconfirmedProposalsAdapter
+        swipe_refresh_confirmed.isRefreshing = false
+        swipe_refresh_unconfirmed.isRefreshing = false
     }
 
     private fun reloadProposals(){
