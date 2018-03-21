@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
 
         api.getProposals().enqueue(object : Callback<ArrayList<Proposal>>{
             override fun onFailure(call: Call<ArrayList<Proposal>>?, t: Throwable?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onResponse(call: Call<ArrayList<Proposal>>?, response: Response<ArrayList<Proposal>>?) {

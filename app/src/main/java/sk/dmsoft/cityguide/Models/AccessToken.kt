@@ -7,6 +7,7 @@ import sk.dmsoft.cityguide.Commons.EAccountType
  */
 
 class AccessToken {
+    val userId = ""
     val token: String = ""
     val email = ""
     val accountType: Int = 0

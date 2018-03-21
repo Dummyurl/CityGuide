@@ -1,4 +1,4 @@
-package sk.dmsoft.cityguide.Chat
+package sk.dmsoft.cityguide.Models.Chat
 
 /**
  * Created by Daniel on 19. 3. 2018.

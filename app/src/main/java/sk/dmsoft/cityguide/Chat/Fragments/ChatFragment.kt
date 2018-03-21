@@ -1,13 +1,17 @@
 package sk.dmsoft.cityguide.Chat.Fragments
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import sk.dmsoft.cityguide.Chat.Message
+import com.google.gson.Gson
+import kotlinx.android.synthetic.main.fragment_chat.*
+import sk.dmsoft.cityguide.Commons.Adapters.ChatAdapter
+import sk.dmsoft.cityguide.Models.Chat.Message
+import sk.dmsoft.cityguide.Models.Chat.ReceivedMessage
 
 import sk.dmsoft.cityguide.R
 
@@ -21,6 +25,7 @@ class ChatFragment : Fragment() {
 
     private var mListener: OnChatInteractionListener? = null
     private var proposalId = 0
+    lateinit var chatAdapter: ChatAdapter
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -29,12 +34,26 @@ class ChatFragment : Fragment() {
         return inflater!!.inflate(R.layout.fragment_chat, container, false)
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun sendMessage() {
-        if (mListener != null) {
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        chatAdapter = ChatAdapter(activity, ArrayList())
+        messages_list.setHasFixedSize(true)
+        messages_list.layoutManager = LinearLayoutManager(activity)
+        messages_list.adapter = chatAdapter
+
+
+
+        send_message.setOnClickListener {
             val message = Message()
-            mListener!!.onMessageSend(message)
+            message.text = message_text.text.toString()
+            message.conversationId = "1"
+            val messageJson = Gson().toJson(message)
+            mListener?.onMessageSend(messageJson)
         }
+    }
+
+    fun addMessage(message: ReceivedMessage){
+        chatAdapter.addMessage(message)
     }
 
     override fun onAttach(context: Context?) {
@@ -62,6 +81,6 @@ class ChatFragment : Fragment() {
      */
     interface OnChatInteractionListener {
         // TODO: Update argument type and name
-        fun onMessageSend(message: Message)
+        fun onMessageSend(message: String)
     }
 }// Required empty public constructor
