@@ -29,13 +29,36 @@
         </activity>
         <activity
             android:name=".Account.Login.LoginActivity"
-            android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_login" />
         <activity
             android:name=".Account.Registration.RegistrationActivity"
-            android:label="@string/title_activity_registration"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Search.SearchActivity"></activity>
+            android:label="@string/title_activity_registration" />
+        <activity android:name=".Search.SearchActivity" />
+        <activity
+            android:name=".Guide.GuideDetailsActivity"
+            android:label="@string/title_activity_guide_details"
+            android:theme="@style/AppTheme" />
+
+        <service android:name=".Commons.Services.FirebaseRegistration">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".Commons.Services.OnNotificationReceived">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".Chat.ChatActivity"
+            android:label="@string/title_activity_chat"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sk.dmsoft.cityguide.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

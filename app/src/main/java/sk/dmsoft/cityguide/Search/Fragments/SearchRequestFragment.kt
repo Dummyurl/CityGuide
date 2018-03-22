@@ -1,16 +1,21 @@
 package sk.dmsoft.cityguide.Search.Fragments
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.GridLayoutManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_search_request.*
+import sk.dmsoft.cityguide.Api.DB
+import sk.dmsoft.cityguide.Commons.GridSpacingItemDecoration
+import sk.dmsoft.cityguide.Commons.Adapters.PlacesAdapter
+import sk.dmsoft.cityguide.Models.Place
 import sk.dmsoft.cityguide.Models.Search.SearchRequest
+import sk.dmsoft.cityguide.Models.Search.SearchResluts
 
 import sk.dmsoft.cityguide.R
 import java.util.*
@@ -24,6 +29,7 @@ import java.util.*
 class SearchRequestFragment : Fragment() {
 
     private var mListener: OnSearchTextInserted? = null
+    lateinit var placesAdapter: PlacesAdapter
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -37,6 +43,16 @@ class SearchRequestFragment : Fragment() {
 
         var timer: Timer? = Timer()
 
+        places_list.setHasFixedSize(true)
+        places_list.layoutManager = GridLayoutManager(activity, 2)
+        places_list.addItemDecoration(GridSpacingItemDecoration(2, 30, true))
+
+        placesAdapter = PlacesAdapter(activity, DB(activity).GetPlaces(), { place: Place, position: Int ->
+            mListener?.onCitySelected(place)
+        })
+
+        places_list.adapter = placesAdapter
+
         search_text.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) = Unit
 
@@ -48,14 +64,18 @@ class SearchRequestFragment : Fragment() {
                 timer = Timer()
                 timer!!.schedule(object : TimerTask() {
                     override fun run() {
-                        activity.runOnUiThread {
+                        activity?.runOnUiThread {
                             val model = SearchRequest(search_text.text.toString())
                             mListener?.onSearch(model)
                         }
                     }
-                }, 1000)
+                }, 500)
             }
         })
+    }
+
+    fun UpdateSearch(model: SearchResluts){
+        placesAdapter.updateList(model.places)
     }
 
     override fun onAttach(context: Context?) {
@@ -84,5 +104,6 @@ class SearchRequestFragment : Fragment() {
     interface OnSearchTextInserted {
         // TODO: Update argument type and name
         fun onSearch(model: SearchRequest)
+        fun onCitySelected(place: Place)
     }
 }// Required empty public constructor

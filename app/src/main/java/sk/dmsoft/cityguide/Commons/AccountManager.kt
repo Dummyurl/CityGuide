@@ -46,6 +46,27 @@ object AccountManager {
             _sharedPreferences.edit().putInt("REGISTRATION_STEP", value).apply()
         }
 
+    var fcmTokenId: String
+        get(){
+            return _sharedPreferences.getString("FCM_TOKEN_ID", "")
+        }
+        set(value) {
+            _sharedPreferences.edit().putString("FCM_TOKEN_ID", value).commit()
+        }
+
+    var isFcmRegistered: Boolean
+        get(){
+            return _sharedPreferences.getBoolean("FC_REGISTERED", false)
+        }
+        set(value) {
+            _sharedPreferences.edit().putBoolean("FC:_REGISTERED", value)
+        }
+
+    val userId: String
+        get() {
+            return  _sharedPreferences.getString("ACCOUNT_ID", "")
+        }
+
     // Methods
     fun LogIn(accessToken: AccessToken){
         val editor = _sharedPreferences.edit()
@@ -53,6 +74,7 @@ object AccountManager {
         editor.putString("USER_EMAIL", accessToken.email)
         editor.putInt("ACCOUNT_TYPE", accessToken.accountType)
         editor.putInt("REGISTRATION_STEP", accessToken.registrationStep)
+        editor.putString("ACCOUNT_ID", accessToken.userId)
         editor.apply()
     }
 

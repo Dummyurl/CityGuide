@@ -7,7 +7,11 @@ import retrofit2.Call
 import retrofit2.http.*
 import sk.dmsoft.cityguide.Models.*
 import sk.dmsoft.cityguide.Models.Account.*
+import sk.dmsoft.cityguide.Models.Guides.GuideDetails
+import sk.dmsoft.cityguide.Models.Guides.GuideListItem
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
+import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
+import sk.dmsoft.cityguide.Models.Search.SearchInCity
 import sk.dmsoft.cityguide.Models.Search.SearchRequest
 import sk.dmsoft.cityguide.Models.Search.SearchResluts
 
@@ -41,7 +45,37 @@ interface IApi {
     @GET("proposals")
     fun getProposals(): Call<ArrayList<Proposal>>
 
+    @GET("proposals/unconfirmed")
+    fun getUnconfirmedProposals(): Call<ArrayList<Proposal>>
+
+    @POST("proposals")
+    fun createProposal(@Body model: ProposalRequest): Call<ResponseBody>
+
+    @PUT("proposals/{id}")
+    fun editProposal(@Path("id") id: Int, @Body model: ProposalRequest): Call<ResponseBody>
+
+    @PUT("proposals/confirm/{id}")
+    fun confirmProposal(@Path("id") id: Int): Call<ResponseBody>
+
+    @DELETE("proposals/{id}")
+    fun deleteProposal(@Path("id") id: Int): Call<ResponseBody>
+
+    @POST("proposals/start/{id}")
+    fun startProposal(@Path("id") id: Int): Call<ResponseBody>
+
+    @POST("proposals/end/{id}")
+    fun endProposal(@Path("id") id: Int): Call<ResponseBody>
+
     @POST("search")
     fun search(@Body model: SearchRequest): Call<SearchResluts>
+
+    @POST("guides")
+    fun searchInCity(@Body model: SearchInCity): Call<ArrayList<GuideListItem>>
+
+    @GET("guides/{id}")
+    fun getGuideDetails(@Path("id") id: String): Call<GuideDetails>
+
+    @POST("account/register/fcm")
+    fun registerFcm(@Body model: RegisterFcm): Call<ResponseBody>
 
 }

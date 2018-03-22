@@ -20,6 +20,10 @@ import java.util.concurrent.TimeUnit
 import android.provider.MediaStore
 import android.provider.DocumentsContract
 import sk.dmsoft.cityguide.Models.Account.*
+import sk.dmsoft.cityguide.Models.Guides.GuideDetails
+import sk.dmsoft.cityguide.Models.Guides.GuideListItem
+import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
+import sk.dmsoft.cityguide.Models.Search.SearchInCity
 import sk.dmsoft.cityguide.Models.Search.SearchRequest
 import sk.dmsoft.cityguide.Models.Search.SearchResluts
 
@@ -28,7 +32,7 @@ import sk.dmsoft.cityguide.Models.Search.SearchResluts
  * Created by Daniel on 13. 11. 2017.
  */
 
-class Api constructor(private val activity : Activity? = null) {
+class Api constructor(private val activity : Context? = null) {
 
     private val api : IApi
     private val domain = "http://cityguide.dmsoft.sk/"
@@ -121,10 +125,37 @@ class Api constructor(private val activity : Activity? = null) {
         return api.getProposals()
     }
 
+    fun getUnconfirmedProposals(): Call<ArrayList<Proposal>> {
+        return api.getUnconfirmedProposals()
+    }
+
+    fun editProposal(id: Int, model: ProposalRequest): Call<ResponseBody>{
+        return api.editProposal(id, model)
+    }
+
+    fun confirmProposal(model: Proposal): Call<ResponseBody>{
+        return api.confirmProposal(model.id)
+    }
+
     fun search(model: SearchRequest): Call<SearchResluts> {
         return api.search(model)
     }
 
+    fun searchInCity(model: SearchInCity): Call<ArrayList<GuideListItem>>{
+        return api.searchInCity(model)
+    }
+
+    fun guideDetails(id: String): Call<GuideDetails> {
+        return api.getGuideDetails(id)
+    }
+
+    fun registerFcm(model: RegisterFcm): Call<ResponseBody>{
+        return api.registerFcm(model)
+    }
+
+    fun createProposal(model: ProposalRequest): Call<ResponseBody> {
+        return api.createProposal(model)
+    }
 
     //fun uploadImages(image: NoteImage) : Call<ResponseBody> {
     //    val file : RequestBody = RequestBody.create(MediaType.parse("image/*"), image.image)

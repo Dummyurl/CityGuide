@@ -37,6 +37,7 @@ class RegistrationActivity : AppCompatActivity(),
     override fun onSwitchToGuide() {
         AccountManager.accountType = EAccountType.guide
         registrationSteps[0] = RegisterGuideFragment()
+        registrationSteps.add(RegisterGuideInfoFragment())
         pager.adapter = PagerAdapter(supportFragmentManager)
     }
 
@@ -154,7 +155,6 @@ class RegistrationActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)
-        setSupportActionBar(toolbar)
 
         api = Api(this)
 

@@ -39,6 +39,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
                 android:layout_gravity="end"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:text="@string/login" />
 
         </RelativeLayout>
@@ -96,6 +97,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            style="@style/green_button"
+            android:theme="@style/green_button"
             android:text="@string/sign_up" />
 
         <Button
@@ -103,6 +106,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:text="@string/i_want_to_be_a_guru" />
 
 

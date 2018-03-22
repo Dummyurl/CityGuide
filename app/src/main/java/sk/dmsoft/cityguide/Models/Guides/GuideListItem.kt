@@ -6,5 +6,5 @@ package sk.dmsoft.cityguide.Models.Guides
 class GuideListItem {
     var id: String = ""
     var firstName: String = ""
-    var lastName: String = ""
+    var secondName: String = ""
 }

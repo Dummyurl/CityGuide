@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.squareup.picasso.Picasso
+import jp.wasabeef.picasso.transformations.CropCircleTransformation
 
 /**
  * Created by Daniel on 27. 2. 2018.
@@ -22,15 +23,22 @@ fun ImageView.load(url : String){
     Picasso.with(context).load(url).into(this)
 }
 
-inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction) {
-    beginTransaction().func().commit()
+fun ImageView.loadCircle(url: String){
+    Picasso.with(context).load(url).transform(CropCircleTransformation()).into(this)
 }
 
-fun AppCompatActivity.addFragment(fragment: Fragment, frameId: Int){
-    supportFragmentManager.inTransaction { add(frameId, fragment) }
+inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction, addToBackstack: Boolean) {
+    if (addToBackstack)
+        beginTransaction().func().addToBackStack("true").commit()
+    else
+        beginTransaction().func().commit()
+}
+
+fun AppCompatActivity.addFragment(fragment: Fragment, frameId: Int, addToBackstack: Boolean = false){
+    supportFragmentManager.inTransaction ({ add(frameId, fragment) }, addToBackstack)
 }
 
 
-fun AppCompatActivity.replaceFragment(fragment: Fragment, frameId: Int) {
-    supportFragmentManager.inTransaction{replace(frameId, fragment)}
+fun AppCompatActivity.replaceFragment(fragment: Fragment, frameId: Int, addToBackstack: Boolean = false) {
+    supportFragmentManager.inTransaction({replace(frameId, fragment)}, addToBackstack)
 }
