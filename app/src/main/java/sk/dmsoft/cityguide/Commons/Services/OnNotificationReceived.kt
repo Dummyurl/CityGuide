@@ -20,10 +20,6 @@ import sk.dmsoft.cityguide.R
 class OnNotificationReceived: FirebaseMessagingService(){
 
     override fun onMessageReceived(remoteMessage: RemoteMessage?) {
-        // ...
-
-        // TODO(developer): Handle FCM messages here.
-        // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: " + remoteMessage!!.from)
 
         // Check if message contains a data payload.

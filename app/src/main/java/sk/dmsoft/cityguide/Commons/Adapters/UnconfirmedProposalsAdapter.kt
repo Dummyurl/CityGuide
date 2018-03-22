@@ -39,7 +39,7 @@ class UnconfirmedProposalsAdapter (val activity: Activity, val proposals: ArrayL
                     title.text = if (AccountManager.accountType == EAccountType.guide) "New time proposal" else "Waiting for guru"
                 }
                 ProposalState.WaitingForTourist.value -> {
-                    title.text = if (AccountManager.accountType == EAccountType.tourist) "Tourist proposed new time" else "Waiting for tourist"
+                    title.text = if (AccountManager.accountType == EAccountType.tourist) "Guide proposed new time" else "Waiting for tourist"
                 }
                 else -> {
                     title.text = "Code: ${item.state}"
