@@ -27,12 +27,6 @@ class MapFragment : Fragment() {
         return inflater!!.inflate(R.layout.fragment_map, container, false)
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        if (mListener != null) {
-            mListener!!.onFragmentInteraction(uri)
-        }
-    }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -58,7 +52,6 @@ class MapFragment : Fragment() {
      * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
      */
     interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
+
     }
 }// Required empty public constructor

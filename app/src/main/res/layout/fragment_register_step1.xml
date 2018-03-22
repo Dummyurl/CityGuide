@@ -114,6 +114,7 @@
             android:id="@+id/next"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:theme="@style/green_button"
             android:text="@string/next" />
 
     </LinearLayout>

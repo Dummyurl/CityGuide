@@ -34,7 +34,7 @@ class ProposalsAdapter(val activity: Activity, val proposals: ArrayList<Proposal
             city_image.load("https://zlavomat.sgcdn.cz/images/t/1280x640c/32/22/3222366-31a2f0.webp")
             guide_name.text = "${item.user.firstName} ${item.user.secondName}"
             start_date.text = item.start
-            guide_photo.loadCircle("http://cityguide.dmsoft.sk/users/photo/${item.guideId}")
+            guide_photo.loadCircle("http://cityguide.dmsoft.sk/users/photo/${item.user.id}")
 
             open_chat.setOnClickListener {
                 val intent = Intent(activity, ChatActivity::class.java)

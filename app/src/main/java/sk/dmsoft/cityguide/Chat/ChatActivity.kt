@@ -11,14 +11,16 @@ import org.java_websocket.client.WebSocketClient
 import org.java_websocket.drafts.Draft_17
 import org.java_websocket.handshake.ServerHandshake
 import sk.dmsoft.cityguide.Chat.Fragments.ChatFragment
+import sk.dmsoft.cityguide.Chat.Fragments.MapFragment
 import sk.dmsoft.cityguide.Commons.AccountManager
 import sk.dmsoft.cityguide.Commons.addFragment
+import sk.dmsoft.cityguide.Commons.replaceFragment
 import sk.dmsoft.cityguide.Models.Chat.Message
 import sk.dmsoft.cityguide.Models.Chat.ReceivedMessage
 import java.lang.Exception
 import java.net.URI
 
-class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener {
+class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener, MapFragment.OnFragmentInteractionListener {
     override fun onMessageSend(message: String) {
         wsClient.send(message)
     }
@@ -27,6 +29,7 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
 
     lateinit var wsClient: WebSocketClient
     val chatFragment: ChatFragment = ChatFragment()
+    val mapFragment: MapFragment = MapFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,9 +37,23 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
         setSupportActionBar(toolbar)
         connectWebsocket()
 
-        addFragment(chatFragment, android.R.id.content)
+        addFragment(chatFragment, R.id.chat_fragment_wrapper)
+
+        bottom_menu.setOnNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.chat -> replaceFragment(chatFragment, R.id.chat_fragment_wrapper)
+                R.id.map -> replaceFragment(mapFragment, R.id.chat_fragment_wrapper)
+            }
+            it.isChecked = true
+            false
+        }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        connectWebsocket()
     }
 
     override fun onStop() {

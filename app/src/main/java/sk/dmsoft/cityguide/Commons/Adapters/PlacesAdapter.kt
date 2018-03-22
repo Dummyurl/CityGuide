@@ -33,7 +33,7 @@ class PlacesAdapter(val activity: Activity, var places: ArrayList<Place>, val cl
         fun bind(item: Place, listener: (Place, Int) -> Unit) = with(itemView) {
 
             city_name.text = item.city
-            city_image.load("https://zlavomat.sgcdn.cz/images/t/1280x640c/32/22/3222366-31a2f0.webp")
+            city_image.load("http://cityguide.dmsoft.sk/places/photo/${item.id}")
 
             setOnClickListener {
                 listener(item, adapterPosition)

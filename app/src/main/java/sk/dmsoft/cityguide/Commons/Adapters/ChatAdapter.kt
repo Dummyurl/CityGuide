@@ -11,6 +11,7 @@ import sk.dmsoft.cityguide.Commons.inflate
 import sk.dmsoft.cityguide.Commons.loadCircle
 import sk.dmsoft.cityguide.Models.Chat.ReceivedMessage
 import sk.dmsoft.cityguide.R
+import java.net.URLDecoder
 
 /**
  * Created by Daniel on 20. 3. 2018.
@@ -43,7 +44,7 @@ class ChatAdapter (val activity: Activity, val messages: ArrayList<ReceivedMessa
     }
 
     fun addMessage(message: ReceivedMessage){
-        messages.add(message)
+        messages.add(0, message)
         notifyDataSetChanged()
         notifyItemInserted(messages.size -1)
     }
@@ -59,7 +60,7 @@ class ChatAdapter (val activity: Activity, val messages: ArrayList<ReceivedMessa
     class SendedViewHolder(val activity: Activity, itemView: View) : RecyclerView.ViewHolder(itemView){
 
         fun bind(item: ReceivedMessage) = with(itemView) {
-            message_text.text = item.message.text
+            message_text.text = URLDecoder.decode(item.message.text, "UTF-8")
         }
     }
 

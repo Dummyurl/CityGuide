@@ -38,7 +38,9 @@ class ChatFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         chatAdapter = ChatAdapter(activity, ArrayList())
         messages_list.setHasFixedSize(true)
-        messages_list.layoutManager = LinearLayoutManager(activity)
+        val layoutManager = LinearLayoutManager(activity)
+        layoutManager.reverseLayout = true
+        messages_list.layoutManager = layoutManager
         messages_list.adapter = chatAdapter
 
 
