@@ -31,15 +31,17 @@ class UnconfirmedProposalsAdapter (val activity: Activity, val proposals: ArrayL
     class ViewHolder(val activity: Activity, itemView: View) : RecyclerView.ViewHolder(itemView){
 
         fun bind(item: Proposal, listener: (Proposal, Int) -> Unit) = with(itemView) {
-            user_photo.loadCircle("http://cityguide.dmsoft.sk/users/photo/${item.user.id}")
-            user_name.text = "${item.user.firstName} ${item.user.secondName}"
+            if (item.user != null) {
+                user_photo.loadCircle("http://cityguide.dmsoft.sk/users/photo/${item.user.id}")
+                user_name.text = "${item.user.firstName} ${item.user.secondName}"
+            }
             when (item.state){
                 ProposalState.New.value -> title.text = "New proposal"
                 ProposalState.WaitingForGuide.value -> {
                     title.text = if (AccountManager.accountType == EAccountType.guide) "New time proposal" else "Waiting for guru"
                 }
                 ProposalState.WaitingForTourist.value -> {
-                    title.text = if (AccountManager.accountType == EAccountType.tourist) "Tourist proposed new time" else "Waiting for tourist"
+                    title.text = if (AccountManager.accountType == EAccountType.tourist) "Guide proposed new time" else "Waiting for tourist"
                 }
                 else -> {
                     title.text = "Code: ${item.state}"

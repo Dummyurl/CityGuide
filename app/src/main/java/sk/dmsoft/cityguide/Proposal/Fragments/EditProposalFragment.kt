@@ -9,11 +9,15 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment
 import kotlinx.android.synthetic.main.fragment_edit_proposal.*
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormatter
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
 import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
 
 import sk.dmsoft.cityguide.R
+import java.util.*
 
 /**
  * A simple [Fragment] subclass.
@@ -26,6 +30,8 @@ class EditProposalFragment : Fragment() {
     private var mListener: OnProposalUpdate? = null
     private var proposal: Proposal = Proposal()
     private lateinit var bottomSheet: BottomSheetBehavior<ConstraintLayout>
+    lateinit var startDateTimeFragment: SwitchDateTimeDialogFragment
+    lateinit var endDateTimeFragment: SwitchDateTimeDialogFragment
 
     val isSheetVisible: Boolean
         get() {
@@ -40,6 +46,9 @@ class EditProposalFragment : Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initDatePickers()
+
         bottomSheet = BottomSheetBehavior.from(edit_proposal_sheet)
         edit_proposal.setOnClickListener {
             hide()
@@ -53,13 +62,16 @@ class EditProposalFragment : Fragment() {
 
     fun getNewProposalData(): ProposalRequest{
         val request = ProposalRequest()
-        //TODO("Update proposal from inputs")
+
+        request.start = start_date.text.toString()
+        request.end = end_date.text.toString()
         return request
     }
 
     fun setProposal(proposal: Proposal){
         this.proposal = proposal
-        //TODO("Update UI")
+        start_date.setText(proposal.start)
+        end_date.setText(proposal.end)
     }
 
     fun hide(){
@@ -79,6 +91,53 @@ class EditProposalFragment : Fragment() {
         }
     }
 
+    fun initDatePickers(){
+        startDateTimeFragment = SwitchDateTimeDialogFragment.newInstance(
+                "Select date",
+                "OK",
+                "Cancel"
+        )
+        startDateTimeFragment.startAtCalendarView()
+        startDateTimeFragment.set24HoursMode(true)
+
+        startDateTimeFragment.setOnButtonClickListener(object: SwitchDateTimeDialogFragment.OnButtonClickListener{
+            override fun onPositiveButtonClick(date: Date) {
+                start_date.setText(DateTime(date).toString())
+            }
+
+            override fun onNegativeButtonClick(p0: Date?) {
+            }
+
+        })
+
+        start_date.setOnFocusChangeListener { view, b ->
+            if (b)
+                startDateTimeFragment.show(activity.supportFragmentManager, "dialog_start")
+        }
+
+        endDateTimeFragment = SwitchDateTimeDialogFragment.newInstance(
+                "Select date",
+                "OK",
+                "Cancel"
+        )
+        endDateTimeFragment.startAtCalendarView()
+        endDateTimeFragment.set24HoursMode(true)
+
+        endDateTimeFragment.setOnButtonClickListener(object: SwitchDateTimeDialogFragment.OnButtonClickListener{
+            override fun onPositiveButtonClick(date: Date) {
+                end_date.setText(DateTime(date).toString())
+            }
+
+            override fun onNegativeButtonClick(p0: Date?) {
+            }
+
+        })
+
+        end_date.setOnFocusChangeListener { view, b ->
+            if (b)
+                endDateTimeFragment.show(activity.supportFragmentManager, "dialog_end")
+        }
+    }
 
     override fun onDetach() {
         super.onDetach()

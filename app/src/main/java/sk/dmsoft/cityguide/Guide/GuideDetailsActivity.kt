@@ -15,11 +15,16 @@ import retrofit2.Response
 import sk.dmsoft.cityguide.Api.Api
 import sk.dmsoft.cityguide.Models.Guides.GuideDetails
 import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
+import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment
+import java.util.*
+
 
 class GuideDetailsActivity : AppCompatActivity() {
 
     lateinit var api: Api
     lateinit var guideId: String
+    lateinit var startDateTimeFragment: SwitchDateTimeDialogFragment
+    lateinit var endDateTimeFragment: SwitchDateTimeDialogFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,8 +32,10 @@ class GuideDetailsActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         api = Api(this)
+        initDatePickers()
 
         guideId = intent.extras.getString("GUIDE_ID", "")
+
 
         api.guideDetails(guideId).enqueue(object: Callback<GuideDetails>{
             override fun onFailure(call: Call<GuideDetails>?, t: Throwable?) {
@@ -46,8 +53,8 @@ class GuideDetailsActivity : AppCompatActivity() {
 
         send_proposal.setOnClickListener {
             val model = ProposalRequest()
-            model.start = DateTime(2018, 3, 15, 12, 0).toString()
-            model.end = DateTime(2018, 3, 15, 13, 0).toString()
+            model.start = start_date.text.toString()
+            model.end = end_date.text.toString()
             model.guideId = guideId
 
             api.createProposal(model).enqueue(object: Callback<ResponseBody>{
@@ -62,6 +69,54 @@ class GuideDetailsActivity : AppCompatActivity() {
                 }
 
             })
+        }
+    }
+
+    fun initDatePickers(){
+        startDateTimeFragment = SwitchDateTimeDialogFragment.newInstance(
+                "Select date",
+                "OK",
+                "Cancel"
+        )
+        startDateTimeFragment.startAtCalendarView()
+        startDateTimeFragment.set24HoursMode(true)
+
+        startDateTimeFragment.setOnButtonClickListener(object: SwitchDateTimeDialogFragment.OnButtonClickListener{
+            override fun onPositiveButtonClick(date: Date) {
+                start_date.setText(DateTime(date).toString())
+            }
+
+            override fun onNegativeButtonClick(p0: Date?) {
+            }
+
+        })
+
+        start_date.setOnFocusChangeListener { view, b ->
+            if (b)
+                startDateTimeFragment.show(supportFragmentManager, "dialog_start")
+        }
+
+        endDateTimeFragment = SwitchDateTimeDialogFragment.newInstance(
+                "Select date",
+                "OK",
+                "Cancel"
+        )
+        endDateTimeFragment.startAtCalendarView()
+        endDateTimeFragment.set24HoursMode(true)
+
+        endDateTimeFragment.setOnButtonClickListener(object: SwitchDateTimeDialogFragment.OnButtonClickListener{
+            override fun onPositiveButtonClick(date: Date) {
+                end_date.setText(DateTime(date).toString())
+            }
+
+            override fun onNegativeButtonClick(p0: Date?) {
+            }
+
+        })
+
+        end_date.setOnFocusChangeListener { view, b ->
+            if (b)
+                endDateTimeFragment.show(supportFragmentManager, "dialog_end")
         }
     }
 
