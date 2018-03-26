@@ -16,7 +16,6 @@ import sk.dmsoft.cityguide.Commons.AccountManager
 import sk.dmsoft.cityguide.Commons.addFragment
 import sk.dmsoft.cityguide.Commons.replaceFragment
 import sk.dmsoft.cityguide.Models.Chat.Message
-import sk.dmsoft.cityguide.Models.Chat.ReceivedMessage
 import java.lang.Exception
 import java.net.URI
 
@@ -26,6 +25,8 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
     }
 
     val WS_TAG = "WS"
+    var userId = ""
+    var proposalId = 0
 
     lateinit var wsClient: WebSocketClient
     val chatFragment: ChatFragment = ChatFragment()
@@ -38,6 +39,11 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
         connectWebsocket()
 
         addFragment(chatFragment, R.id.chat_fragment_wrapper)
+
+        userId = intent.getStringExtra("USER_ID")
+        proposalId = intent.getIntExtra("PROPOSAL_ID", 0)
+
+        chatFragment.init(proposalId, userId)
 
         bottom_menu.setOnNavigationItemSelectedListener {
             when(it.itemId){
@@ -71,10 +77,10 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
                 Log.e(WS_TAG, reason)
             }
 
-            override fun onMessage(message: String?) {
+            override fun onMessage(messageJson: String?) {
                 runOnUiThread({
-                    Log.e("chat", message)
-                    val message: ReceivedMessage = Gson().fromJson(message, ReceivedMessage::class.java)
+                    Log.e("chat", messageJson)
+                    val message: Message = Gson().fromJson(messageJson, Message::class.java)
                     chatFragment.addMessage(message)
                 })
             }

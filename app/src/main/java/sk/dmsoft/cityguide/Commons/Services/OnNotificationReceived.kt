@@ -25,6 +25,7 @@ class OnNotificationReceived: FirebaseMessagingService(){
         // Check if message contains a data payload.
         if (remoteMessage.data.isNotEmpty()) {
             Log.d(TAG, "Message data payload: " + remoteMessage.data)
+            showNotification(remoteMessage)
         }
 
         // Check if message contains a notification payload.

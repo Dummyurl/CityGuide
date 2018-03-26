@@ -11,7 +11,7 @@ import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_chat.*
 import sk.dmsoft.cityguide.Commons.Adapters.ChatAdapter
 import sk.dmsoft.cityguide.Models.Chat.Message
-import sk.dmsoft.cityguide.Models.Chat.ReceivedMessage
+import sk.dmsoft.cityguide.Models.Chat.MessageType
 
 import sk.dmsoft.cityguide.R
 
@@ -25,6 +25,7 @@ class ChatFragment : Fragment() {
 
     private var mListener: OnChatInteractionListener? = null
     private var proposalId = 0
+    private var userId = ""
     lateinit var chatAdapter: ChatAdapter
 
 
@@ -47,14 +48,22 @@ class ChatFragment : Fragment() {
 
         send_message.setOnClickListener {
             val message = Message()
-            message.text = message_text.text.toString()
-            message.conversationId = "1"
+            message.Text = message_text.text.toString()
+            message.ConversationId = proposalId
+            message.To = userId
+            message.MessageType = MessageType.Message.value
             val messageJson = Gson().toJson(message)
             mListener?.onMessageSend(messageJson)
+            message_text.setText("")
         }
     }
 
-    fun addMessage(message: ReceivedMessage){
+    fun init(pId: Int, uId: String){
+        proposalId = pId
+        userId = uId
+    }
+
+    fun addMessage(message: Message){
         chatAdapter.addMessage(message)
     }
 

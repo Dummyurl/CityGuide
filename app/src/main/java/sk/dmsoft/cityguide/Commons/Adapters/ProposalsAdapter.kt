@@ -39,6 +39,8 @@ class ProposalsAdapter(val activity: Activity, val proposals: ArrayList<Proposal
             }
             open_chat.setOnClickListener {
                 val intent = Intent(activity, ChatActivity::class.java)
+                intent.putExtra("PROPOSAL_ID", item.id)
+                intent.putExtra("USER_ID", item.user.id)
                 activity.startActivity(intent)
             }
 

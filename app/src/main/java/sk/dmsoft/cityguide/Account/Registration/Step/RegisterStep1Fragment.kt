@@ -75,11 +75,12 @@ class RegisterStep1Fragment : Fragment(), DatePickerDialog.OnDateSetListener {
         }
 
         next.setOnClickListener { completeStep1() }
-        birth_date.setOnClickListener { datePickerDialog.show() }
+        birth_date.onFocusChangeListener = View.OnFocusChangeListener { _, p1 -> if(p1) datePickerDialog.show() }
     }
 
     override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
         model.birthDate = DateTime(p1, p2, p3, 0, 0).toString()
+        birth_date.setText(DateTime(p1, p2, p3, 0, 0).toLocalDate().toString())
     }
 
     // TODO: Rename method, update argument and hook method into UI event

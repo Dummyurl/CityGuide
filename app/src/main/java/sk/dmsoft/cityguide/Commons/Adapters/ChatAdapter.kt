@@ -9,14 +9,14 @@ import kotlinx.android.synthetic.main.sended_message_item.view.*
 import sk.dmsoft.cityguide.Commons.AccountManager
 import sk.dmsoft.cityguide.Commons.inflate
 import sk.dmsoft.cityguide.Commons.loadCircle
-import sk.dmsoft.cityguide.Models.Chat.ReceivedMessage
+import sk.dmsoft.cityguide.Models.Chat.Message
 import sk.dmsoft.cityguide.R
 import java.net.URLDecoder
 
 /**
  * Created by Daniel on 20. 3. 2018.
  */
-class ChatAdapter (val activity: Activity, val messages: ArrayList<ReceivedMessage>) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+class ChatAdapter (val activity: Activity, val messages: ArrayList<Message>) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
     private val ITEM_TYPE_RECEIVED = 1
     private val ITEM_TYPE_SENDED = 2
@@ -38,12 +38,12 @@ class ChatAdapter (val activity: Activity, val messages: ArrayList<ReceivedMessa
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (messages[position].message.from == AccountManager.userId)
+        if (messages[position].From == AccountManager.userId)
             return ITEM_TYPE_SENDED
         return ITEM_TYPE_RECEIVED
     }
 
-    fun addMessage(message: ReceivedMessage){
+    fun addMessage(message: Message){
         messages.add(0, message)
         notifyDataSetChanged()
         notifyItemInserted(messages.size -1)
@@ -51,16 +51,16 @@ class ChatAdapter (val activity: Activity, val messages: ArrayList<ReceivedMessa
 
     class ReceivedViewHolder(val activity: Activity, itemView: View) : RecyclerView.ViewHolder(itemView){
 
-        fun bind(item: ReceivedMessage) = with(itemView) {
-            user_photo.loadCircle("http://cityguide.dmsoft.sk/users/photo/${item.message.from}")
-            received_message_text.text = item.message.text
+        fun bind(item: Message) = with(itemView) {
+            user_photo.loadCircle("http://cityguide.dmsoft.sk/users/photo/${item.From}")
+            received_message_text.text = URLDecoder.decode(item.Text, "UTF-8")
         }
     }
 
     class SendedViewHolder(val activity: Activity, itemView: View) : RecyclerView.ViewHolder(itemView){
 
-        fun bind(item: ReceivedMessage) = with(itemView) {
-            message_text.text = URLDecoder.decode(item.message.text, "UTF-8")
+        fun bind(item: Message) = with(itemView) {
+            message_text.text = URLDecoder.decode(item.Text, "UTF-8")
         }
     }
 
