@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">CityGuide</string>
     <string name="title_activity_registration">RegistrationActivity</string>
+    <string name="google_maps_key">AIzaSyCumbJjzosVkOQ88Yg_XkW0IzcLN-4s42A</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

@@ -107,6 +107,7 @@ class RegistrationActivity : AppCompatActivity(),
     }
 
     override fun onStep2Completed(model: Registration2) {
+        if (profilePhotoUri.toString().length > 5)
         api.registration2(model, profilePhotoUri).enqueue(object: Callback<ResponseBody>{
             override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -127,6 +128,17 @@ class RegistrationActivity : AppCompatActivity(),
             }
 
         })
+        else {
+            AccountManager.registrationStep = 3
+
+            if (AccountManager.accountType == EAccountType.guide)
+                pager.setCurrentItem(3, true)
+
+            else {
+                startActivity(Intent(this@RegistrationActivity, MainActivity::class.java))
+                finish()
+            }
+        }
     }
 
     override fun onRegistrationGuideInfoCompleted(model: RegistrationGuideInfo) {
