@@ -13,10 +13,7 @@ import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.Circle
-import com.google.android.gms.maps.model.CircleOptions
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.gson.Gson
 import sk.dmsoft.cityguide.R
 
@@ -35,6 +32,7 @@ import sk.dmsoft.cityguide.Models.Chat.Message
 import sk.dmsoft.cityguide.Models.Chat.MessageType
 import java.lang.Exception
 import java.net.URI
+import java.net.URLDecoder
 
 class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener, MapFragment.OnFragmentInteractionListener, LocationUpdateCallback {
     override fun onMessageSend(message: String) {
@@ -53,7 +51,8 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
 
     val mapFragment = com.google.android.gms.maps.SupportMapFragment()
     var googleMap: GoogleMap? = null
-    var myCircle: Circle? = null
+    var myCircle: Marker? = null
+    var otherUserCircle: Marker? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,11 +62,14 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
 
         mapFragment.getMapAsync {
             googleMap = it
-            myCircle = googleMap?.addCircle(CircleOptions()
-                    .center(LatLng(0.0, 0.0))
-                    .fillColor(resources.getColor(R.color.colorPrimary))
-                    .strokeWidth(0f)
-                    .radius(10.0))
+            myCircle = googleMap?.addMarker(MarkerOptions()
+                    .position(LatLng(0.0, 0.0))
+                    .title("Me")
+            )
+            otherUserCircle = googleMap?.addMarker(MarkerOptions()
+                    .position(LatLng(0.0, 0.0))
+                    .title("My friend")
+            )
         }
 
         addFragment(chatFragment, R.id.chat_fragment_wrapper)
@@ -103,7 +105,7 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
 
     override fun onStop() {
         super.onStop()
-        //wsClient.close()
+        wsClient.close()
     }
 
     fun connectWebsocket(){
@@ -120,7 +122,15 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
                 runOnUiThread({
                     Log.e("chat", messageJson)
                     val message: Message = Gson().fromJson(messageJson, Message::class.java)
-                    chatFragment.addMessage(message)
+                    when (message.MessageType) {
+                        MessageType.Message.value -> chatFragment.addMessage(message)
+                        MessageType.Map.value -> {
+                            if (message.From != AccountManager.userId) {
+                                val location = Gson().fromJson(URLDecoder.decode(message.Text), LatLng::class.java)
+                                otherUserCircle?.position = location
+                            }
+                        }
+                    }
                 })
             }
 
@@ -155,12 +165,12 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
         val locationUpdateModel = Message()
         locationUpdateModel.ConversationId = proposalId
         locationUpdateModel.To = userId
-        locationUpdateModel.Text = Gson().toJson(position)
+        locationUpdateModel.Text = Gson().toJson(myLocation)
         locationUpdateModel.MessageType = MessageType.Map.value
         if (wsClient.connection.isOpen)
             wsClient.send(Gson().toJson(locationUpdateModel))
 
-        myCircle?.center = myLocation
+        myCircle?.position = myLocation
         googleMap?.moveCamera(CameraUpdateFactory.newLatLng(myLocation))
         googleMap?.moveCamera(CameraUpdateFactory.zoomTo(15f))
 
