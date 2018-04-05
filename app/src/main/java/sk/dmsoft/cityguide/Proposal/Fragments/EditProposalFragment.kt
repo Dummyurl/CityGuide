@@ -38,13 +38,13 @@ class EditProposalFragment : Fragment() {
             return bottomSheet.state == BottomSheetBehavior.STATE_EXPANDED
         }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater!!.inflate(R.layout.fragment_edit_proposal, container, false)
+        return inflater.inflate(R.layout.fragment_edit_proposal, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         initDatePickers()
@@ -112,7 +112,7 @@ class EditProposalFragment : Fragment() {
 
         start_date.setOnFocusChangeListener { view, b ->
             if (b)
-                startDateTimeFragment.show(activity.supportFragmentManager, "dialog_start")
+                startDateTimeFragment.show(activity!!.supportFragmentManager, "dialog_start")
         }
 
         endDateTimeFragment = SwitchDateTimeDialogFragment.newInstance(
@@ -135,7 +135,7 @@ class EditProposalFragment : Fragment() {
 
         end_date.setOnFocusChangeListener { view, b ->
             if (b)
-                endDateTimeFragment.show(activity.supportFragmentManager, "dialog_end")
+                endDateTimeFragment.show(activity!!.supportFragmentManager, "dialog_end")
         }
     }
 

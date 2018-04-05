@@ -36,16 +36,15 @@ class RegisterStep1Fragment : Fragment(), DatePickerDialog.OnDateSetListener {
     val model = Registration1()
     lateinit var datePickerDialog: DatePickerDialog
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        db = DB(context)
+        db = DB(context!!)
 
-        return inflater!!.inflate(R.layout.fragment_register_step1, container, false)
+        return inflater.inflate(R.layout.fragment_register_step1, container, false)
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         datePickerDialog = DatePickerDialog(context, this, 2018, 1, 1)
 

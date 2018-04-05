@@ -22,6 +22,7 @@ import android.provider.DocumentsContract
 import sk.dmsoft.cityguide.Models.Account.*
 import sk.dmsoft.cityguide.Models.Guides.GuideDetails
 import sk.dmsoft.cityguide.Models.Guides.GuideListItem
+import sk.dmsoft.cityguide.Models.Proposal.MeetingPoint
 import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
 import sk.dmsoft.cityguide.Models.Search.SearchInCity
 import sk.dmsoft.cityguide.Models.Search.SearchRequest
@@ -129,6 +130,10 @@ class Api constructor(private val activity : Context? = null) {
         return api.getUnconfirmedProposals()
     }
 
+    fun getProposal(id: Int): Call<Proposal>{
+        return api.getProposal(id)
+    }
+
     fun editProposal(id: Int, model: ProposalRequest): Call<ResponseBody>{
         return api.editProposal(id, model)
     }
@@ -155,6 +160,18 @@ class Api constructor(private val activity : Context? = null) {
 
     fun createProposal(model: ProposalRequest): Call<ResponseBody> {
         return api.createProposal(model)
+    }
+
+    fun deleteProposal(id: Int): Call<ResponseBody>{
+        return api.deleteProposal(id)
+    }
+
+    fun setMeetingPoint(id: Int, meetingPoint: MeetingPoint): Call<ResponseBody>{
+        return api.setMeetingPoint(id, meetingPoint)
+    }
+
+    fun getMeetingPoint(id: Int): Call<MeetingPoint>{
+        return api.getMeetigPoint(id)
     }
 
     //fun uploadImages(image: NoteImage) : Call<ResponseBody> {

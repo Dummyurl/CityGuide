@@ -32,13 +32,13 @@ class SearchRequestFragment : Fragment() {
     lateinit var placesAdapter: PlacesAdapter
 
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater!!.inflate(R.layout.fragment_search_request, container, false)
+        return inflater.inflate(R.layout.fragment_search_request, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         var timer: Timer? = Timer()
@@ -47,7 +47,7 @@ class SearchRequestFragment : Fragment() {
         places_list.layoutManager = GridLayoutManager(activity, 2)
         places_list.addItemDecoration(GridSpacingItemDecoration(2, 30, true))
 
-        placesAdapter = PlacesAdapter(activity, DB(activity).GetPlaces(), { place: Place, position: Int ->
+        placesAdapter = PlacesAdapter(activity!!, DB(activity!!).GetPlaces(), { place: Place, position: Int ->
             mListener?.onCitySelected(place)
         })
 

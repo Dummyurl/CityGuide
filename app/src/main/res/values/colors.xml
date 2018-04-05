@@ -8,4 +8,5 @@
     <color name="red">#ff1010</color>
     <color name="transpatent">#0000</color>
     <color name="semiTransparent">#a000</color>
+    <color name="chat_background">#f2f2f2</color>
 </resources>

@@ -34,7 +34,7 @@ class RegisterStep2Fragment : Fragment() {
         return inflater.inflate(R.layout.fragment_register_step2, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         select_photo.setOnClickListener { listener?.onPhotoSelect() }
         next.setOnClickListener { CompleteStep2() }

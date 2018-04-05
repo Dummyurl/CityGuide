@@ -29,15 +29,15 @@ class ChatFragment : Fragment() {
     lateinit var chatAdapter: ChatAdapter
 
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater!!.inflate(R.layout.fragment_chat, container, false)
+        return inflater.inflate(R.layout.fragment_chat, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        chatAdapter = ChatAdapter(activity, ArrayList())
+        chatAdapter = ChatAdapter(activity!!, ArrayList())
         messages_list.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(activity)
         layoutManager.reverseLayout = true
@@ -72,7 +72,6 @@ class ChatFragment : Fragment() {
         if (context is OnChatInteractionListener) {
             mListener = context
         } else {
-            throw RuntimeException(context!!.toString() + " must implement OnChatInteractionListener")
         }
     }
 

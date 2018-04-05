@@ -9,6 +9,10 @@ import android.os.Bundle
 import android.os.IBinder
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.Toolbar
 import com.google.android.gms.maps.CameraUpdate
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -18,94 +22,132 @@ import com.google.gson.Gson
 import sk.dmsoft.cityguide.R
 
 import kotlinx.android.synthetic.main.activity_chat.*
+import okhttp3.ResponseBody
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.drafts.Draft_17
 import org.java_websocket.handshake.ServerHandshake
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import sk.dmsoft.cityguide.Api.Api
 import sk.dmsoft.cityguide.Chat.Fragments.ChatFragment
 import sk.dmsoft.cityguide.Chat.Fragments.MapFragment
-import sk.dmsoft.cityguide.Commons.AccountManager
+import sk.dmsoft.cityguide.Commons.*
 import sk.dmsoft.cityguide.Commons.Services.LocationService
 import sk.dmsoft.cityguide.Commons.Services.LocationUpdateCallback
-import sk.dmsoft.cityguide.Commons.addFragment
-import sk.dmsoft.cityguide.Commons.replaceFragment
 import sk.dmsoft.cityguide.Models.Chat.Message
 import sk.dmsoft.cityguide.Models.Chat.MessageType
+import sk.dmsoft.cityguide.Models.Proposal.MeetingPoint
+import sk.dmsoft.cityguide.Models.Proposal.Proposal
 import java.lang.Exception
 import java.net.URI
 import java.net.URLDecoder
 
-class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener, MapFragment.OnFragmentInteractionListener, LocationUpdateCallback {
-    override fun onMessageSend(message: String) {
-        wsClient.send(message)
+class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener, MapFragment.OnFragmentInteractionListener {
+
+
+    override fun setMeetingPoint(position: LatLng) {
+        val model = MeetingPoint()
+        model.latitude = position.latitude
+        model.longitude = position.longitude
+        api.setMeetingPoint(proposalId, model).enqueue(object: Callback<ResponseBody>{
+            override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
+
+            }
+
+            override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
+                Log.e("Meeting point", response?.code().toString())
+                hideMap()
+            }
+        })
     }
 
-    lateinit var locationService: LocationService
-    var serviceBounded = false
+
+    override fun updateMyLocation(model: String) {
+        if (wsClient.connection.isOpen)
+            wsClient.send(model)
+    }
+
+    override fun onMessageSend(message: String) {
+        if (wsClient.connection.isOpen)
+            wsClient.send(message)
+    }
+
+    lateinit var api: Api
 
     val WS_TAG = "WS"
     var userId = ""
     var proposalId = 0
+    var proposal: Proposal? = null
+
+    var isMapVisible = false
 
     lateinit var wsClient: WebSocketClient
     val chatFragment: ChatFragment = ChatFragment()
 
-    val mapFragment = com.google.android.gms.maps.SupportMapFragment()
-    var googleMap: GoogleMap? = null
-    var myCircle: Marker? = null
-    var otherUserCircle: Marker? = null
+    val mapFragment = MapFragment()
+
+    var shareLocation = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
         setSupportActionBar(toolbar)
-        connectWebsocket()
-
-        mapFragment.getMapAsync {
-            googleMap = it
-            myCircle = googleMap?.addMarker(MarkerOptions()
-                    .position(LatLng(0.0, 0.0))
-                    .title("Me")
-            )
-            otherUserCircle = googleMap?.addMarker(MarkerOptions()
-                    .position(LatLng(0.0, 0.0))
-                    .title("My friend")
-            )
-        }
-
-        addFragment(chatFragment, R.id.chat_fragment_wrapper)
 
         userId = intent.getStringExtra("USER_ID")
         proposalId = intent.getIntExtra("PROPOSAL_ID", 0)
 
-        chatFragment.init(proposalId, userId)
+        connectWebsocket()
+        api = Api(this)
 
-        bottom_menu.setOnNavigationItemSelectedListener {
-            when(it.itemId){
-                R.id.chat -> replaceFragment(chatFragment, R.id.chat_fragment_wrapper)
-                R.id.map -> replaceFragment(mapFragment, R.id.chat_fragment_wrapper)
-            }
-            it.isChecked = true
-            false
-        }
+        chatFragment.init(proposalId, userId)
+        mapFragment.init(proposalId, userId)
+
+        hideMap()
+
+        addFragment(chatFragment, R.id.chat_fragment_wrapper)
+        addFragment(mapFragment, R.id.map_fragment_wrapper)
+
+
+        getProposal()
+
+        user_photo.loadCircle("http://cityguide.dmsoft.sk/users/photo/$userId")
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-
-        // To-do("Logic when start location service")
-        val serviceIntent = Intent(this, LocationService::class.java)
-        bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
-
+        switchStartSet()
     }
 
     override fun onRestart() {
         super.onRestart()
         if (!wsClient.connection.isOpen)
-            wsClient.connect()
+            connectWebsocket()
     }
 
     override fun onStop() {
         super.onStop()
         wsClient.close()
+    }
+
+    fun getProposal(){
+        api.getProposal(proposalId).enqueue(object: Callback<Proposal>{
+            override fun onFailure(call: Call<Proposal>?, t: Throwable?) {
+
+            }
+
+            override fun onResponse(call: Call<Proposal>?, response: Response<Proposal>?) {
+                if (response?.code() == 200){
+                    proposal = response.body()
+                    if (proposal?.meetingPoint != null) {
+                        val meetingPointPosition = LatLng(proposal?.meetingPoint?.latitude!!, proposal?.meetingPoint?.longitude!!)
+                        mapFragment.updateMeetingPointPosition(meetingPointPosition)
+                        set_meeting_point.setOnClickListener {
+                            showMap()
+                        }
+                        switchStartSet()
+                    }
+                }
+            }
+        })
     }
 
     fun connectWebsocket(){
@@ -126,8 +168,8 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
                         MessageType.Message.value -> chatFragment.addMessage(message)
                         MessageType.Map.value -> {
                             if (message.From != AccountManager.userId) {
-                                val location = Gson().fromJson(URLDecoder.decode(message.Text), LatLng::class.java)
-                                otherUserCircle?.position = location
+                                val position = Gson().fromJson(URLDecoder.decode(message.Text), LatLng::class.java)
+                                mapFragment.updateUserPosition(position)
                             }
                         }
                     }
@@ -142,39 +184,69 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
         wsClient.connect()
     }
 
-
-
-
-    val serviceConnection = object: ServiceConnection {
-
-        override fun onServiceConnected(className: ComponentName, service: IBinder) {
-            // cast the IBinder and get MyService instance
-            val binder = service as LocationService.LocalBinder
-            locationService = binder.service
-            serviceBounded = true
-            locationService.setCallbacks(this@ChatActivity)
-        }
-
-        override fun onServiceDisconnected(arg0: ComponentName ) {
-            serviceBounded = false
-        }
+    fun showMap(){
+        isMapVisible = true
+        map_fragment_wrapper.visibility = View.VISIBLE
     }
 
-    override fun updateLocation(position: Location) {
-        val myLocation = LatLng(position.latitude, position.longitude)
-        val locationUpdateModel = Message()
-        locationUpdateModel.ConversationId = proposalId
-        locationUpdateModel.To = userId
-        locationUpdateModel.Text = Gson().toJson(myLocation)
-        locationUpdateModel.MessageType = MessageType.Map.value
-        if (wsClient.connection.isOpen)
-            wsClient.send(Gson().toJson(locationUpdateModel))
+    override fun hideMap(){
+        isMapVisible = false
+        map_fragment_wrapper.visibility = View.GONE
+    }
 
-        myCircle?.position = myLocation
-        googleMap?.moveCamera(CameraUpdateFactory.newLatLng(myLocation))
-        googleMap?.moveCamera(CameraUpdateFactory.zoomTo(15f))
+    fun cancelProposal(){
+        api.deleteProposal(proposalId).enqueue(object: Callback<ResponseBody>{
+            override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
 
-        Log.e("Chat activity", Gson().toJson(locationUpdateModel))
+            override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
+                if(response.code() == 200)
+                    finish()
+            }
+        })
+    }
+
+    fun changeMeetingPoint(){
+        showMap()
+        mapFragment.updateMode(MapMode.SetMeetingPoint)
+    }
+
+    fun shareLocation(share: Boolean){
+        shareLocation = share
+        if (share)
+            mapFragment.enableLocationSharing()
+        else
+            mapFragment.disableLocationSharing()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.chat_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(p0: MenuItem): Boolean {
+        when (p0.itemId){
+            R.id.cancel_proposal -> { cancelProposal() }
+            R.id.change_meeting_point -> { changeMeetingPoint() }
+            R.id.share_location -> {
+                p0.isChecked = !p0.isChecked
+                shareLocation(p0.isChecked)
+            }
+        }
+        return true
+    }
+
+    fun switchStartSet(){
+        if (proposal?.meetingPoint != null){
+            start_proposal.visibility = View.VISIBLE
+            set_meeting_point.visibility = View.GONE
+        }
+        else{
+            start_proposal.visibility = View.GONE
+            set_meeting_point.visibility = View.VISIBLE
+        }
     }
 
 }

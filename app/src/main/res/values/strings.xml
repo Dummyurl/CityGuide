@@ -34,5 +34,8 @@
     <string name="change_proposal">Edit</string>
     <string name="confirm_proposal">Confirm</string>
     <string name="title_activity_chat">ChatActivity</string>
+    <string name="cancel">Cancel</string>
+    <string name="set_meeting_point">Set meeting point</string>
+    <string name="start">Start</string>
 
 </resources>
