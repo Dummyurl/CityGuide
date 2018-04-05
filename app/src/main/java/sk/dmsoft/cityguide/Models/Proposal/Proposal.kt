@@ -22,6 +22,8 @@ class Proposal {
     var touristEnd = false
     var guideEnd = false
 
+    var meetingPoint: MeetingPoint? = null
+
     var canChange = false
 
     var state : Int = 0

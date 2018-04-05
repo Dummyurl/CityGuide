@@ -19,8 +19,6 @@
 
 
     <android.support.constraint.ConstraintLayout
-        android:elevation="8dp"
-        android:background="@color/white"
         android:id="@+id/chat_controls"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -35,18 +33,21 @@
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
+            android:padding="8dp"
             android:hint="Message"
+            android:background="@drawable/rounded_rectangle_gray"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/send_message"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/send_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
-            android:text="Send"
+            android:src="@drawable/ic_send"
+            app:fabSize="mini"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

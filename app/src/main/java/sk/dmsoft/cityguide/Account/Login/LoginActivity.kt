@@ -44,7 +44,7 @@ class LoginActivity : AppCompatActivity() {
                     }
                     AccountManager.LogIn(response.body()!!)
 
-                    if (!AccountManager.isRegistrationCompleted)
+                    if (AccountManager.isRegistrationCompleted)
                         startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                     else
                         startActivity(Intent(this@LoginActivity, RegistrationActivity::class.java))

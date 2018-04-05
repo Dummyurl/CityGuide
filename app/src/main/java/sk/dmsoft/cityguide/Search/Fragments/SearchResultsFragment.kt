@@ -30,17 +30,17 @@ class SearchResultsFragment : Fragment() {
 
 
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
 
-        return inflater!!.inflate(R.layout.fragment_search_results, container, false)
+        return inflater.inflate(R.layout.fragment_search_results, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        guidesAdapter = GuidesAdapter(activity, guides, { guide, position ->
+        guidesAdapter = GuidesAdapter(activity!!, guides, { guide, position ->
             val intent = Intent(activity, GuideDetailsActivity::class.java)
             intent.putExtra("GUIDE_ID", guide.id)
             startActivity(intent)

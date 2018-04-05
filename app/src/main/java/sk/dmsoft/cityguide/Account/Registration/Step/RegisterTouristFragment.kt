@@ -24,13 +24,13 @@ class RegisterTouristFragment : Fragment() {
     private var mListener: OnRegistration? = null
 
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater!!.inflate(R.layout.fragment_register_tourist, container, false)
+        return inflater.inflate(R.layout.fragment_register_tourist, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         login.setOnClickListener { startActivity(Intent(context, LoginActivity::class.java)) }
         guide_registration.setOnClickListener { mListener?.onSwitchToGuide() }

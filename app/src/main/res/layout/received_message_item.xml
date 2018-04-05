@@ -25,6 +25,7 @@
         android:background="@drawable/rounded_rectangle_green"
         android:maxWidth="200dp"
         android:padding="10dp"
+        android:textColor="@color/white"
         android:text="Bacon ipsum dolor amet tenderloin shankle kevin shoulder pancetta, chuck pork belly alcatra cupim filet mignon biltong short loin pork pork loin."
         app:layout_constraintStart_toEndOf="@id/user_photo"
         app:layout_constraintTop_toTopOf="parent"
