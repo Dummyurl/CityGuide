@@ -5,7 +5,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -61,14 +62,19 @@
                 android:value="sk.dmsoft.cityguide.MainActivity" />
         </activity>
 
+        <service android:name=".Commons.Services.LocationService" />
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
+        <activity
+            android:name=".Proposal.ActiveProposalActivity"
+            android:label="@string/title_activity_active_proposal"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
