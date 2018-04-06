@@ -37,5 +37,7 @@
     <string name="cancel">Cancel</string>
     <string name="set_meeting_point">Set meeting point</string>
     <string name="start">Start</string>
+    <string name="title_activity_active_proposal">ActiveProposalActivity</string>
+    <string name="end_proposal">End proposal</string>
 
 </resources>

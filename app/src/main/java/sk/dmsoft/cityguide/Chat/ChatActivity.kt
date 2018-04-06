@@ -115,6 +115,17 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         switchStartSet()
+        start_proposal.setOnClickListener{
+            api.startProposal(proposalId).enqueue(object: Callback<ResponseBody>{
+                override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
+
+                }
+            })
+        }
     }
 
     override fun onRestart() {

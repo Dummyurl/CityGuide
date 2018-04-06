@@ -49,7 +49,7 @@ class OnNotificationReceived: FirebaseMessagingService(){
                 .setContentText(remoteMessage.notification?.body)
                 .setAutoCancel(true)
                 .setChannelId("sk.dmsoft.cityguide")
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.design_ic_visibility)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent)
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

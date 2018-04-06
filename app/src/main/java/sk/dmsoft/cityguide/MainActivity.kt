@@ -12,11 +12,14 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import sk.dmsoft.cityguide.Api.Api
+import sk.dmsoft.cityguide.Api.DB
 import sk.dmsoft.cityguide.Commons.*
 import sk.dmsoft.cityguide.Commons.Adapters.ProposalsAdapter
 import sk.dmsoft.cityguide.Commons.Adapters.UnconfirmedProposalsAdapter
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
 import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
+import sk.dmsoft.cityguide.Models.Proposal.ProposalState
+import sk.dmsoft.cityguide.Proposal.ActiveProposalActivity
 import sk.dmsoft.cityguide.Proposal.Fragments.EditProposalFragment
 import sk.dmsoft.cityguide.Search.SearchActivity
 
@@ -112,6 +115,7 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
         proposals_recycler.setHasFixedSize(true)
         proposals_recycler.layoutManager = LinearLayoutManager(this)
         proposals_recycler.adapter = proposalsAdapter
+        checkActiveProposal(proposals)
     }
 
     private fun initUnconfirmedProposals(proposals: ArrayList<Proposal>){
@@ -152,5 +156,15 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
             }
 
         })
+    }
+
+    fun checkActiveProposal(proposals: ArrayList<Proposal>){
+        val active = proposals.find { it.state == ProposalState.InProgress.value  }
+        if (active != null){
+            val intent = Intent(this, ActiveProposalActivity::class.java)
+            intent.putExtra("PROPOSAL_ID", active.id)
+            startActivity(intent)
+        }
+
     }
 }
