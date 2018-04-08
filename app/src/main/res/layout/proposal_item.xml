@@ -34,15 +34,40 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/start_date"
+                android:id="@+id/proposal_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="50dp"
-                android:layout_marginStart="50dp"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
                 android:textColor="@color/white"
+                app:layout_constraintBottom_toTopOf="@id/proposal_time"
+                app:layout_constraintStart_toStartOf="parent"
+                android:drawableStart="@drawable/ic_calendar"
+                android:drawablePadding="15dp"
+                android:layout_marginStart="15dp" />
+
+            <TextView
+                android:id="@+id/proposal_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                app:layout_constraintBottom_toTopOf="@id/place_name"
+                app:layout_constraintStart_toStartOf="@id/proposal_date"
+                android:textColor="@color/white"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="40dp"/>
+
+            <TextView
+                android:id="@+id/place_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                android:textColor="@color/white"
+                android:drawableStart="@drawable/ic_place"
+                android:drawablePadding="15dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginStart="15dp"/>
 
         </android.support.constraint.ConstraintLayout>
 
@@ -69,6 +94,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
+                <TextView
+                    android:text="sport - night life"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
             </LinearLayout>
 
         </LinearLayout>
@@ -79,7 +109,9 @@
             android:layout_height="wrap_content"
             android:text="Open chat"
             style="@style/Widget.AppCompat.Button.Borderless"
-            android:textColor="@color/colorPrimary"/>
+            android:textColor="@color/colorPrimary"
+            android:layout_marginStart="45dp"
+            android:layout_gravity="bottom"/>
 
     </LinearLayout>
 

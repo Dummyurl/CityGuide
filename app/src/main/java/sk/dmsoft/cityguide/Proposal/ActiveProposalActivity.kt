@@ -1,6 +1,7 @@
 package sk.dmsoft.cityguide.Proposal
 
 import android.os.Bundle
+import android.os.SystemClock
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import sk.dmsoft.cityguide.R
@@ -14,6 +15,7 @@ import retrofit2.Response
 import sk.dmsoft.cityguide.Api.Api
 import sk.dmsoft.cityguide.Commons.loadCircle
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
+import java.text.SimpleDateFormat
 import java.util.*
 
 class ActiveProposalActivity : AppCompatActivity() {
@@ -44,6 +46,7 @@ class ActiveProposalActivity : AppCompatActivity() {
                 }
             })
         }
+
     }
 
 
@@ -66,8 +69,14 @@ class ActiveProposalActivity : AppCompatActivity() {
         user_photo.loadCircle("http://cityguide.dmsoft.sk/users/photo/${proposal.user.id}")
         user_name.text = "${proposal.user.firstName} ${proposal.user.secondName}"
         per_hour_salary.text = "20€"
-//        val spendTime = Date().time - Date(proposal.realStart).time
-//        spend_time.text = "$spendTime"
+        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+        var a = Date()
+        val spendTime = Date().time - format.parse(proposal.realStart).time
+        spend_time.text = "${spendTime}"
+
+        chronometer2.format = "%s"
+        chronometer2.base = spendTime
+        chronometer2.start()
     }
 
 }
