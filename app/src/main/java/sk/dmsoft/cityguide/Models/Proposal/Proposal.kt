@@ -24,6 +24,8 @@ class Proposal {
 
     var meetingPoint: MeetingPoint? = null
 
+    var proposalPayment: ProposalPayment? = null
+
     var canChange = false
 
     var state : Int = 0

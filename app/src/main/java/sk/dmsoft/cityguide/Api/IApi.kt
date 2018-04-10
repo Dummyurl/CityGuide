@@ -68,7 +68,7 @@ interface IApi {
     fun startProposal(@Path("id") id: Int): Call<ResponseBody>
 
     @POST("proposals/end/{id}")
-    fun endProposal(@Path("id") id: Int): Call<ResponseBody>
+    fun endProposal(@Path("id") id: Int): Call<Proposal>
 
     @POST("proposals/meetingpoint/{id}")
     fun setMeetingPoint(@Path("id") id:Int, @Body meetingPoint: MeetingPoint): Call<ResponseBody>
@@ -88,4 +88,9 @@ interface IApi {
     @POST("account/register/fcm")
     fun registerFcm(@Body model: RegisterFcm): Call<ResponseBody>
 
+    @GET("checkout/token")
+    fun getCheckoutToken(): Call<CheckoutToken>
+
+    @POST("checkout/transaction")
+    fun createTransaction(@Body model: TransactionRequest): Call<ResponseBody>
 }

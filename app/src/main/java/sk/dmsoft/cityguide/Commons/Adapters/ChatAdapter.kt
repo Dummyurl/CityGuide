@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.received_message_item.view.*
 import kotlinx.android.synthetic.main.sended_message_item.view.*
 import sk.dmsoft.cityguide.Commons.AccountManager
+import sk.dmsoft.cityguide.Commons.AppSettings
 import sk.dmsoft.cityguide.Commons.inflate
 import sk.dmsoft.cityguide.Commons.loadCircle
 import sk.dmsoft.cityguide.Models.Chat.Message
@@ -52,7 +53,7 @@ class ChatAdapter (val activity: Activity, val messages: ArrayList<Message>) : R
     class ReceivedViewHolder(val activity: Activity, itemView: View) : RecyclerView.ViewHolder(itemView){
 
         fun bind(item: Message) = with(itemView) {
-            user_photo.loadCircle("http://cityguide.dmsoft.sk/users/photo/${item.From}")
+            user_photo.loadCircle("${AppSettings.apiUrl}users/photo/${item.From}")
             received_message_text.text = URLDecoder.decode(item.Text, "UTF-8")
         }
     }

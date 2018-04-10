@@ -5,10 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.unconfirmed_proposal_item.view.*
-import sk.dmsoft.cityguide.Commons.AccountManager
-import sk.dmsoft.cityguide.Commons.EAccountType
-import sk.dmsoft.cityguide.Commons.inflate
-import sk.dmsoft.cityguide.Commons.loadCircle
+import sk.dmsoft.cityguide.Commons.*
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
 import sk.dmsoft.cityguide.Models.Proposal.ProposalState
 import sk.dmsoft.cityguide.R
@@ -32,7 +29,7 @@ class UnconfirmedProposalsAdapter (val activity: Activity, val proposals: ArrayL
 
         fun bind(item: Proposal, listener: (Proposal, Int) -> Unit) = with(itemView) {
             if (item.user != null) {
-                user_photo.loadCircle("http://cityguide.dmsoft.sk/users/photo/${item.user.id}")
+                user_photo.loadCircle("${AppSettings.apiUrl}users/photo/${item.user.id}")
                 user_name.text = "${item.user.firstName} ${item.user.secondName}"
             }
             when (item.state){

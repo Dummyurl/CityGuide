@@ -1,9 +1,11 @@
 package sk.dmsoft.cityguide.Proposal
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import com.google.gson.Gson
 import sk.dmsoft.cityguide.R
 
 import kotlinx.android.synthetic.main.activity_active_proposal.*
@@ -13,6 +15,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import sk.dmsoft.cityguide.Api.Api
+import sk.dmsoft.cityguide.CheckoutActivity
+import sk.dmsoft.cityguide.Commons.AccountManager
+import sk.dmsoft.cityguide.Commons.AppSettings
+import sk.dmsoft.cityguide.Commons.EAccountType
 import sk.dmsoft.cityguide.Commons.loadCircle
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
 import java.text.SimpleDateFormat
@@ -36,13 +42,20 @@ class ActiveProposalActivity : AppCompatActivity() {
         loadProposal()
 
         end_proposal.setOnClickListener {
-            api.endProposal(proposalId).enqueue(object: Callback<ResponseBody>{
-                override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
+            api.endProposal(proposalId).enqueue(object: Callback<Proposal>{
+                override fun onFailure(call: Call<Proposal>?, t: Throwable?) {
                     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 }
 
-                override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
-                    //finish()
+                override fun onResponse(call: Call<Proposal>?, response: Response<Proposal>) {
+                    if (response.code() == 200){
+                        proposal = response.body()!!
+                        if (AccountManager.accountType == EAccountType.tourist) {
+                            val intent = Intent(this@ActiveProposalActivity, CheckoutActivity::class.java)
+                            intent.putExtra("PROPOSAL", Gson().toJson(proposal))
+                            startActivity(intent)
+                        }
+                    }
                 }
             })
         }
@@ -66,17 +79,16 @@ class ActiveProposalActivity : AppCompatActivity() {
     }
 
     fun setUpInfo(){
-        user_photo.loadCircle("http://cityguide.dmsoft.sk/users/photo/${proposal.user.id}")
+        user_photo.loadCircle("${AppSettings.apiUrl}users/photo/${proposal.user.id}")
         user_name.text = "${proposal.user.firstName} ${proposal.user.secondName}"
-        per_hour_salary.text = "20€"
+        per_hour_salary.text = "5€"
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
         format.timeZone = TimeZone.getTimeZone("UTC")
-        var a = Date()
         val spendTime = Date().time - format.parse(proposal.realStart).time
-        spend_time.text = "$spendTime"
+        spend_time.text = "${proposal.realStart}"
 
         chronometer2.format = "%s"
-        chronometer2.base = spendTime
+        chronometer2.base = SystemClock.elapsedRealtime() - spendTime
         chronometer2.start()
     }
 
