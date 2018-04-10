@@ -8,10 +8,13 @@ import kotlinx.android.synthetic.main.proposal_item.view.*
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
 import sk.dmsoft.cityguide.R
 import android.view.View
+import org.joda.time.DateTime
+import sk.dmsoft.cityguide.Api.DB
 import sk.dmsoft.cityguide.Chat.ChatActivity
 import sk.dmsoft.cityguide.Commons.inflate
 import sk.dmsoft.cityguide.Commons.load
 import sk.dmsoft.cityguide.Commons.loadCircle
+import java.util.*
 
 /**
  * Created by Daniel on 27. 2. 2018.
@@ -31,10 +34,14 @@ class ProposalsAdapter(val activity: Activity, val proposals: ArrayList<Proposal
     class ViewHolder(val activity: Activity, itemView: View) : RecyclerView.ViewHolder(itemView){
 
         fun bind(item: Proposal, listener: (Proposal, Int) -> Unit) = with(itemView) {
-            city_image.load("https://zlavomat.sgcdn.cz/images/t/1280x640c/32/22/3222366-31a2f0.webp")
+            val db = DB(activity)
+            city_image.load("http://cityguide.dmsoft.sk/places/photo/${item.placeId}")
             if (item.user != null) {
                 guide_name.text = "${item.user.firstName} ${item.user.secondName}"
-                start_date.text = item.start
+                val startDate = DateTime(item.start)
+                proposal_date.text = "${startDate.dayOfMonth}. ${startDate.monthOfYear}."
+                proposal_time.text = "Start at ${startDate.hourOfDay}:${startDate.minuteOfHour}"
+                //place_name.text = db.GetPlace(item.placeId).city
                 guide_photo.loadCircle("http://cityguide.dmsoft.sk/users/photo/${item.user.id}")
             }
             open_chat.setOnClickListener {
@@ -49,6 +56,7 @@ class ProposalsAdapter(val activity: Activity, val proposals: ArrayList<Proposal
             }
 
             setOnLongClickListener {
+                listener(item, adapterPosition)
                 false
             }
 

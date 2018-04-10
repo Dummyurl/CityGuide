@@ -2,6 +2,7 @@ package sk.dmsoft.cityguide.Api
 
 import android.content.Context
 import ninja.sakib.pultusorm.core.PultusORM
+import ninja.sakib.pultusorm.core.PultusORMCondition
 import sk.dmsoft.cityguide.Models.Country
 import sk.dmsoft.cityguide.Models.Place
 
@@ -31,6 +32,12 @@ public class DB (val context: Context) {
 
     fun GetPlaces(): ArrayList<Place> {
         return pultusORM.find(Place()) as ArrayList<Place>
+    }
+
+    fun GetPlace(id: Int): Place{
+        val query = PultusORMCondition.Builder()
+                .eq("id", id).build()
+        return pultusORM.find(Place(), query).first() as Place
     }
 
     fun Drop(objectType: Any){

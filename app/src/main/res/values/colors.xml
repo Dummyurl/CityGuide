@@ -5,6 +5,7 @@
     <color name="colorPrimaryDark">#2da820</color>
     <color name="colorAccent">#2da820</color>
     <color name="white">#fff</color>
+    <color name="black">#000</color>
     <color name="red">#ff1010</color>
     <color name="transpatent">#0000</color>
     <color name="semiTransparent">#a000</color>

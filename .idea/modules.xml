@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://D:/Applications/CityGuide/CityGuide/CityGuide.iml" filepath="D:/Applications/CityGuide/CityGuide/CityGuide.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/CityGuide.iml" filepath="$PROJECT_DIR$/.idea/CityGuide.iml" />
+      <module fileurl="file://D:\Applications\CityGuide\CityGuide\CityGuide.iml" filepath="D:\Applications\CityGuide\CityGuide\CityGuide.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://D:/Applications/CityGuide/CityGuide/app/app.iml" filepath="D:/Applications/CityGuide/CityGuide/app/app.iml" />
+      <module fileurl="file://D:\Applications\CityGuide\CityGuide\app\app.iml" filepath="D:\Applications\CityGuide\CityGuide\app\app.iml" />
     </modules>
   </component>
 </project>
