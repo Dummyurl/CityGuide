@@ -56,6 +56,7 @@ class ProposalsAdapter(val activity: Activity, val proposals: ArrayList<Proposal
             }
 
             setOnLongClickListener {
+                listener(item, adapterPosition)
                 false
             }
 

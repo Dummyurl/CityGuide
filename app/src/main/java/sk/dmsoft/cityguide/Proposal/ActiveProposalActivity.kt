@@ -70,9 +70,10 @@ class ActiveProposalActivity : AppCompatActivity() {
         user_name.text = "${proposal.user.firstName} ${proposal.user.secondName}"
         per_hour_salary.text = "20€"
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+        format.timeZone = TimeZone.getTimeZone("UTC")
         var a = Date()
         val spendTime = Date().time - format.parse(proposal.realStart).time
-        spend_time.text = "${spendTime}"
+        spend_time.text = "$spendTime"
 
         chronometer2.format = "%s"
         chronometer2.base = spendTime

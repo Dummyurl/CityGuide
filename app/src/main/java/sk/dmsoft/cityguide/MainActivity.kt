@@ -111,7 +111,17 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
     }
 
     private fun initProposals(proposals: ArrayList<Proposal>) {
-        proposalsAdapter = ProposalsAdapter(this, proposals, { _, _ -> })
+        proposalsAdapter = ProposalsAdapter(this, proposals, { proposal, _ ->
+            api.deleteProposal(proposal.id).enqueue(object: Callback<ResponseBody>{
+                override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
+                }
+
+            })
+        })
         proposals_recycler.setHasFixedSize(true)
         proposals_recycler.layoutManager = LinearLayoutManager(this)
         proposals_recycler.adapter = proposalsAdapter
