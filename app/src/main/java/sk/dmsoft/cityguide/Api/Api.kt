@@ -19,6 +19,7 @@ import java.io.File
 import java.util.concurrent.TimeUnit
 import android.provider.MediaStore
 import android.provider.DocumentsContract
+import sk.dmsoft.cityguide.Commons.AppSettings
 import sk.dmsoft.cityguide.Models.Account.*
 import sk.dmsoft.cityguide.Models.Guides.GuideDetails
 import sk.dmsoft.cityguide.Models.Guides.GuideListItem
@@ -36,7 +37,6 @@ import sk.dmsoft.cityguide.Models.Search.SearchResluts
 class Api constructor(private val activity : Context? = null) {
 
     private val api : IApi
-    private val domain = "http://cityguide.dmsoft.sk/"
 
     init {
         if (activity != null) {
@@ -54,7 +54,7 @@ class Api constructor(private val activity : Context? = null) {
                     .build()
 
             val retrofit = Retrofit.Builder()
-                    .baseUrl(domain +"api/")
+                    .baseUrl(AppSettings.apiUrl +"api/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(client)
                     .build()
@@ -178,8 +178,16 @@ class Api constructor(private val activity : Context? = null) {
         return api.startProposal(id)
     }
 
-    fun endProposal(id: Int): Call<ResponseBody>{
+    fun endProposal(id: Int): Call<Proposal>{
         return api.endProposal(id)
+    }
+
+    fun getCheckoutToken(): Call<CheckoutToken>{
+        return api.getCheckoutToken()
+    }
+
+    fun createTransaction(model: TransactionRequest): Call<ResponseBody>{
+        return api.createTransaction(model)
     }
 
     //fun uploadImages(image: NoteImage) : Call<ResponseBody> {

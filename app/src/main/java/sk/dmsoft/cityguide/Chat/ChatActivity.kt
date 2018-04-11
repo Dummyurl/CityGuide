@@ -111,7 +111,7 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
 
         getProposal()
 
-        user_photo.loadCircle("http://cityguide.dmsoft.sk/users/photo/$userId")
+        user_photo.loadCircle("${AppSettings.apiUrl}$userId")
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         switchStartSet()

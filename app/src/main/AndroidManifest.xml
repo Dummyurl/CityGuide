@@ -74,7 +74,8 @@
         <activity
             android:name=".Proposal.ActiveProposalActivity"
             android:label="@string/title_activity_active_proposal"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".CheckoutActivity"></activity>
     </application>
 
 </manifest>

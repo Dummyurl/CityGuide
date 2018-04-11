@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.guide_item.view.*
+import sk.dmsoft.cityguide.Commons.AppSettings
 import sk.dmsoft.cityguide.Commons.inflate
 import sk.dmsoft.cityguide.Commons.loadCircle
 import sk.dmsoft.cityguide.Models.Guides.GuideListItem
@@ -35,7 +36,7 @@ class GuidesAdapter(val activity: Activity, val guides: ArrayList<GuideListItem>
 
         fun bind(item: GuideListItem, listener: (GuideListItem, Int) -> Unit) = with(itemView) {
             guide_name.text = "${item.firstName} ${item.secondName}"
-            guide_photo.loadCircle("http://cityguide.dmsoft.sk/users/photo/${item.id}")
+            guide_photo.loadCircle("${AppSettings.apiUrl}users/photo/${item.id}")
 
             setOnClickListener {
                 listener(item, adapterPosition)
