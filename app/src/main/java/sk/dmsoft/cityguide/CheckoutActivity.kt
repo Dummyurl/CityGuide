@@ -3,15 +3,18 @@ package sk.dmsoft.cityguide
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.braintreepayments.api.dropin.DropInRequest
 import com.braintreepayments.api.dropin.DropInResult
 import com.google.gson.Gson
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import sk.dmsoft.cityguide.Api.Api
 import sk.dmsoft.cityguide.Models.CheckoutToken
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
+import sk.dmsoft.cityguide.Models.TransactionRequest
 
 class CheckoutActivity : AppCompatActivity() {
 
@@ -45,12 +48,22 @@ class CheckoutActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == BRAINTREE_REQUEST_CODE){
-            val results = data?.getParcelableArrayExtra(DropInResult.EXTRA_DROP_IN_RESULT)
-
+            val results: DropInResult = data!!.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT)
+            Log.e("BRAINTREE", results.toString())
+            createTransaction(results.paymentMethodNonce!!.nonce)
         }
     }
 
-    private fun createTransaction(){
+    private fun createTransaction(nonce: String){
+        val transaction = TransactionRequest(nonce, proposal!!.id)
+        api.createTransaction(transaction).enqueue(object: Callback<ResponseBody>{
+            override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
 
+            override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
+                Log.e("BRAINTREE", response?.body().toString())
+            }
+        })
     }
 }

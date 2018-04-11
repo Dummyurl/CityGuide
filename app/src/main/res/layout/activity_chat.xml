@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/chat_background"
-    tools:context="sk.dmsoft.cityguide.Chat.ChatActivity">
+    tools:context="sk.dmsoft.cityguide.Chat.ChatActivity"
+    android:id="@+id/chat_wrapper">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
