@@ -28,8 +28,15 @@ class CheckoutActivity : AppCompatActivity() {
         setContentView(R.layout.activity_checkout)
         api = Api(this)
 
-        val proposalJson = intent.getStringExtra("PROPOSAL")
-        proposal = Gson().fromJson(proposalJson, Proposal::class.java)
+        val proposalId = intent.getIntExtra("PROPOSAL_ID", 0)
+        if (proposalId == 0){
+            val proposalJson = intent.getStringExtra("PROPOSAL")
+            proposal = Gson().fromJson(proposalJson, Proposal::class.java)
+        }
+        else {
+            proposal = Proposal()
+            proposal?.id = proposalId
+        }
 
         api.getCheckoutToken().enqueue(object: Callback<CheckoutToken>{
             override fun onFailure(call: Call<CheckoutToken>?, t: Throwable?) {

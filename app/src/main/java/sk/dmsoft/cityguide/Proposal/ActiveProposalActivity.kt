@@ -133,7 +133,7 @@ class ActiveProposalActivity : AppCompatActivity() {
     fun endProposal(){
         if (AccountManager.accountType == EAccountType.tourist) {
             val intent = Intent(this@ActiveProposalActivity, CheckoutActivity::class.java)
-            intent.putExtra("PROPOSAL", Gson().toJson(proposal))
+            intent.putExtra("PROPOSAL_ID", proposalId)
             startActivity(intent)
         }
     }

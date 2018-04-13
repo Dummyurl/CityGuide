@@ -4,4 +4,5 @@ class ProposalPayment {
     var id = 0
     var totalAmount: Double = 0.0
     var totalHours = 0
+    var proposal: Proposal? = null
 }

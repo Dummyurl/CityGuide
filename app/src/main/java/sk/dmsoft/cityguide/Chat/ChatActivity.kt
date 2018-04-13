@@ -190,7 +190,7 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
                                 mapFragment.updateUserPosition(position)
                             }
                         }
-                        MessageType.MeetingPoint.value -> getMeetingPoint()
+                        MessageType.MeetingPoint.value -> getMeetingPoint(Gson().fromJson(message.Text, MeetingPoint::class.java))
                         MessageType.ProposalStart.value -> startProposal()
                     }
                 })
@@ -269,19 +269,9 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
         }
     }
 
-    fun getMeetingPoint(){
-        api.getMeetingPoint(proposalId).enqueue(object: Callback<MeetingPoint>{
-            override fun onFailure(call: Call<MeetingPoint>?, t: Throwable?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onResponse(call: Call<MeetingPoint>?, response: Response<MeetingPoint>) {
-                if (response.code() == 200){
-                    proposal?.meetingPoint = response.body()!!
-                    switchStartSet()
-                }
-            }
-        })
+    fun getMeetingPoint(meetingPoint: MeetingPoint){
+        proposal?.meetingPoint = meetingPoint
+        switchStartSet()
     }
 
     fun startProposal(){
