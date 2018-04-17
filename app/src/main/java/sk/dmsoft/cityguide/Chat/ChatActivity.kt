@@ -7,6 +7,7 @@ import android.content.ServiceConnection
 import android.location.Location
 import android.os.Bundle
 import android.os.IBinder
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
@@ -39,6 +40,7 @@ import sk.dmsoft.cityguide.Models.Chat.Message
 import sk.dmsoft.cityguide.Models.Chat.MessageType
 import sk.dmsoft.cityguide.Models.Proposal.MeetingPoint
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
+import sk.dmsoft.cityguide.Proposal.ActiveProposalActivity
 import java.lang.Exception
 import java.net.URI
 import java.net.URLDecoder
@@ -58,6 +60,8 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
             override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
                 Log.e("Meeting point", response?.code().toString())
                 hideMap()
+                proposal?.meetingPoint = model
+                switchStartSet()
             }
         })
     }
@@ -115,6 +119,9 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         switchStartSet()
+
+        set_meeting_point.setOnClickListener { changeMeetingPoint() }
+
         start_proposal.setOnClickListener{
             api.startProposal(proposalId).enqueue(object: Callback<ResponseBody>{
                 override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
@@ -122,7 +129,7 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
                 }
 
                 override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
-
+                    Snackbar.make(chat_wrapper, "Wait for other side", Snackbar.LENGTH_LONG).show()
                 }
             })
         }
@@ -183,6 +190,8 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
                                 mapFragment.updateUserPosition(position)
                             }
                         }
+                        MessageType.MeetingPoint.value -> getMeetingPoint(Gson().fromJson(message.Text, MeetingPoint::class.java))
+                        MessageType.ProposalStart.value -> startProposal()
                     }
                 })
             }
@@ -258,6 +267,17 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
             start_proposal.visibility = View.GONE
             set_meeting_point.visibility = View.VISIBLE
         }
+    }
+
+    fun getMeetingPoint(meetingPoint: MeetingPoint){
+        proposal?.meetingPoint = meetingPoint
+        switchStartSet()
+    }
+
+    fun startProposal(){
+        val intent = Intent(this@ChatActivity, ActiveProposalActivity::class.java)
+        intent.putExtra("PROPOSAL_ID", proposalId)
+        startActivity(intent)
     }
 
 }

@@ -110,6 +110,10 @@ class Api constructor(private val activity : Context? = null) {
         return api.registration2(aboutMePart, imagePart)
     }
 
+    fun init(): Call<InitResponse>{
+        return api.init()
+    }
+
     fun registrationGuideInfo(model: RegistrationGuideInfo): Call<ResponseBody>{
         return api.registrationGuideInfo(model)
     }

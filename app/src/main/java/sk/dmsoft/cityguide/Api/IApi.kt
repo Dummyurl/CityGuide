@@ -21,6 +21,9 @@ import sk.dmsoft.cityguide.Models.Search.SearchResluts
  */
 interface IApi {
 
+    @GET("init")
+    fun init(): Call<InitResponse>
+
     @POST("account/getToken")
     fun login(@Body model: Login): Call<AccessToken>
 

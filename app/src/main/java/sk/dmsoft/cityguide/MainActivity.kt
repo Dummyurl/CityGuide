@@ -175,6 +175,5 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
             intent.putExtra("PROPOSAL_ID", active.id)
             startActivity(intent)
         }
-
     }
 }

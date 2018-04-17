@@ -24,6 +24,9 @@ import android.content.Context
 import android.os.Build
 import android.content.Context.NOTIFICATION_SERVICE
 import android.support.annotation.RequiresApi
+import com.google.gson.Gson
+import sk.dmsoft.cityguide.Models.InitResponse
+import sk.dmsoft.cityguide.Proposal.ActiveProposalActivity
 
 
 /**
@@ -44,8 +47,7 @@ class SplashActivity : AppCompatActivity() {
         api  = Api(this)
         db = DB(this)
 
-        SaveCountries()
-        SavePlaces()
+        init()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             createNotificationChannel()
@@ -79,47 +81,61 @@ class SplashActivity : AppCompatActivity() {
         })
     }
 
-    private fun SaveCountries(){
-        db.Drop(Country())
-        api.getCountries().enqueue(object: Callback<ArrayList<Country>> {
-            override fun onFailure(call: Call<ArrayList<Country>>?, t: Throwable?) {
+    private fun init(){
+        api.init().enqueue(object: Callback<InitResponse>{
+            override fun onFailure(call: Call<InitResponse>?, t: Throwable?) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
-            override fun onResponse(call: Call<ArrayList<Country>>?, response: Response<ArrayList<Country>>?) {
-                db.SaveCountries(response?.body()!!)
-                countriesDownloaded = true
-                CloseSplashScreen()
-            }
+            override fun onResponse(call: Call<InitResponse>?, response: Response<InitResponse>) {
+                if (response.code() == 200){
+                    val initResponse = response.body()!!
+                    var continueToMainScreen = true
+                    if (initResponse.activeProposal != null){
+                        val intent = Intent(this@SplashActivity, ActiveProposalActivity::class.java)
+                        intent.putExtra("PROPOSAL_ID", initResponse.activeProposal?.id)
+                        startActivity(intent)
+                        finish()
+                        continueToMainScreen = false
+                    }
+                    if (initResponse.proposalToPay != null){
+                        val intent = Intent(this@SplashActivity, CheckoutActivity::class.java)
+                        intent.putExtra("PROPOSAL", Gson().toJson(initResponse.proposalToPay?.proposal))
+                        startActivity(intent)
+                        finish()
+                        continueToMainScreen = false
+                    }
+                    if (initResponse.places.size > 0)
+                        savePlaces(initResponse.places)
 
+                    if (initResponse.countries.size > 0)
+                        saveCountries(initResponse.countries)
+
+                    if (continueToMainScreen)
+                        closeSplashScreen()
+                }
+            }
         })
     }
 
-    private fun SavePlaces(){
+    private fun saveCountries(countries: ArrayList<Country>){
+        db.Drop(Country())
+        db.SaveCountries(countries)
+
+    }
+
+    private fun savePlaces(places: ArrayList<Place>){
         db.Drop(Place())
-        api.getPlaces().enqueue(object: Callback<ArrayList<Place>> {
-            override fun onFailure(call: Call<ArrayList<Place>>?, t: Throwable?) {
-            }
-
-            override fun onResponse(call: Call<ArrayList<Place>>?, response: Response<ArrayList<Place>>?) {
-                db.SavePlaces(response?.body()!!)
-                placesDownloaded = true
-                CloseSplashScreen()
-            }
-
-        })
+        db.SavePlaces(places)
     }
 
-    private fun CloseSplashScreen(){
-        if (placesDownloaded && countriesDownloaded) {
-            if (AccountManager.isLoggedIn && AccountManager.isRegistrationCompleted)
-                startActivity(Intent(this, MainActivity::class.java))
+    private fun closeSplashScreen(){
+        if (AccountManager.isLoggedIn && AccountManager.isRegistrationCompleted)
+            startActivity(Intent(this, MainActivity::class.java))
 
-            else
-                startActivity(Intent(this, RegistrationActivity::class.java))
-            finish()
-
-        }
+        else
+            startActivity(Intent(this, RegistrationActivity::class.java))
+        finish()
     }
 
 }
