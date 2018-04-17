@@ -30,6 +30,8 @@ class SearchActivity : AppCompatActivity(), SearchRequestFragment.OnSearchTextIn
     val searchResultsFragment = SearchResultsFragment()
     lateinit var db: DB
 
+    val searchRequest = SearchRequest()
+
     override fun onGuideSelected() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -57,14 +59,15 @@ class SearchActivity : AppCompatActivity(), SearchRequestFragment.OnSearchTextIn
 
     }
 
-    override fun onSearch(model: SearchRequest) {
-        if (model.search == ""){
+    override fun onSearch(searchText: String) {
+        if (searchText == ""){
             val results = SearchResluts()
             results.places = db.GetPlaces()
             searchRequestFragment.UpdateSearch(results)
         }
         else {
-            api.search(model).enqueue(object : Callback<SearchResluts> {
+            searchRequest.search = searchText
+            api.search(searchRequest).enqueue(object : Callback<SearchResluts> {
                 override fun onFailure(call: Call<SearchResluts>?, t: Throwable?) {
                     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 }
@@ -88,10 +91,15 @@ class SearchActivity : AppCompatActivity(), SearchRequestFragment.OnSearchTextIn
         api = Api(this)
         db = DB(this)
 
-        test1.setOnClickListener {
-            Snackbar.make(it, "aaaaaa", Snackbar.LENGTH_LONG).show()
+        apply_filter_btn.setOnClickListener {
+            applyFilters()
         }
 
         addFragment(searchRequestFragment, R.id.fragment_holder)
+    }
+
+    fun applyFilters(){
+        searchRequest.maxHourlyRate = max_hourly_rate.progress
+        searchRequest.minRating = min_rating.rating
     }
 }

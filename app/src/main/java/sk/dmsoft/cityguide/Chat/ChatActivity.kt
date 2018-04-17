@@ -30,6 +30,7 @@ import org.java_websocket.handshake.ServerHandshake
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.http.Url
 import sk.dmsoft.cityguide.Api.Api
 import sk.dmsoft.cityguide.Chat.Fragments.ChatFragment
 import sk.dmsoft.cityguide.Chat.Fragments.MapFragment
@@ -186,11 +187,11 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
                         MessageType.Message.value -> chatFragment.addMessage(message)
                         MessageType.Map.value -> {
                             if (message.From != AccountManager.userId) {
-                                val position = Gson().fromJson(URLDecoder.decode(message.Text), LatLng::class.java)
+                                val position = Gson().fromJson(URLDecoder.decode(message.Text, "UTF-8"), LatLng::class.java)
                                 mapFragment.updateUserPosition(position)
                             }
                         }
-                        MessageType.MeetingPoint.value -> getMeetingPoint(Gson().fromJson(message.Text, MeetingPoint::class.java))
+                        MessageType.MeetingPoint.value -> getMeetingPoint(Gson().fromJson(URLDecoder.decode(message.Text, "UTF-8"), MeetingPoint::class.java))
                         MessageType.ProposalStart.value -> startProposal()
                     }
                 })

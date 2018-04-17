@@ -39,5 +39,9 @@
     <string name="start">Start</string>
     <string name="title_activity_active_proposal">ActiveProposalActivity</string>
     <string name="end_proposal">End proposal</string>
+    <string name="apply_filters">Apply filters</string>
+    <string name="reset">Reset</string>
+    <string name="max_hourly_rate">Max hourly rate</string>
+    <string name="min_rating">Min rating</string>
 
 </resources>

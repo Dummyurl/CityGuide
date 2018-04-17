@@ -28,6 +28,10 @@ import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
 import sk.dmsoft.cityguide.Models.Search.SearchInCity
 import sk.dmsoft.cityguide.Models.Search.SearchRequest
 import sk.dmsoft.cityguide.Models.Search.SearchResluts
+import com.google.gson.GsonBuilder
+import com.google.gson.Gson
+
+
 
 
 /**
@@ -45,6 +49,10 @@ class Api constructor(private val activity : Context? = null) {
             val logInterceptor = HttpLoggingInterceptor()
             logInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
+            val gson = GsonBuilder()
+                    .setLenient()
+                    .create()
+
             val client = OkHttpClient().newBuilder()
                     .addInterceptor(AuthenticationInterceptor(accessToken))
                     .addInterceptor(logInterceptor)
@@ -55,7 +63,7 @@ class Api constructor(private val activity : Context? = null) {
 
             val retrofit = Retrofit.Builder()
                     .baseUrl(AppSettings.apiUrl +"api/")
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .client(client)
                     .build()
 

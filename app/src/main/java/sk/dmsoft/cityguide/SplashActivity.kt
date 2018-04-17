@@ -25,6 +25,7 @@ import android.os.Build
 import android.content.Context.NOTIFICATION_SERVICE
 import android.support.annotation.RequiresApi
 import com.google.gson.Gson
+import sk.dmsoft.cityguide.Commons.PicassoCache
 import sk.dmsoft.cityguide.Models.InitResponse
 import sk.dmsoft.cityguide.Proposal.ActiveProposalActivity
 
@@ -38,14 +39,13 @@ class SplashActivity : AppCompatActivity() {
     private lateinit var api: Api
     private lateinit var db: DB
 
-    private var placesDownloaded = false
-    private var countriesDownloaded = false;
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sk.dmsoft.cityguide.Commons.AccountManager.init(this)
         api  = Api(this)
         db = DB(this)
+
+        PicassoCache.CreatePicassoCache(this)
 
         init()
 
@@ -100,7 +100,8 @@ class SplashActivity : AppCompatActivity() {
                     }
                     if (initResponse.proposalToPay != null){
                         val intent = Intent(this@SplashActivity, CheckoutActivity::class.java)
-                        intent.putExtra("PROPOSAL", Gson().toJson(initResponse.proposalToPay?.proposal))
+                        val proposalJson = Gson().toJson(initResponse.proposalToPay!!.proposal)
+                        intent.putExtra("PROPOSAL", proposalJson)
                         startActivity(intent)
                         finish()
                         continueToMainScreen = false
