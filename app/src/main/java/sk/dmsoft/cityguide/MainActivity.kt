@@ -16,6 +16,7 @@ import sk.dmsoft.cityguide.Api.DB
 import sk.dmsoft.cityguide.Commons.*
 import sk.dmsoft.cityguide.Commons.Adapters.ProposalsAdapter
 import sk.dmsoft.cityguide.Commons.Adapters.UnconfirmedProposalsAdapter
+import sk.dmsoft.cityguide.Guide.GuideDetailsActivity
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
 import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
 import sk.dmsoft.cityguide.Models.Proposal.ProposalState
@@ -64,6 +65,11 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
+        val intent = Intent(this, GuideDetailsActivity::class.java)
+        intent.putExtra("GUIDE_ID", "b2cce26e-c9e5-48ed-8b0a-ee43f360def3")
+        startActivity(intent)
 
         api = Api(this)
 

@@ -35,6 +35,7 @@ class PlacesAdapter(val activity: Activity, var places: ArrayList<Place>, val cl
 
             city_name.text = item.city
             city_image.load("${AppSettings.apiUrl}places/photo/${item.id}")
+            available_guides.text = "${item.gurusCount} gurus available"
 
             setOnClickListener {
                 listener(item, adapterPosition)

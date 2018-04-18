@@ -16,6 +16,10 @@ import sk.dmsoft.cityguide.Api.Api
 import sk.dmsoft.cityguide.Models.Guides.GuideDetails
 import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment
+import sk.dmsoft.cityguide.Api.DB
+import sk.dmsoft.cityguide.Commons.AppSettings
+import sk.dmsoft.cityguide.Commons.load
+import sk.dmsoft.cityguide.Commons.loadCircle
 import java.util.*
 
 
@@ -23,8 +27,10 @@ class GuideDetailsActivity : AppCompatActivity() {
 
     lateinit var api: Api
     lateinit var guideId: String
+    lateinit var db: DB
     lateinit var startDateTimeFragment: SwitchDateTimeDialogFragment
     lateinit var endDateTimeFragment: SwitchDateTimeDialogFragment
+    var guideInfo: GuideDetails = GuideDetails()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +38,7 @@ class GuideDetailsActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         api = Api(this)
+        db = DB(this)
         initDatePickers()
 
         guideId = intent.extras.getString("GUIDE_ID", "")
@@ -44,8 +51,9 @@ class GuideDetailsActivity : AppCompatActivity() {
 
             override fun onResponse(call: Call<GuideDetails>?, response: Response<GuideDetails>?) {
                 if (response?.code() == 200){
-                    val guideInfo = response.body()!!
+                    guideInfo = response.body()!!
                     guide_name.text = "${guideInfo.firstName} ${guideInfo.secondName}"
+                    fillDetails()
                 }
             }
 
@@ -120,4 +128,16 @@ class GuideDetailsActivity : AppCompatActivity() {
         }
     }
 
+    fun fillDetails(){
+        user_photo.loadCircle("${AppSettings.apiUrl}/users/photo/${guideInfo.id}")
+        guide_photo.loadCircle("${AppSettings.apiUrl}/users/photo/${guideInfo.id}")
+        city_image.load("${AppSettings.apiUrl}/places/photo/${guideInfo.place?.id}")
+
+        user_rating.rating = 3f
+        user_name.text = "${guideInfo.firstName} ${guideInfo.secondName}"
+        place_name.text = guideInfo.place?.city
+        total_amount.text = "${guideInfo.salary}€"
+        hourly_rate.text = "${guideInfo.salary}€/h"
+        book_user.text = "Book ${guideInfo.firstName}"
+    }
 }

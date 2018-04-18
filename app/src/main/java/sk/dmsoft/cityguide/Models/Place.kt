@@ -16,4 +16,5 @@ class Place {
     var city: String = ""
     var zip: String = ""
     var countryId: Int = 0
+    var gurusCount: Int = 0
 }

@@ -65,8 +65,7 @@ class SearchRequestFragment : Fragment() {
                 timer!!.schedule(object : TimerTask() {
                     override fun run() {
                         activity?.runOnUiThread {
-                            val model = SearchRequest(search_text.text.toString())
-                            mListener?.onSearch(model)
+                            mListener?.onSearch(search_text.text.toString())
                         }
                     }
                 }, 500)
@@ -103,7 +102,7 @@ class SearchRequestFragment : Fragment() {
      */
     interface OnSearchTextInserted {
         // TODO: Update argument type and name
-        fun onSearch(model: SearchRequest)
+        fun onSearch(searchText: String)
         fun onCitySelected(place: Place)
     }
 }// Required empty public constructor

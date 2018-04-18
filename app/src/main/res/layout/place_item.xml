@@ -34,7 +34,6 @@
                 android:id="@+id/city_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Praha"
                 android:textAppearance="@android:style/TextAppearance.Material.Large"
                 android:textColor="@color/white" />
 
@@ -42,7 +41,6 @@
                 android:id="@+id/available_guides"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="24 gurus available"
                 android:textAppearance="@android:style/TextAppearance.Material.Small"
                 android:textColor="@color/white" />
 

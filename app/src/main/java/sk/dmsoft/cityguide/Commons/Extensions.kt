@@ -20,11 +20,11 @@ fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false): View {
 }
 
 fun ImageView.load(url : String){
-    Picasso.with(context).load(url).into(this)
+    PicassoCache.instance?.load(url)?.into(this)
 }
 
 fun ImageView.loadCircle(url: String){
-    Picasso.with(context).load(url).transform(CropCircleTransformation()).into(this)
+    PicassoCache.instance?.load(url)?.transform(CropCircleTransformation())?.into(this)
 }
 
 inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction, addToBackstack: Boolean) {
