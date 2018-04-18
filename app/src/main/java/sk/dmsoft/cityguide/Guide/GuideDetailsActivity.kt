@@ -133,6 +133,8 @@ class GuideDetailsActivity : AppCompatActivity() {
         guide_photo.loadCircle("${AppSettings.apiUrl}/users/photo/${guideInfo.id}")
         city_image.load("${AppSettings.apiUrl}/places/photo/${guideInfo.place?.id}")
 
+        guide_about.text = guideInfo.about
+
         user_rating.rating = 3f
         user_name.text = "${guideInfo.firstName} ${guideInfo.secondName}"
         place_name.text = guideInfo.place?.city
