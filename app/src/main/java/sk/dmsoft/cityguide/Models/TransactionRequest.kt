@@ -1,3 +1,3 @@
 package sk.dmsoft.cityguide.Models
 
-class TransactionRequest(val nonce: String, val proposalId: Int)
+class TransactionRequest(val nonce: String, val proposalId: Int, var rating: Rating? = null)
