@@ -44,5 +44,8 @@
     <string name="max_hourly_rate">Max. hourly rate</string>
     <string name="min_rating">Min. rating</string>
     <string name="about">About me:</string>
+    <string name="total_hours">Total hours</string>
+    <string name="total_proposals">Total proposals</string>
+    <string name="checkout">Checkout</string>
 
 </resources>

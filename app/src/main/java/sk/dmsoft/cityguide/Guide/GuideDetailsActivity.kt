@@ -1,8 +1,11 @@
 package sk.dmsoft.cityguide.Guide
 
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import sk.dmsoft.cityguide.R
 
 import kotlinx.android.synthetic.main.activity_guide_details.*
@@ -17,10 +20,14 @@ import sk.dmsoft.cityguide.Models.Guides.GuideDetails
 import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment
 import sk.dmsoft.cityguide.Api.DB
+import sk.dmsoft.cityguide.Commons.Adapters.RatingAdapter
 import sk.dmsoft.cityguide.Commons.AppSettings
 import sk.dmsoft.cityguide.Commons.load
 import sk.dmsoft.cityguide.Commons.loadCircle
 import java.util.*
+import sk.dmsoft.cityguide.R.id.appBarLayout
+
+
 
 
 class GuideDetailsActivity : AppCompatActivity() {
@@ -78,6 +85,14 @@ class GuideDetailsActivity : AppCompatActivity() {
 
             })
         }
+
+        appbar_layout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
+            val offsetFactor = -verticalOffset.toFloat()  / appBarLayout.totalScrollRange.toFloat()
+            Log.e("appbar", "$offsetFactor")
+            guide_photo.scaleX = 1 - offsetFactor * 0.85f
+            guide_photo.scaleY =  1 - offsetFactor * 0.85f
+        }
+
     }
 
     fun initDatePickers(){
@@ -141,5 +156,14 @@ class GuideDetailsActivity : AppCompatActivity() {
         total_amount.text = "${guideInfo.salary}€"
         hourly_rate.text = "${guideInfo.salary}€/h"
         book_user.text = "Book ${guideInfo.firstName}"
+
+        total_hours.text = guideInfo.totalHours.toString()
+        total_proposals.text = guideInfo.totalProposals.toString()
+
+        ratings_recycler.setHasFixedSize(true)
+        val ratingsAdapter = RatingAdapter(guideInfo.ratings)
+        val linearLayout = LinearLayoutManager(this)
+        ratings_recycler.layoutManager = linearLayout
+        ratings_recycler.adapter = ratingsAdapter
     }
 }
