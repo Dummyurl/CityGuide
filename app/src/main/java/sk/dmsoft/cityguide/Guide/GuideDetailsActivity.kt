@@ -162,27 +162,16 @@ class GuideDetailsActivity : AppCompatActivity() {
         total_proposals.text = guideInfo.totalProposals.toString()
 
         ratings_recycler.setHasFixedSize(true)
-        val ratingsAdapter = RatingAdapter(fillRatings())
+        val ratingsAdapter = RatingAdapter(guideInfo.ratings)
         val linearLayout = LinearLayoutManager(this)
         ratings_recycler.layoutManager = linearLayout
         ratings_recycler.adapter = ratingsAdapter
         var sum = 0f
-        fillRatings().forEach {
+        guideInfo.ratings.forEach {
             sum += it.ratingStars
         }
-        ratingBar.rating = sum/fillRatings().size
+        ratingBar.rating = sum/guideInfo.ratings.size
+        user_rating.rating = sum/guideInfo.ratings.size
     }
 
-    fun fillRatings(): ArrayList<Rating> {
-        val ratings = ArrayList<Rating>()
-        for (i in 1..10){
-            val rating = Rating()
-            rating.date = Date().toString()
-            rating.comment = "Super sprievodca, nejaký komentár $i"
-            rating.userId = AccountManager.userId
-            rating.ratingStars = if (i > 5) (i/5).toFloat() else i.toFloat()
-            ratings.add(rating)
-        }
-        return ratings
-    }
 }

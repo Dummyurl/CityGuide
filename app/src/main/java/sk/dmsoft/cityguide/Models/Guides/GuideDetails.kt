@@ -1,5 +1,6 @@
 package sk.dmsoft.cityguide.Models.Guides
 
+import sk.dmsoft.cityguide.Models.Interest
 import sk.dmsoft.cityguide.Models.Place
 import sk.dmsoft.cityguide.Models.Rating
 
@@ -16,4 +17,5 @@ class GuideDetails {
     var about = ""
     var totalHours = 0
     var totalProposals = 0
+    var interests: ArrayList<Interest> = ArrayList()
 }
