@@ -34,8 +34,8 @@ object AccountManager {
     val isRegistrationCompleted: Boolean
         get() {
             if (accountType == EAccountType.tourist)
-                return _sharedPreferences.getInt("REGISTRATION_STEP", 0) == 3
-            return _sharedPreferences.getInt("REGISTRATION_STEP", 0) == 4
+                return _sharedPreferences.getInt("REGISTRATION_STEP", 0) == 4
+            return _sharedPreferences.getInt("REGISTRATION_STEP", 0) == 5
         }
 
     var registrationStep: Int

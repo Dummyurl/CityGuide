@@ -20,11 +20,8 @@ import sk.dmsoft.cityguide.Api.Api
 import sk.dmsoft.cityguide.Commons.AccountManager
 import sk.dmsoft.cityguide.Commons.EAccountType
 import sk.dmsoft.cityguide.Models.AccessToken
-import sk.dmsoft.cityguide.Models.Account.Registration
 import sk.dmsoft.cityguide.MainActivity
-import sk.dmsoft.cityguide.Models.Account.Registration1
-import sk.dmsoft.cityguide.Models.Account.Registration2
-import sk.dmsoft.cityguide.Models.Account.RegistrationGuideInfo
+import sk.dmsoft.cityguide.Models.Account.*
 
 
 class RegistrationActivity : AppCompatActivity(),
@@ -32,6 +29,7 @@ class RegistrationActivity : AppCompatActivity(),
         RegisterGuideFragment.OnRegistrationGuide,
         RegisterStep1Fragment.Step1Listener,
         RegisterStep2Fragment.Step2Listener,
+        RegisterStep3Fragment.Step3Listener,
         RegisterGuideInfoFragment.OnRegistrationGuideInfo{
 
     override fun onSwitchToGuide() {
@@ -116,14 +114,7 @@ class RegistrationActivity : AppCompatActivity(),
             override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
                 if (response.code() == 200){
                     AccountManager.registrationStep = 3
-
-                    if (AccountManager.accountType == EAccountType.guide)
-                        pager.setCurrentItem(3, true)
-
-                    else {
-                        startActivity(Intent(this@RegistrationActivity, MainActivity::class.java))
-                        finish()
-                    }
+                    pager.setCurrentItem(3, true)
                 }
             }
 
@@ -139,6 +130,28 @@ class RegistrationActivity : AppCompatActivity(),
                 finish()
             }
         }
+    }
+
+
+    override fun onStep3Completed(model: Registration3) {
+        api.registration3(model).enqueue((object: Callback<ResponseBody>{
+            override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
+                if (response.code() == 200){
+                    AccountManager.registrationStep = 4
+                    if (AccountManager.accountType == EAccountType.guide)
+                        pager.setCurrentItem(4, true)
+
+                    else {
+                        startActivity(Intent(this@RegistrationActivity, MainActivity::class.java))
+                        finish()
+                    }
+                }
+            }
+        }))
     }
 
     override fun onRegistrationGuideInfoCompleted(model: RegistrationGuideInfo) {
@@ -173,6 +186,7 @@ class RegistrationActivity : AppCompatActivity(),
         registrationSteps.add(RegisterTouristFragment())
         registrationSteps.add(RegisterStep1Fragment())
         registrationSteps.add(step2Fragment)
+        registrationSteps.add(RegisterStep3Fragment())
 
         if (AccountManager.accountType == EAccountType.guide)
             registrationSteps.add(RegisterGuideInfoFragment())

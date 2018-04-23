@@ -20,14 +20,15 @@ import sk.dmsoft.cityguide.Models.Guides.GuideDetails
 import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment
 import sk.dmsoft.cityguide.Api.DB
+import sk.dmsoft.cityguide.Commons.AccountManager
 import sk.dmsoft.cityguide.Commons.Adapters.RatingAdapter
 import sk.dmsoft.cityguide.Commons.AppSettings
 import sk.dmsoft.cityguide.Commons.load
 import sk.dmsoft.cityguide.Commons.loadCircle
+import sk.dmsoft.cityguide.Models.Rating
 import java.util.*
 import sk.dmsoft.cityguide.R.id.appBarLayout
-
-
+import kotlin.collections.ArrayList
 
 
 class GuideDetailsActivity : AppCompatActivity() {
@@ -165,5 +166,12 @@ class GuideDetailsActivity : AppCompatActivity() {
         val linearLayout = LinearLayoutManager(this)
         ratings_recycler.layoutManager = linearLayout
         ratings_recycler.adapter = ratingsAdapter
+        var sum = 0f
+        guideInfo.ratings.forEach {
+            sum += it.ratingStars
+        }
+        ratingBar.rating = sum/guideInfo.ratings.size
+        user_rating.rating = sum/guideInfo.ratings.size
     }
+
 }

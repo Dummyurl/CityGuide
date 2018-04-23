@@ -47,5 +47,6 @@
     <string name="total_hours">Total hours</string>
     <string name="total_proposals">Total proposals</string>
     <string name="checkout">Checkout</string>
+    <string name="select_interests">Select interests</string>
 
 </resources>

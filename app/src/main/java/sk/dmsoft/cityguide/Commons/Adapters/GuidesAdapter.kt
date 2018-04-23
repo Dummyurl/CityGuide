@@ -37,6 +37,8 @@ class GuidesAdapter(val activity: Activity, val guides: ArrayList<GuideListItem>
         fun bind(item: GuideListItem, listener: (GuideListItem, Int) -> Unit) = with(itemView) {
             guide_name.text = "${item.firstName} ${item.secondName}"
             guide_photo.loadCircle("${AppSettings.apiUrl}users/photo/${item.id}")
+            salary.text = "${item.guideInfo?.salary}€"
+            interests.text = item.interests.joinToString(" - ")
 
             setOnClickListener {
                 listener(item, adapterPosition)

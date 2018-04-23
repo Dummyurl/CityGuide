@@ -27,6 +27,7 @@ import android.support.annotation.RequiresApi
 import com.google.gson.Gson
 import sk.dmsoft.cityguide.Commons.PicassoCache
 import sk.dmsoft.cityguide.Models.InitResponse
+import sk.dmsoft.cityguide.Models.Interest
 import sk.dmsoft.cityguide.Proposal.ActiveProposalActivity
 
 
@@ -48,6 +49,7 @@ class SplashActivity : AppCompatActivity() {
         PicassoCache.CreatePicassoCache(this)
 
         init()
+        getInterests()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             createNotificationChannel()
@@ -114,6 +116,21 @@ class SplashActivity : AppCompatActivity() {
 
                     if (continueToMainScreen)
                         closeSplashScreen()
+                }
+            }
+        })
+    }
+
+    fun getInterests(){
+        api.getInterests().enqueue(object: Callback<ArrayList<Interest>>{
+            override fun onFailure(call: Call<ArrayList<Interest>>?, t: Throwable?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onResponse(call: Call<ArrayList<Interest>>?, response: Response<ArrayList<Interest>>) {
+                if (response.isSuccessful){
+                    db.Drop(Interest())
+                    db.SaveInterests(response.body()!!)
                 }
             }
         })

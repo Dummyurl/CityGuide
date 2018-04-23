@@ -51,7 +51,8 @@ class SearchActivity : AppCompatActivity(), SearchRequestFragment.OnSearchTextIn
             override fun onResponse(call: Call<ArrayList<GuideListItem>>?, response: Response<ArrayList<GuideListItem>>?) {
                 if (response?.code() == 200) {
                     replaceFragment(searchResultsFragment, R.id.fragment_holder, true)
-                    searchResultsFragment.updateGuides(response.body()!!)
+                    val guides = response.body()!!
+                    searchResultsFragment.updateGuides(guides)
                 }
             }
 
