@@ -4,13 +4,14 @@ import android.content.Context
 import ninja.sakib.pultusorm.core.PultusORM
 import ninja.sakib.pultusorm.core.PultusORMCondition
 import sk.dmsoft.cityguide.Models.Country
+import sk.dmsoft.cityguide.Models.Interest
 import sk.dmsoft.cityguide.Models.Place
 
 /**
  * Created by Daniel on 23. 11. 2017.
  */
 
-public class DB (val context: Context) {
+class DB (val context: Context) {
     val appPath = context.filesDir.absolutePath  // Output : /data/data/application_package_name/files/
     val pultusORM: PultusORM = PultusORM("cityGuide.db", appPath)
 
@@ -38,6 +39,16 @@ public class DB (val context: Context) {
         val query = PultusORMCondition.Builder()
                 .eq("id", id).build()
         return pultusORM.find(Place(), query).first() as Place
+    }
+
+    fun SaveInterests(items: ArrayList<Interest>){
+        items.forEach {
+            pultusORM.save(it)
+        }
+    }
+
+    fun GetInterests(): ArrayList<Interest>{
+        return pultusORM.find(Interest()) as ArrayList<Interest>
     }
 
     fun Drop(objectType: Any){

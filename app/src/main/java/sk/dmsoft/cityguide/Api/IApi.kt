@@ -37,6 +37,9 @@ interface IApi {
     @POST("account/register/2")
     fun registration2(@Part aboutMe: MultipartBody.Part, @Part profilePhoto: MultipartBody.Part): Call<ResponseBody>
 
+    @POST("account/register/3")
+    fun registration3(@Body model: Registration3): Call<ResponseBody>
+
     @POST("account/register/guide")
     fun registrationGuideInfo(@Body model: RegistrationGuideInfo): Call<ResponseBody>
 
@@ -96,4 +99,7 @@ interface IApi {
 
     @POST("checkout/transaction")
     fun createTransaction(@Body model: TransactionRequest): Call<ResponseBody>
+
+    @GET("interests")
+    fun getInterests(): Call<ArrayList<Interest>>
 }

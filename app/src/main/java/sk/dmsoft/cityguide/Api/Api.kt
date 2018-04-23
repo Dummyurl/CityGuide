@@ -118,6 +118,10 @@ class Api constructor(private val activity : Context? = null) {
         return api.registration2(aboutMePart, imagePart)
     }
 
+    fun registration3(model: Registration3): Call<ResponseBody>{
+        return api.registration3(model)
+    }
+
     fun init(): Call<InitResponse>{
         return api.init()
     }
@@ -200,6 +204,10 @@ class Api constructor(private val activity : Context? = null) {
 
     fun createTransaction(model: TransactionRequest): Call<ResponseBody>{
         return api.createTransaction(model)
+    }
+
+    fun getInterests(): Call<ArrayList<Interest>>{
+        return api.getInterests()
     }
 
     //fun uploadImages(image: NoteImage) : Call<ResponseBody> {
