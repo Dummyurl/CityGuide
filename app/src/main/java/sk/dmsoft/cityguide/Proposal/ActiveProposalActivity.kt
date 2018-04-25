@@ -91,7 +91,7 @@ class ActiveProposalActivity : AppCompatActivity() {
     fun setUpInfo(){
         user_photo.loadCircle("${AppSettings.apiUrl}users/photo/${proposal.user.id}")
         user_name.text = "${proposal.user.firstName} ${proposal.user.secondName}"
-        per_hour_salary.text = "5€"
+        per_hour_salary.text = "${proposal.perHourSalary}€"
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
         format.timeZone = TimeZone.getTimeZone("UTC")
         val spendTime = Date().time - format.parse(proposal.realStart).time

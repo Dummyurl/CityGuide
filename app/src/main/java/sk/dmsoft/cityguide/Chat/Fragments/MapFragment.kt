@@ -51,7 +51,8 @@ class MapFragment : Fragment(), LocationUpdateCallback {
     var myPosition = LatLng(0.0, 0.0)
     var userPosition = LatLng(0.0, 0.0)
     var meetingPointPosition = LatLng(0.0, 0.0)
-    lateinit var myMarker: Marker
+    var myMarker: Marker? = null
+    var userMarker: Marker? = null
 
     var userId = ""
     var proposalId = 0
@@ -69,8 +70,7 @@ class MapFragment : Fragment(), LocationUpdateCallback {
 
         // To-do("Logic when start location service")
         if (mapMode == MapMode.GoToMeetingPoint) {
-            val serviceIntent = Intent(activity, LocationService::class.java)
-            activity?.bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+
         }
         return inflater.inflate(R.layout.fragment_map, container, false)
     }
@@ -89,6 +89,7 @@ class MapFragment : Fragment(), LocationUpdateCallback {
                     .title("Meeting point")
                     .draggable(true))
             initCamera()
+            googleMap?.isMyLocationEnabled = true
             setMarkerCallback()
         }
         if (mapMode == MapMode.GoToMeetingPoint)
@@ -105,15 +106,28 @@ class MapFragment : Fragment(), LocationUpdateCallback {
 
     fun updateUserPosition(position: LatLng){
         userPosition = position
+        if (userMarker == null)
+            userMarker = googleMap?.addMarker(
+                    MarkerOptions()
+                            .position(position)
+                            .title("Other user"))
+
+        userMarker?.position = position
     }
 
     fun updateMode(mode: MapMode){
-        when (mode){
-            MapMode.SetMeetingPoint -> meeting_point_controls.visibility = View.VISIBLE
-            MapMode.GoToMeetingPoint -> meeting_point_controls.visibility = View.GONE
-        }
+        if (mapMode != mode) {
+            when (mode) {
+                MapMode.SetMeetingPoint -> meeting_point_controls.visibility = View.VISIBLE
+                MapMode.GoToMeetingPoint -> {
+                    meeting_point_controls.visibility = View.GONE
+                    val serviceIntent = Intent(activity, LocationService::class.java)
+                    activity?.bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+                }
+            }
 
-        mapMode = mode
+            mapMode = mode
+        }
     }
 
     fun updateMeetingPointPosition(position: LatLng){
@@ -168,9 +182,16 @@ class MapFragment : Fragment(), LocationUpdateCallback {
         locationUpdateModel.MessageType = MessageType.Map.value
         mListener?.updateMyLocation(Gson().toJson(locationUpdateModel))
 
-        myMarker?.position = myPosition
-        googleMap?.moveCamera(CameraUpdateFactory.newLatLng(myPosition))
-        googleMap?.moveCamera(CameraUpdateFactory.zoomTo(15f))
+        //if (myMarker == null){
+        //    myMarker = googleMap?.addMarker(
+        //            MarkerOptions()
+        //                    .position(myPosition)
+        //                    .title("Me"))
+        //}
+//
+        //myMarker?.position = myPosition
+        //googleMap?.moveCamera(CameraUpdateFactory.newLatLng(myPosition))
+        //googleMap?.moveCamera(CameraUpdateFactory.zoomTo(15f))
 
         Log.e("Chat activity", Gson().toJson(locationUpdateModel))
     }
