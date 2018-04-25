@@ -53,6 +53,7 @@ class SearchActivity : AppCompatActivity(), SearchRequestFragment.OnSearchTextIn
                     replaceFragment(searchResultsFragment, R.id.fragment_holder, true)
                     val guides = response.body()!!
                     searchResultsFragment.updateGuides(guides)
+                    searchResultsFragment.updateImage(place.id)
                 }
             }
 

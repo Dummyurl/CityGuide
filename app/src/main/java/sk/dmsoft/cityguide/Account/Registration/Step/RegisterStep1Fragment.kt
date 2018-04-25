@@ -87,6 +87,7 @@ class RegisterStep1Fragment : Fragment(), DatePickerDialog.OnDateSetListener {
         if (mListener != null) {
             model.firstName = first_name.text.toString()
             model.secondName = second_name.text.toString()
+            model.placeId = db.GetPlaces().filter { it.city == places_spinner.selectedItem.toString() }[0].id
             mListener!!.onStep1Completed(model)
         }
     }

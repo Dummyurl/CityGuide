@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_search_results.*
 import sk.dmsoft.cityguide.Commons.Adapters.GuidesAdapter
+import sk.dmsoft.cityguide.Commons.AppSettings
 import sk.dmsoft.cityguide.Commons.load
 import sk.dmsoft.cityguide.Guide.GuideDetailsActivity
 import sk.dmsoft.cityguide.Models.Guides.GuideListItem
@@ -27,8 +28,7 @@ class SearchResultsFragment : Fragment() {
     private var mListener: OnSearchResultsInteraction? = null
     lateinit var guidesAdapter: GuidesAdapter
     var guides: ArrayList<GuideListItem> = ArrayList()
-
-
+    var placeId = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -50,11 +50,16 @@ class SearchResultsFragment : Fragment() {
         guides_list.layoutManager = LinearLayoutManager(activity)
         guides_list.adapter = guidesAdapter
 
-        city_image.load("https://zlavomat.sgcdn.cz/images/t/1280x640c/32/22/3222366-31a2f0.webp")
+        city_image?.load("${AppSettings.apiUrl}/places/photo/$placeId")
     }
 
     fun updateGuides(guides: ArrayList<GuideListItem>){
         this.guides = guides
+    }
+
+    fun updateImage(placeId: Int){
+        this.placeId = placeId
+        city_image?.load("${AppSettings.apiUrl}/places/photo/$placeId")
     }
 
     override fun onAttach(context: Context?) {
