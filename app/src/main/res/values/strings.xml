@@ -48,5 +48,8 @@
     <string name="total_proposals">Total proposals</string>
     <string name="checkout">Checkout</string>
     <string name="select_interests">Select interests</string>
+    <string name="empty_confirmed_text">Search for guru...</string>
+    <string name="show_map">Show map</string>
+    <string name="change_meeting_point">Change meeting point</string>
 
 </resources>

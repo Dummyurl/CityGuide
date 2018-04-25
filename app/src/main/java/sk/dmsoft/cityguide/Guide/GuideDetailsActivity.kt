@@ -171,7 +171,7 @@ class GuideDetailsActivity : AppCompatActivity() {
             sum += it.ratingStars
         }
         ratingBar.rating = sum/guideInfo.ratings.size
-        user_rating.rating = sum/guideInfo.ratings.size
+        user_rating.rating = if (sum == 0f) sum/guideInfo.ratings.size else 3f
     }
 
 }

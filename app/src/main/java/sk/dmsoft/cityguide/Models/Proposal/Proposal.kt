@@ -22,6 +22,8 @@ class Proposal {
     var touristEnd = false
     var guideEnd = false
 
+    var perHourSalary = 0.0
+
     var meetingPoint: MeetingPoint? = null
 
     var proposalPayment: ProposalPayment? = null

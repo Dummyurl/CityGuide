@@ -66,11 +66,6 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
-        val intent = Intent(this, GuideDetailsActivity::class.java)
-        intent.putExtra("GUIDE_ID", "b2cce26e-c9e5-48ed-8b0a-ee43f360def3")
-        startActivity(intent)
-
         api = Api(this)
 
         logout.setOnClickListener {
@@ -132,6 +127,15 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
         proposals_recycler.layoutManager = LinearLayoutManager(this)
         proposals_recycler.adapter = proposalsAdapter
         checkActiveProposal(proposals)
+
+        if (proposals.size > 0) {
+            proposals_recycler.visibility = View.VISIBLE
+            empty_confirmed.visibility = View.GONE
+        }
+        else {
+            proposals_recycler.visibility = View.GONE
+            empty_confirmed.visibility = View.VISIBLE
+        }
     }
 
     private fun initUnconfirmedProposals(proposals: ArrayList<Proposal>){
@@ -145,6 +149,15 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
         unconfirmed_proposals_list.adapter = unconfirmedProposalsAdapter
         swipe_refresh_confirmed.isRefreshing = false
         swipe_refresh_unconfirmed.isRefreshing = false
+
+        if (proposals.size > 0) {
+            unconfirmed_proposals_list.visibility = View.VISIBLE
+            empty_unconfirmed.visibility = View.GONE
+        }
+        else {
+            unconfirmed_proposals_list.visibility = View.GONE
+            empty_unconfirmed.visibility = View.VISIBLE
+        }
     }
 
     private fun reloadProposals(){

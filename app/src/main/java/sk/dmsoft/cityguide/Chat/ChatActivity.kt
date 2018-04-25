@@ -116,7 +116,7 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
 
         getProposal()
 
-        user_photo.loadCircle("${AppSettings.apiUrl}$userId")
+        user_photo.loadCircle("${AppSettings.apiUrl}/users/photo/$userId")
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         switchStartSet()
@@ -233,12 +233,9 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
         mapFragment.updateMode(MapMode.SetMeetingPoint)
     }
 
-    fun shareLocation(share: Boolean){
-        shareLocation = share
-        if (share)
-            mapFragment.enableLocationSharing()
-        else
-            mapFragment.disableLocationSharing()
+    fun goToMeetingPoint(){
+        mapFragment.updateMode(MapMode.GoToMeetingPoint)
+        showMap()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -251,10 +248,7 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
         when (p0.itemId){
             R.id.cancel_proposal -> { cancelProposal() }
             R.id.change_meeting_point -> { changeMeetingPoint() }
-            R.id.share_location -> {
-                p0.isChecked = !p0.isChecked
-                shareLocation(p0.isChecked)
-            }
+            R.id.share_location -> { goToMeetingPoint() }
         }
         return true
     }
@@ -281,4 +275,10 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
         startActivity(intent)
     }
 
+    override fun onBackPressed() {
+        if (isMapVisible)
+            hideMap()
+        else
+            super.onBackPressed()
+    }
 }
