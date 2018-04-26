@@ -1,4 +1,5 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/cancel_proposal"
         android:title="@string/cancel"/>
@@ -8,5 +9,7 @@
         android:icon="@drawable/ic_map"/>
     <item
         android:id="@+id/share_location"
-        android:title="@string/show_map"/>
+        android:title="@string/show_map"
+        android:icon="@drawable/ic_map"
+        app:showAsAction="always"/>
 </menu>

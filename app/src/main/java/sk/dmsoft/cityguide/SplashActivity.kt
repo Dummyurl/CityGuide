@@ -90,6 +90,13 @@ class SplashActivity : AppCompatActivity() {
             }
 
             override fun onResponse(call: Call<InitResponse>?, response: Response<InitResponse>) {
+
+                if (false){
+                    val intent = Intent(this@SplashActivity, CreatePaymentMethodActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                    return
+                }
                 if (response.code() == 200){
                     val initResponse = response.body()!!
                     var continueToMainScreen = true

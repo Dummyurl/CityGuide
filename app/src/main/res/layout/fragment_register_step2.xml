@@ -24,20 +24,24 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/photo_image"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_margin="20dp"/>
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_margin="20dp"
+                    android:layout_gravity="center"/>
 
                 <Button
                     android:id="@+id/select_photo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:theme="@style/green_button"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_gravity="center"
                     android:text="@string/select_photo"/>
 
             </LinearLayout>
@@ -65,7 +69,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:theme="@style/green_button"
-                android:text="Button" />
+                android:text="@string/next" />
 
         </LinearLayout>
 

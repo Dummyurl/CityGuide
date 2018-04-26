@@ -17,6 +17,7 @@ import sk.dmsoft.cityguide.Models.Proposal.Proposal
 import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
 
 import sk.dmsoft.cityguide.R
+import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -32,6 +33,7 @@ class EditProposalFragment : Fragment() {
     private lateinit var bottomSheet: BottomSheetBehavior<ConstraintLayout>
     lateinit var startDateTimeFragment: SwitchDateTimeDialogFragment
     lateinit var endDateTimeFragment: SwitchDateTimeDialogFragment
+    var proposalRequest: ProposalRequest = ProposalRequest()
 
     val isSheetVisible: Boolean
         get() {
@@ -52,7 +54,7 @@ class EditProposalFragment : Fragment() {
         bottomSheet = BottomSheetBehavior.from(edit_proposal_sheet)
         edit_proposal.setOnClickListener {
             hide()
-            mListener?.onProposalChange(proposal.id, getNewProposalData())
+            mListener?.onProposalChange(proposal.id, proposalRequest)
         }
         confirm_proposal.setOnClickListener {
             hide()
@@ -60,18 +62,12 @@ class EditProposalFragment : Fragment() {
         }
     }
 
-    fun getNewProposalData(): ProposalRequest{
-        val request = ProposalRequest()
-
-        request.start = start_date.text.toString()
-        request.end = end_date.text.toString()
-        return request
-    }
-
     fun setProposal(proposal: Proposal){
         this.proposal = proposal
-        start_date.setText(proposal.start)
-        end_date.setText(proposal.end)
+        proposalRequest.start = proposal.start
+        proposalRequest.end = proposal.end
+        start_date.setText(DateTime(proposal.start).toLocalDateTime().toString())
+        end_date.setText(DateTime(proposal.start).toLocalDateTime().toString())
     }
 
     fun hide(){
@@ -102,7 +98,9 @@ class EditProposalFragment : Fragment() {
 
         startDateTimeFragment.setOnButtonClickListener(object: SwitchDateTimeDialogFragment.OnButtonClickListener{
             override fun onPositiveButtonClick(date: Date) {
-                start_date.setText(DateTime(date).toString())
+                val locale = SimpleDateFormat("dd.MM.YYYY HH:mm")
+                start_date.setText(locale.format(date))
+                proposalRequest.start = DateTime(date).toString()
             }
 
             override fun onNegativeButtonClick(p0: Date?) {
@@ -125,7 +123,9 @@ class EditProposalFragment : Fragment() {
 
         endDateTimeFragment.setOnButtonClickListener(object: SwitchDateTimeDialogFragment.OnButtonClickListener{
             override fun onPositiveButtonClick(date: Date) {
-                end_date.setText(DateTime(date).toString())
+                val locale = SimpleDateFormat("dd.MM.YYYY HH:mm")
+                end_date.setText(locale.format(date))
+                proposalRequest.end = DateTime(date).toString()
             }
 
             override fun onNegativeButtonClick(p0: Date?) {

@@ -59,12 +59,20 @@ object AccountManager {
             return _sharedPreferences.getBoolean("FC_REGISTERED", false)
         }
         set(value) {
-            _sharedPreferences.edit().putBoolean("FC:_REGISTERED", value)
+            _sharedPreferences.edit().putBoolean("FC:_REGISTERED", value).apply()
         }
 
     val userId: String
         get() {
             return  _sharedPreferences.getString("ACCOUNT_ID", "")
+        }
+
+    var isPaymentMethodSaved: Boolean
+        get() {
+            return _sharedPreferences.getBoolean("IS_PAYMENT_METHOD_SAVED", false)
+        }
+        set(value){
+            _sharedPreferences.edit().putBoolean("IS_PAYMENT_METHOD_SAVED", value).apply()
         }
 
     // Methods

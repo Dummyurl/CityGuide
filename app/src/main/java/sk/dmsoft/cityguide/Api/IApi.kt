@@ -102,4 +102,7 @@ interface IApi {
 
     @GET("interests")
     fun getInterests(): Call<ArrayList<Interest>>
+
+    @POST("checkout/paymentMethod")
+    fun savePaymentMethod(@Body model: CreatePaymentMethodRequest): Call<ResponseBody>
 }

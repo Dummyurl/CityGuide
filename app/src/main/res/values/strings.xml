@@ -51,5 +51,8 @@
     <string name="empty_confirmed_text">Search for guru...</string>
     <string name="show_map">Show map</string>
     <string name="change_meeting_point">Change meeting point</string>
+    <string name="skip">Skip</string>
+    <string name="add_payment_method">Add payment method</string>
+    <string name="add_payment_method_text">Add payment method to order GURU</string>
 
 </resources>

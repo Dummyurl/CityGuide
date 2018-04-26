@@ -32,11 +32,22 @@ class RegistrationActivity : AppCompatActivity(),
         RegisterStep3Fragment.Step3Listener,
         RegisterGuideInfoFragment.OnRegistrationGuideInfo{
 
+    var guideMode = false
+
     override fun onSwitchToGuide() {
         AccountManager.accountType = EAccountType.guide
         registrationSteps[0] = RegisterGuideFragment()
         registrationSteps.add(RegisterGuideInfoFragment())
         pager.adapter = PagerAdapter(supportFragmentManager)
+        guideMode = true
+    }
+
+    fun onSwitchToTourist(){
+        AccountManager.accountType = EAccountType.tourist
+        registrationSteps[0] = RegisterTouristFragment()
+        registrationSteps.remove(registrationSteps.last())
+        pager.adapter = PagerAdapter(supportFragmentManager)
+        guideMode = false
     }
 
     val registrationSteps: ArrayList<Fragment> = ArrayList()
@@ -205,6 +216,13 @@ class RegistrationActivity : AppCompatActivity(),
         override fun getCount(): Int {
             return registrationSteps.size
         }
+    }
+
+    override fun onBackPressed() {
+        if (guideMode)
+            onSwitchToTourist()
+        else
+            super.onBackPressed()
     }
 
 }
