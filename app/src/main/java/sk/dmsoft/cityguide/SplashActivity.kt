@@ -1,5 +1,6 @@
 package sk.dmsoft.cityguide
 
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -23,8 +24,12 @@ import android.app.NotificationChannel
 import android.content.Context
 import android.os.Build
 import android.content.Context.NOTIFICATION_SERVICE
+import android.content.pm.PackageManager
 import android.support.annotation.RequiresApi
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import com.google.gson.Gson
+import sk.dmsoft.cityguide.Commons.EAccountType
 import sk.dmsoft.cityguide.Commons.PicassoCache
 import sk.dmsoft.cityguide.Models.InitResponse
 import sk.dmsoft.cityguide.Models.Interest
@@ -100,6 +105,10 @@ class SplashActivity : AppCompatActivity() {
                 if (response.code() == 200){
                     val initResponse = response.body()!!
                     var continueToMainScreen = true
+
+                    if (AccountManager.accountType == EAccountType.tourist)
+                        AccountManager.isPaymentMethodSaved = initResponse.braintreeConnected
+
                     if (initResponse.activeProposal != null){
                         val intent = Intent(this@SplashActivity, ActiveProposalActivity::class.java)
                         intent.putExtra("PROPOSAL_ID", initResponse.activeProposal?.id)

@@ -1,8 +1,11 @@
 package sk.dmsoft.cityguide.Account.Registration
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
@@ -10,6 +13,7 @@ import sk.dmsoft.cityguide.R
 
 import kotlinx.android.synthetic.main.activity_registration.*
 import android.support.v4.app.FragmentStatePagerAdapter
+import android.support.v4.content.ContextCompat
 import android.util.Log
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -191,7 +195,7 @@ class RegistrationActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)
-
+        checkPermissions()
         api = Api(this)
 
         registrationSteps.add(RegisterTouristFragment())
@@ -223,6 +227,20 @@ class RegistrationActivity : AppCompatActivity(),
             onSwitchToTourist()
         else
             super.onBackPressed()
+    }
+
+
+    fun checkPermissions(){
+        val permissionArrayList = ArrayList<String>()
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            permissionArrayList.add(Manifest.permission.ACCESS_COARSE_LOCATION)
+
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            permissionArrayList.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+
+        if(!permissionArrayList.isEmpty())
+            ActivityCompat.requestPermissions(this,permissionArrayList.toTypedArray(),1)
     }
 
 }

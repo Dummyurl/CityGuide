@@ -41,19 +41,21 @@ class CheckoutActivity : AppCompatActivity() {
         }
 
         checkout_btn.setOnClickListener {
-            api.getCheckoutToken().enqueue(object : Callback<CheckoutToken> {
-                override fun onFailure(call: Call<CheckoutToken>?, t: Throwable?) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
+            //api.getCheckoutToken().enqueue(object : Callback<CheckoutToken> {
+            //    override fun onFailure(call: Call<CheckoutToken>?, t: Throwable?) {
+            //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            //    }
+//
+            //    override fun onResponse(call: Call<CheckoutToken>?, response: Response<CheckoutToken>) {
+            //        if (response.code() == 200) {
+            //            token = response.body()!!.token
+            //            val dropInRequest = DropInRequest().clientToken(token)
+            //            startActivityForResult(dropInRequest.getIntent(this@CheckoutActivity), BRAINTREE_REQUEST_CODE)
+            //        }
+            //    }
+            //})
 
-                override fun onResponse(call: Call<CheckoutToken>?, response: Response<CheckoutToken>) {
-                    if (response.code() == 200) {
-                        token = response.body()!!.token
-                        val dropInRequest = DropInRequest().clientToken(token)
-                        startActivityForResult(dropInRequest.getIntent(this@CheckoutActivity), BRAINTREE_REQUEST_CODE)
-                    }
-                }
-            })
+            createTransaction("")
         }
     }
 

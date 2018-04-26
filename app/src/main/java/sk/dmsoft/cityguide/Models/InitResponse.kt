@@ -8,6 +8,7 @@ class InitResponse {
     var proposalToPay: ProposalPayment? = null
     var places: ArrayList<Place> = ArrayList()
     var countries: ArrayList<Country> = ArrayList()
-    var braintreeToken: String? = null
+    var braintreeConnected: Boolean = false
+    var paypalConnected: Boolean = false
 
 }
