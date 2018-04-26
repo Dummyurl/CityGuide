@@ -11,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
         android:text="@string/select_interests"
         android:textStyle="bold"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
@@ -25,7 +26,7 @@
         app:alignItems="stretch"
         app:alignContent="stretch"
         app:justifyContent="center"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="66dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">

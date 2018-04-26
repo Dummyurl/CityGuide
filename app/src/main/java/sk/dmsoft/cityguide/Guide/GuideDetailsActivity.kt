@@ -29,6 +29,11 @@ import sk.dmsoft.cityguide.Models.Rating
 import java.util.*
 import sk.dmsoft.cityguide.R.id.appBarLayout
 import kotlin.collections.ArrayList
+import com.paypal.android.sdk.onetouch.core.metadata.l
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter.ofLocalizedDate
+import java.time.format.FormatStyle
 
 
 class GuideDetailsActivity : AppCompatActivity() {
@@ -39,6 +44,7 @@ class GuideDetailsActivity : AppCompatActivity() {
     lateinit var startDateTimeFragment: SwitchDateTimeDialogFragment
     lateinit var endDateTimeFragment: SwitchDateTimeDialogFragment
     var guideInfo: GuideDetails = GuideDetails()
+    var proposalRequest = ProposalRequest()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,12 +74,9 @@ class GuideDetailsActivity : AppCompatActivity() {
         })
 
         send_proposal.setOnClickListener {
-            val model = ProposalRequest()
-            model.start = start_date.text.toString()
-            model.end = end_date.text.toString()
-            model.guideId = guideId
+            proposalRequest.guideId = guideId
 
-            api.createProposal(model).enqueue(object: Callback<ResponseBody>{
+            api.createProposal(proposalRequest).enqueue(object: Callback<ResponseBody>{
                 override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
 
                 }
@@ -107,7 +110,9 @@ class GuideDetailsActivity : AppCompatActivity() {
 
         startDateTimeFragment.setOnButtonClickListener(object: SwitchDateTimeDialogFragment.OnButtonClickListener{
             override fun onPositiveButtonClick(date: Date) {
-                start_date.setText(DateTime(date).toString())
+                val locale = SimpleDateFormat("dd.MM.YYYY HH:mm")
+                start_date.setText(locale.format(date))
+                proposalRequest.start = DateTime(date).toString()
             }
 
             override fun onNegativeButtonClick(p0: Date?) {
@@ -115,6 +120,8 @@ class GuideDetailsActivity : AppCompatActivity() {
 
         })
 
+        start_date.showSoftInputOnFocus = false
+        end_date.showSoftInputOnFocus = false
         start_date.setOnFocusChangeListener { view, b ->
             if (b)
                 startDateTimeFragment.show(supportFragmentManager, "dialog_start")
@@ -130,7 +137,9 @@ class GuideDetailsActivity : AppCompatActivity() {
 
         endDateTimeFragment.setOnButtonClickListener(object: SwitchDateTimeDialogFragment.OnButtonClickListener{
             override fun onPositiveButtonClick(date: Date) {
-                end_date.setText(DateTime(date).toString())
+                val locale = SimpleDateFormat("dd.MM.YYYY HH:mm")
+                end_date.setText(locale.format(date))
+                proposalRequest.end = DateTime(date).toString()
             }
 
             override fun onNegativeButtonClick(p0: Date?) {

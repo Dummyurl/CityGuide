@@ -97,6 +97,8 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
             }
 
         addFragment(editProposalFragment, R.id.bottom_sheet_wrapper)
+        if (AccountManager.accountType == EAccountType.tourist)
+            checkPaymentMethod()
     }
 
     override fun onBackPressed() {
@@ -192,6 +194,13 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
         if (active != null){
             val intent = Intent(this, ActiveProposalActivity::class.java)
             intent.putExtra("PROPOSAL_ID", active.id)
+            //startActivity(intent)
+        }
+    }
+
+    fun checkPaymentMethod(){
+        if (!AccountManager.isPaymentMethodSaved){
+            val intent = Intent(this, CreatePaymentMethodActivity::class.java)
             startActivity(intent)
         }
     }

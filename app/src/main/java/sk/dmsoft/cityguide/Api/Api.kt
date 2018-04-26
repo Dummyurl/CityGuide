@@ -210,6 +210,10 @@ class Api constructor(private val activity : Context? = null) {
         return api.getInterests()
     }
 
+    fun savePaymentMethod(model: CreatePaymentMethodRequest): Call<ResponseBody>{
+        return api.savePaymentMethod(model)
+    }
+
     //fun uploadImages(image: NoteImage) : Call<ResponseBody> {
     //    val file : RequestBody = RequestBody.create(MediaType.parse("image/*"), image.image)
     //    val imagePart = MultipartBody.Part.createFormData("image", image.image?.name, file)
