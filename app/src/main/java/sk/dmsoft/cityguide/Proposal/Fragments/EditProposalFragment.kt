@@ -13,6 +13,9 @@ import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment
 import kotlinx.android.synthetic.main.fragment_edit_proposal.*
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormatter
+import sk.dmsoft.cityguide.Api.DB
+import sk.dmsoft.cityguide.Commons.AppSettings
+import sk.dmsoft.cityguide.Commons.loadCircle
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
 import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
 
@@ -34,6 +37,7 @@ class EditProposalFragment : Fragment() {
     lateinit var startDateTimeFragment: SwitchDateTimeDialogFragment
     lateinit var endDateTimeFragment: SwitchDateTimeDialogFragment
     var proposalRequest: ProposalRequest = ProposalRequest()
+    lateinit var db: DB
 
     val isSheetVisible: Boolean
         get() {
@@ -43,6 +47,7 @@ class EditProposalFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
+        db = DB(context!!)
         return inflater.inflate(R.layout.fragment_edit_proposal, container, false)
     }
 
@@ -68,6 +73,10 @@ class EditProposalFragment : Fragment() {
         proposalRequest.end = proposal.end
         start_date.setText(DateTime(proposal.start).toLocalDateTime().toString())
         end_date.setText(DateTime(proposal.start).toLocalDateTime().toString())
+        user_name.text = "${proposal.user.firstName} ${proposal.user.secondName}"
+        place_name.text = db.GetPlace(proposal.placeId).city
+        user_photo.loadCircle("${AppSettings.apiUrl}/users/photo/${proposal.user.id}")
+        total_amount.text = "${proposal.perHourSalary}€"
     }
 
     fun hide(){

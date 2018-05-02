@@ -91,11 +91,9 @@ class ActiveProposalActivity : AppCompatActivity() {
     fun setUpInfo(){
         user_photo.loadCircle("${AppSettings.apiUrl}users/photo/${proposal.user.id}")
         user_name.text = "${proposal.user.firstName} ${proposal.user.secondName}"
-        per_hour_salary.text = "${proposal.perHourSalary}€"
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
         format.timeZone = TimeZone.getTimeZone("UTC")
         val spendTime = Date().time - format.parse(proposal.realStart).time
-        spend_time.text = "${proposal.realStart}"
 
         chronometer2.format = "%s"
         chronometer2.base = SystemClock.elapsedRealtime() - spendTime
@@ -130,9 +128,30 @@ class ActiveProposalActivity : AppCompatActivity() {
         wsClient.connect()
     }
 
+    override fun onStop() {
+        super.onStop()
+        if (wsClient.connection.isOpen)
+            wsClient.close()
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        if (!wsClient.connection.isOpen) {
+            try {
+                wsClient.connect()
+            }
+            catch (e: Exception){}
+        }
+    }
+
     fun endProposal(){
         if (AccountManager.accountType == EAccountType.tourist) {
             val intent = Intent(this@ActiveProposalActivity, CheckoutActivity::class.java)
+            intent.putExtra("PROPOSAL_ID", proposalId)
+            startActivity(intent)
+        }
+        else {
+            val intent = Intent(this, CompletedProposalGuideDetails::class.java)
             intent.putExtra("PROPOSAL_ID", proposalId)
             startActivity(intent)
         }

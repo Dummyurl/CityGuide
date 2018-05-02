@@ -47,8 +47,8 @@ class SearchRequestFragment : Fragment() {
         places_list.layoutManager = GridLayoutManager(activity, 2)
         places_list.addItemDecoration(GridSpacingItemDecoration(2, 30, true))
 
-        placesAdapter = PlacesAdapter(activity!!, DB(activity!!).GetPlaces(), { place: Place, position: Int ->
-            mListener?.onCitySelected(place)
+        placesAdapter = PlacesAdapter(activity!!, DB(activity!!).GetPlaces(), { place: Place, position: Int, itemView: View ->
+            mListener?.onCitySelected(place, itemView)
         })
 
         places_list.adapter = placesAdapter
@@ -103,6 +103,6 @@ class SearchRequestFragment : Fragment() {
     interface OnSearchTextInserted {
         // TODO: Update argument type and name
         fun onSearch(searchText: String)
-        fun onCitySelected(place: Place)
+        fun onCitySelected(place: Place, itemView: View)
     }
 }// Required empty public constructor

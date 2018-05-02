@@ -40,6 +40,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.0'
     implementation 'ninja.sakib:PultusORM:v1.7'
     implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.squareup.okhttp:okhttp:2.4.0'
     implementation 'jp.wasabeef:picasso-transformations:2.2.1'
     // If you want to use the GPU Filters
     implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'

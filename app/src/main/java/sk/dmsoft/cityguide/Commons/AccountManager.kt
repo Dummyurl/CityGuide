@@ -14,6 +14,7 @@ object AccountManager {
 
     private lateinit var _context: Context
     private lateinit var _sharedPreferences: SharedPreferences
+    private var paymentMethodSaved: Boolean = false
 
     fun init(context: Context){
         _context = context
@@ -69,10 +70,18 @@ object AccountManager {
 
     var isPaymentMethodSaved: Boolean
         get() {
-            return _sharedPreferences.getBoolean("IS_PAYMENT_METHOD_SAVED", false)
+            return paymentMethodSaved
         }
         set(value){
-            _sharedPreferences.edit().putBoolean("IS_PAYMENT_METHOD_SAVED", value).apply()
+            paymentMethodSaved = value
+        }
+
+    var currency: String
+        get() {
+            return _sharedPreferences.getString("CURRENCY", "EUR")
+        }
+        set(value){
+            _sharedPreferences.edit().putString("CURRENCY", value).apply()
         }
 
     // Methods

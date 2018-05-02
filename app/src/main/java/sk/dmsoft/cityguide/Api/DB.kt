@@ -4,6 +4,7 @@ import android.content.Context
 import ninja.sakib.pultusorm.core.PultusORM
 import ninja.sakib.pultusorm.core.PultusORMCondition
 import sk.dmsoft.cityguide.Models.Country
+import sk.dmsoft.cityguide.Models.Currency
 import sk.dmsoft.cityguide.Models.Interest
 import sk.dmsoft.cityguide.Models.Place
 
@@ -49,6 +50,16 @@ class DB (val context: Context) {
 
     fun GetInterests(): ArrayList<Interest>{
         return pultusORM.find(Interest()) as ArrayList<Interest>
+    }
+
+    fun SaveCurrencies(items: ArrayList<Currency>){
+        items.forEach {
+            pultusORM.save(it)
+        }
+    }
+
+    fun GetCurrencies(): ArrayList<Currency>{
+        return pultusORM.find(Currency()) as ArrayList<Currency>
     }
 
     fun Drop(objectType: Any){

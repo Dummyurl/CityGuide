@@ -4,6 +4,8 @@ import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.transition.TransitionInflater
+import android.support.transition.TransitionSet
 import android.util.Log
 import android.view.View
 import kotlinx.android.synthetic.main.activity_search.*
@@ -40,7 +42,7 @@ class SearchActivity : AppCompatActivity(), SearchRequestFragment.OnSearchTextIn
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onCitySelected(place: Place) {
+    override fun onCitySelected(place: Place, itemView: View) {
         val model = SearchInCity()
         model.placeId = place.id
         api.searchInCity(model).enqueue(object: Callback<ArrayList<GuideListItem>>{
@@ -50,7 +52,14 @@ class SearchActivity : AppCompatActivity(), SearchRequestFragment.OnSearchTextIn
 
             override fun onResponse(call: Call<ArrayList<GuideListItem>>?, response: Response<ArrayList<GuideListItem>>?) {
                 if (response?.code() == 200) {
-                    replaceFragment(searchResultsFragment, R.id.fragment_holder, true)
+
+                    val enterTransitionSet = TransitionSet()
+                    enterTransitionSet.addTransition(TransitionInflater.from(this@SearchActivity).inflateTransition(android.R.transition.move))
+                    enterTransitionSet.duration = 1000
+                    enterTransitionSet.startDelay = 100
+                    searchResultsFragment.sharedElementEnterTransition = enterTransitionSet
+
+                    replaceFragment(searchResultsFragment, R.id.fragment_holder, true, itemView.findViewById(R.id.city_image))
                     val guides = response.body()!!
                     searchResultsFragment.updateGuides(guides)
                     searchResultsFragment.updateImage(place.id)

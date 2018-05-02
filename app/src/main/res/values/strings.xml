@@ -54,5 +54,10 @@
     <string name="skip">Skip</string>
     <string name="add_payment_method">Add payment method</string>
     <string name="add_payment_method_text">Add payment method to order GURU</string>
+    <string name="paypal_account_email">PayPal account email</string>
+    <string name="estimated_time">Estimated time</string>
+    <string name="proposal_completed">Proposal completed</string>
+    <string name="completed_proposal_guide_text">Money will be send to your paypayl account</string>
+    <string name="comment">Comment</string>
 
 </resources>

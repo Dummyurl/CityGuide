@@ -57,6 +57,9 @@ class GuideDetailsActivity : AppCompatActivity() {
 
         guideId = intent.extras.getString("GUIDE_ID", "")
 
+        user_photo.loadCircle("${AppSettings.apiUrl}/users/photo/${guideId}")
+        guide_photo.loadCircle("${AppSettings.apiUrl}/users/photo/${guideId}")
+
 
         api.guideDetails(guideId).enqueue(object: Callback<GuideDetails>{
             override fun onFailure(call: Call<GuideDetails>?, t: Throwable?) {
@@ -154,8 +157,6 @@ class GuideDetailsActivity : AppCompatActivity() {
     }
 
     fun fillDetails(){
-        user_photo.loadCircle("${AppSettings.apiUrl}/users/photo/${guideInfo.id}")
-        guide_photo.loadCircle("${AppSettings.apiUrl}/users/photo/${guideInfo.id}")
         city_image.load("${AppSettings.apiUrl}/places/photo/${guideInfo.place?.id}")
 
         guide_about.text = guideInfo.about

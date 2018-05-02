@@ -39,6 +39,8 @@ class RegisterGuideInfoFragment : Fragment() {
         if (mListener != null) {
             val model = RegistrationGuideInfo()
             model.salary = salary.text.toString().toInt()
+            model.paypalEmail = paypal_email.text.toString()
+            model.estimatedTime = estimated_time.text.toString().toDouble()
             mListener!!.onRegistrationGuideInfoCompleted(model)
         }
     }

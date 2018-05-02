@@ -270,6 +270,8 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
     }
 
     fun startProposal(){
+        if (wsClient.connection.isOpen)
+            wsClient.close()
         val intent = Intent(this@ChatActivity, ActiveProposalActivity::class.java)
         intent.putExtra("PROPOSAL_ID", proposalId)
         startActivity(intent)

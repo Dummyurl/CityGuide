@@ -13,6 +13,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import sk.dmsoft.cityguide.Api.Api
+import sk.dmsoft.cityguide.Commons.CurrencyConverter
 import sk.dmsoft.cityguide.Models.CheckoutToken
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
 import sk.dmsoft.cityguide.Models.Rating
@@ -34,6 +35,8 @@ class CheckoutActivity : AppCompatActivity() {
         if (proposalId == 0){
             val proposalJson = intent.getStringExtra("PROPOSAL")
             proposal = Gson().fromJson(proposalJson, Proposal::class.java)
+            if (proposal?.proposalPayment?.totalAmount != null)
+            total_amount.text = CurrencyConverter.convert(proposal!!.proposalPayment!!.totalAmount)
         }
         else {
             proposal = Proposal()
@@ -41,19 +44,21 @@ class CheckoutActivity : AppCompatActivity() {
         }
 
         checkout_btn.setOnClickListener {
-            api.getCheckoutToken().enqueue(object : Callback<CheckoutToken> {
-                override fun onFailure(call: Call<CheckoutToken>?, t: Throwable?) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
+            //api.getCheckoutToken().enqueue(object : Callback<CheckoutToken> {
+            //    override fun onFailure(call: Call<CheckoutToken>?, t: Throwable?) {
+            //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            //    }
+//
+            //    override fun onResponse(call: Call<CheckoutToken>?, response: Response<CheckoutToken>) {
+            //        if (response.code() == 200) {
+            //            token = response.body()!!.token
+            //            val dropInRequest = DropInRequest().clientToken(token)
+            //            startActivityForResult(dropInRequest.getIntent(this@CheckoutActivity), BRAINTREE_REQUEST_CODE)
+            //        }
+            //    }
+            //})
 
-                override fun onResponse(call: Call<CheckoutToken>?, response: Response<CheckoutToken>) {
-                    if (response.code() == 200) {
-                        token = response.body()!!.token
-                        val dropInRequest = DropInRequest().clientToken(token)
-                        startActivityForResult(dropInRequest.getIntent(this@CheckoutActivity), BRAINTREE_REQUEST_CODE)
-                    }
-                }
-            })
+            createTransaction("")
         }
     }
 
@@ -82,6 +87,8 @@ class CheckoutActivity : AppCompatActivity() {
 
             override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
                 Log.e("BRAINTREE", response?.body().toString())
+                val intent = Intent(this@CheckoutActivity, MainActivity::class.java)
+                startActivity(intent)
             }
         })
     }

@@ -5,9 +5,11 @@ import sk.dmsoft.cityguide.Models.Proposal.ProposalPayment
 
 class InitResponse {
     var activeProposal: Proposal? = null
-    var proposalToPay: ProposalPayment? = null
+    var proposalToPay: Proposal? = null
     var places: ArrayList<Place> = ArrayList()
     var countries: ArrayList<Country> = ArrayList()
-    var braintreeToken: String? = null
+    var braintreeConnected: Boolean = false
+    var paypalConnected: Boolean = false
+    var currencyRates: ArrayList<Currency> = ArrayList()
 
 }
