@@ -25,9 +25,9 @@
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
                 android:fitsSystemWindows="true"
-                android:src="@mipmap/praha"
                 app:layout_collapseMode="parallax"
-                android:maxHeight="250dp"/>
+                android:maxHeight="250dp"
+                android:transitionName="city_image"/>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"

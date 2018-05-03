@@ -76,6 +76,14 @@ object AccountManager {
             paymentMethodSaved = value
         }
 
+    var currency: String
+        get() {
+            return _sharedPreferences.getString("CURRENCY", "EUR")
+        }
+        set(value){
+            _sharedPreferences.edit().putString("CURRENCY", value).apply()
+        }
+
     // Methods
     fun LogIn(accessToken: AccessToken){
         val editor = _sharedPreferences.edit()

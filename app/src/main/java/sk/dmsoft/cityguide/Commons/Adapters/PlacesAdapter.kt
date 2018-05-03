@@ -11,7 +11,7 @@ import sk.dmsoft.cityguide.Commons.load
 import sk.dmsoft.cityguide.Models.Place
 import sk.dmsoft.cityguide.R
 
-class PlacesAdapter(val activity: Activity, var places: ArrayList<Place>, val clickListener: (Place, Int) -> Unit) : RecyclerView.Adapter<PlacesAdapter.ViewHolder>(){
+class PlacesAdapter(val activity: Activity, var places: ArrayList<Place>, val clickListener: (Place, Int, View) -> Unit) : RecyclerView.Adapter<PlacesAdapter.ViewHolder>(){
 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(places[position], clickListener)
@@ -31,14 +31,14 @@ class PlacesAdapter(val activity: Activity, var places: ArrayList<Place>, val cl
 
     class ViewHolder(val activity: Activity, itemView: View) : RecyclerView.ViewHolder(itemView){
 
-        fun bind(item: Place, listener: (Place, Int) -> Unit) = with(itemView) {
+        fun bind(item: Place, listener: (Place, Int, View) -> Unit) = with(itemView) {
 
             city_name.text = item.city
             city_image.load("${AppSettings.apiUrl}places/photo/${item.id}")
             available_guides.text = "${item.gurusCount} gurus available"
 
             setOnClickListener {
-                listener(item, adapterPosition)
+                listener(item, adapterPosition, itemView)
             }
 
         }

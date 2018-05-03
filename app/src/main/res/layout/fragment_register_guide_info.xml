@@ -32,6 +32,33 @@
 
         </android.support.design.widget.TextInputLayout>
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/estimated_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/estimated_time"
+                android:inputType="numberDecimal"
+                android:ems="7"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/paypal_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/paypal_account_email"
+                android:inputType="textEmailAddress"/>
+
+        </android.support.design.widget.TextInputLayout>
+
         <Button
             android:id="@+id/finish"
             android:layout_width="match_parent"

@@ -44,7 +44,6 @@ class Api constructor(private val activity : Context? = null) {
 
     init {
         if (activity != null) {
-            val accessToken: String = AccountManager.accessToken
 
             val logInterceptor = HttpLoggingInterceptor()
             logInterceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -54,7 +53,7 @@ class Api constructor(private val activity : Context? = null) {
                     .create()
 
             val client = OkHttpClient().newBuilder()
-                    .addInterceptor(AuthenticationInterceptor(accessToken))
+                    .addInterceptor(AuthenticationInterceptor())
                     .addInterceptor(logInterceptor)
                     .readTimeout(30, TimeUnit.SECONDS)
                     .writeTimeout(30, TimeUnit.SECONDS)
@@ -231,14 +230,14 @@ class Api constructor(private val activity : Context? = null) {
 }
 
 
-class AuthenticationInterceptor(private val accessToken: String) : Interceptor {
+class AuthenticationInterceptor() : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
-        Log.e("Interceptor", "ACCESS TOKEN bearer $accessToken")
+        Log.e("Interceptor", "ACCESS TOKEN bearer ${AccountManager.accessToken}")
         // Add authorization header with updated authorization value to intercepted request
         val authorisedRequest = originalRequest.newBuilder()
-                .header("Authorization", "bearer " +accessToken)
+                .header("Authorization", "bearer " +AccountManager.accessToken)
                 .build()
         return chain.proceed(authorisedRequest)
     }

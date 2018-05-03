@@ -13,9 +13,10 @@ object PicassoCache {
     fun CreatePicassoCache(context: Context) {
 
         //val downloader = OkHttpDownloader(context, Long.MAX_VALUE)
-        val builder = Picasso.Builder(context)
+        val builder = Picasso.Builder(context).downloader(OkHttpDownloader(context))
         //builder.downloader(downloader)
 
         instance = builder.build()
+        instance?.setIndicatorsEnabled(true)
     }
 }

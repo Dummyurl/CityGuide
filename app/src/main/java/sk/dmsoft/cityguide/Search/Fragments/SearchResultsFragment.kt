@@ -16,6 +16,11 @@ import sk.dmsoft.cityguide.Guide.GuideDetailsActivity
 import sk.dmsoft.cityguide.Models.Guides.GuideListItem
 
 import sk.dmsoft.cityguide.R
+import android.R.attr.transitionName
+import android.support.v4.app.ActivityCompat
+import android.support.v4.app.ActivityOptionsCompat
+import android.support.v4.app.FragmentActivity
+
 
 /**
  * A simple [Fragment] subclass.
@@ -40,15 +45,24 @@ class SearchResultsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        guidesAdapter = GuidesAdapter(activity!!, guides, { guide, position ->
+        guidesAdapter = GuidesAdapter(activity!!, guides, { guide, position, itemView ->
             val intent = Intent(activity, GuideDetailsActivity::class.java)
             intent.putExtra("GUIDE_ID", guide.id)
-            startActivity(intent)
+
+            val options =
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(activity as FragmentActivity,
+                            itemView, // Starting view
+                            itemView.transitionName    // The String
+                    )
+
+            ActivityCompat.startActivity(context!!, intent, options.toBundle())
         })
 
         guides_list.setHasFixedSize(true)
         guides_list.layoutManager = LinearLayoutManager(activity)
         guides_list.adapter = guidesAdapter
+        guides_list.setItemViewCacheSize(20)
+        guides_list.isDrawingCacheEnabled = true
 
         city_image?.load("${AppSettings.apiUrl}/places/photo/$placeId")
     }

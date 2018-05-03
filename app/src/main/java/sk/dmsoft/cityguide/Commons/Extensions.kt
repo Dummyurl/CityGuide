@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import com.squareup.picasso.MemoryPolicy
+import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
 import jp.wasabeef.picasso.transformations.CropCircleTransformation
 
@@ -20,18 +22,32 @@ fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false): View {
 }
 
 fun ImageView.load(url : String){
-    PicassoCache.instance?.load(url)?.into(this)
+    PicassoCache.instance?.load(url)?.networkPolicy(NetworkPolicy.OFFLINE)?.into(this, object: com.squareup.picasso.Callback{
+        override fun onSuccess() {}
+
+        override fun onError() {
+            PicassoCache.instance?.load(url)?.fit()?.transform(CropCircleTransformation())?.into(this@load)
+        }
+    })
 }
 
 fun ImageView.loadCircle(url: String){
-    PicassoCache.instance?.load(url)?.transform(CropCircleTransformation())?.into(this)
+    PicassoCache.instance?.load(url)?.networkPolicy(NetworkPolicy.OFFLINE)?.fit()?.transform(CropCircleTransformation())?.into(this, object: com.squareup.picasso.Callback{
+        override fun onSuccess() {}
+
+        override fun onError() {
+            PicassoCache.instance?.load(url)?.fit()?.transform(CropCircleTransformation())?.into(this@loadCircle)
+        }
+    })
 }
 
-inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction, addToBackstack: Boolean) {
+inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction, addToBackstack: Boolean, sharedTransActionItem: View? = null) {
+    val transaction = beginTransaction().func()
     if (addToBackstack)
-        beginTransaction().func().addToBackStack("true").commit()
-    else
-        beginTransaction().func().commit()
+        transaction.addToBackStack("true")
+    if (sharedTransActionItem != null)
+        transaction.addSharedElement(sharedTransActionItem, sharedTransActionItem.transitionName)
+    transaction.commit()
 }
 
 fun AppCompatActivity.addFragment(fragment: Fragment, frameId: Int, addToBackstack: Boolean = false){
@@ -39,6 +55,6 @@ fun AppCompatActivity.addFragment(fragment: Fragment, frameId: Int, addToBacksta
 }
 
 
-fun AppCompatActivity.replaceFragment(fragment: Fragment, frameId: Int, addToBackstack: Boolean = false) {
-    supportFragmentManager.inTransaction({replace(frameId, fragment)}, addToBackstack)
+fun AppCompatActivity.replaceFragment(fragment: Fragment, frameId: Int, addToBackstack: Boolean = false, sharedTransActionItem: View? = null) {
+    supportFragmentManager.inTransaction({replace(frameId, fragment)}, addToBackstack, sharedTransActionItem)
 }

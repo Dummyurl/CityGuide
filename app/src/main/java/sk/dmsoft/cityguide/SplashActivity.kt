@@ -17,8 +17,6 @@ import sk.dmsoft.cityguide.Api.Api
 import sk.dmsoft.cityguide.Api.DB
 import sk.dmsoft.cityguide.Commons.AccountManager
 import sk.dmsoft.cityguide.Models.Account.RegisterFcm
-import sk.dmsoft.cityguide.Models.Country
-import sk.dmsoft.cityguide.Models.Place
 import android.app.NotificationManager
 import android.app.NotificationChannel
 import android.content.Context
@@ -31,8 +29,7 @@ import android.support.v4.content.ContextCompat
 import com.google.gson.Gson
 import sk.dmsoft.cityguide.Commons.EAccountType
 import sk.dmsoft.cityguide.Commons.PicassoCache
-import sk.dmsoft.cityguide.Models.InitResponse
-import sk.dmsoft.cityguide.Models.Interest
+import sk.dmsoft.cityguide.Models.*
 import sk.dmsoft.cityguide.Proposal.ActiveProposalActivity
 
 
@@ -48,6 +45,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sk.dmsoft.cityguide.Commons.AccountManager.init(this)
+        sk.dmsoft.cityguide.Commons.CurrencyConverter.init(this)
         api  = Api(this)
         db = DB(this)
 
@@ -118,7 +116,7 @@ class SplashActivity : AppCompatActivity() {
                     }
                     if (initResponse.proposalToPay != null){
                         val intent = Intent(this@SplashActivity, CheckoutActivity::class.java)
-                        val proposalJson = Gson().toJson(initResponse.proposalToPay!!.proposal)
+                        val proposalJson = Gson().toJson(initResponse.proposalToPay)
                         intent.putExtra("PROPOSAL", proposalJson)
                         startActivity(intent)
                         finish()
@@ -126,6 +124,9 @@ class SplashActivity : AppCompatActivity() {
                     }
                     if (initResponse.places.size > 0)
                         savePlaces(initResponse.places)
+
+                    if (initResponse.currencyRates.size > 0)
+                        saveCurrencies(initResponse.currencyRates)
 
                     if (initResponse.countries.size > 0)
                         saveCountries(initResponse.countries)
@@ -150,6 +151,11 @@ class SplashActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    fun saveCurrencies(currencies: ArrayList<Currency>){
+        db.Drop(Currency())
+        db.SaveCurrencies(currencies)
     }
 
     private fun saveCountries(countries: ArrayList<Country>){

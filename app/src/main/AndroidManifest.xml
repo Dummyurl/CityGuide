@@ -76,7 +76,8 @@
             android:label="@string/title_activity_active_proposal"
             android:theme="@style/AppTheme" />
         <activity android:name=".CheckoutActivity" />
-        <activity android:name=".CreatePaymentMethodActivity"></activity>
+        <activity android:name=".CreatePaymentMethodActivity" />
+        <activity android:name=".Proposal.CompletedProposalGuideDetails"></activity>
     </application>
 
 </manifest>

@@ -5,4 +5,6 @@ package sk.dmsoft.cityguide.Models.Account
  */
 class RegistrationGuideInfo {
     var salary: Int = 0
+    var paypalEmail = ""
+    var estimatedTime: Double = 0.0
 }

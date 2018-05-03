@@ -177,7 +177,7 @@ class RegistrationActivity : AppCompatActivity(),
 
             override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
                 if (response?.code() == 200) {
-                    AccountManager.registrationStep = 4
+                    AccountManager.registrationStep = 5
                     startActivity(Intent(this@RegistrationActivity, MainActivity::class.java))
                     finish()
                 }

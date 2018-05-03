@@ -15,10 +15,10 @@
 
         <ImageView
             android:id="@+id/city_image"
-            android:src="@mipmap/praha"
             android:scaleType="centerCrop"
             android:layout_width="match_parent"
-            android:layout_height="200dp" />
+            android:layout_height="200dp"
+            android:transitionName="city_image"/>
 
 
         <LinearLayout
