@@ -36,7 +36,7 @@ class ProposalsAdapter(val activity: Activity, val proposals: ArrayList<Proposal
 
         fun bind(item: Proposal, listener: (Proposal, Int) -> Unit) = with(itemView) {
             val db = DB(activity)
-            city_image.load("${AppSettings.apiUrl}places/photo/${item.placeId}")
+            city_image.load("${AppSettings.apiUrl}places/photo/${item.placeId}", {})
             if (item.user != null) {
                 guide_name.text = "${item.user.firstName} ${item.user.secondName}"
                 val startDate = DateTime(item.start)

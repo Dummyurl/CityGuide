@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="sk.dmsoft.cityguide.Account.Registration.Step.RegisterTouristFragment"
-    android:background="@color/transparentPrimary">
+    tools:context="sk.dmsoft.cityguide.Account.Registration.Step.RegisterTouristFragment">
 
 
 
@@ -12,26 +11,29 @@
         android:id="@+id/imageView5"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:scaleType="fitStart"
-        android:src="@mipmap/registration_ilustration"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/tourist_register"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
+<!--
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/transpatent">
+        android:layout_marginTop="24dp"
+        android:background="@color/transpatent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/logo"/>
+            android:src="@drawable/logo" />
 
     </android.support.v7.widget.Toolbar>
+-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -66,7 +68,6 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
                 android:layout_gravity="end"
-                android:textColor="@color/white"
                 style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:text="@string/login" />
 

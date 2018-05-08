@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_register_step2.*
 import sk.dmsoft.cityguide.Commons.load
+import sk.dmsoft.cityguide.Commons.loadCircle
 import sk.dmsoft.cityguide.Models.Account.Registration2
 
 import sk.dmsoft.cityguide.R
@@ -41,7 +42,7 @@ class RegisterStep2Fragment : Fragment() {
     }
 
     fun loadPhoto(uri: String){
-        photo_image.load(uri)
+        photo_image.loadCircle(uri)
     }
 
     // TODO: Rename method, update argument and hook method into UI event

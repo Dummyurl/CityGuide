@@ -17,6 +17,6 @@ object PicassoCache {
         //builder.downloader(downloader)
 
         instance = builder.build()
-        instance?.setIndicatorsEnabled(true)
+        //instance?.setIndicatorsEnabled(true)
     }
 }

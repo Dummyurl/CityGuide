@@ -4,8 +4,7 @@ import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.transition.TransitionInflater
-import android.support.transition.TransitionSet
+import android.support.transition.*
 import android.util.Log
 import android.view.View
 import kotlinx.android.synthetic.main.activity_search.*
@@ -52,17 +51,16 @@ class SearchActivity : AppCompatActivity(), SearchRequestFragment.OnSearchTextIn
 
             override fun onResponse(call: Call<ArrayList<GuideListItem>>?, response: Response<ArrayList<GuideListItem>>?) {
                 if (response?.code() == 200) {
-
-                    val enterTransitionSet = TransitionSet()
-                    enterTransitionSet.addTransition(TransitionInflater.from(this@SearchActivity).inflateTransition(android.R.transition.move))
-                    enterTransitionSet.duration = 1000
-                    enterTransitionSet.startDelay = 100
-                    searchResultsFragment.sharedElementEnterTransition = enterTransitionSet
+                    searchResultsFragment.enterTransition = Fade()
+                    searchResultsFragment.exitTransition = Fade()
+                    searchResultsFragment.sharedElementEnterTransition = FragmentTransition()
+                    searchResultsFragment.sharedElementReturnTransition = FragmentTransition()
+                    searchRequestFragment.exitTransition = Fade()
+                    searchResultsFragment.updateImage(place.id)
 
                     replaceFragment(searchResultsFragment, R.id.fragment_holder, true, itemView.findViewById(R.id.city_image))
                     val guides = response.body()!!
                     searchResultsFragment.updateGuides(guides)
-                    searchResultsFragment.updateImage(place.id)
                 }
             }
 
@@ -113,4 +111,12 @@ class SearchActivity : AppCompatActivity(), SearchRequestFragment.OnSearchTextIn
         searchRequest.maxHourlyRate = max_hourly_rate.progress
         searchRequest.minRating = min_rating.rating
     }
+}
+
+class FragmentTransition() : TransitionSet() {init {
+    ordering = ORDERING_TOGETHER
+    addTransition(ChangeBounds()).
+            addTransition(ChangeTransform()).
+            addTransition(ChangeImageTransform())
+}
 }

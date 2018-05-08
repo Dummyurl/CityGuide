@@ -155,6 +155,11 @@ class SplashActivity : AppCompatActivity() {
 
     fun saveCurrencies(currencies: ArrayList<Currency>){
         db.Drop(Currency())
+        val eur = Currency()
+        eur.id = "EUR"
+        eur.rate = 1.0
+        eur.symbol = "€"
+        currencies.add(eur)
         db.SaveCurrencies(currencies)
     }
 

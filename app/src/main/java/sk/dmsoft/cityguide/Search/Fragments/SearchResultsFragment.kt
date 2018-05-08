@@ -20,6 +20,7 @@ import android.R.attr.transitionName
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.FragmentActivity
+import android.support.v4.util.Pair
 
 
 /**
@@ -49,11 +50,11 @@ class SearchResultsFragment : Fragment() {
             val intent = Intent(activity, GuideDetailsActivity::class.java)
             intent.putExtra("GUIDE_ID", guide.id)
 
+            val userPhotoPair: Pair<View, String> = Pair.create(itemView, itemView.transitionName)
+            val cityPhotoPair: Pair<View, String> = Pair.create(city_image, city_image.transitionName)
+
             val options =
-                    ActivityOptionsCompat.makeSceneTransitionAnimation(activity as FragmentActivity,
-                            itemView, // Starting view
-                            itemView.transitionName    // The String
-                    )
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(activity as FragmentActivity, userPhotoPair, cityPhotoPair )
 
             ActivityCompat.startActivity(context!!, intent, options.toBundle())
         })
@@ -64,7 +65,10 @@ class SearchResultsFragment : Fragment() {
         guides_list.setItemViewCacheSize(20)
         guides_list.isDrawingCacheEnabled = true
 
-        city_image?.load("${AppSettings.apiUrl}/places/photo/$placeId")
+        activity?.supportPostponeEnterTransition()
+        city_image?.load("${AppSettings.apiUrl}/places/photo/$placeId", {
+            activity?.supportStartPostponedEnterTransition()
+        })
     }
 
     fun updateGuides(guides: ArrayList<GuideListItem>){
@@ -73,7 +77,9 @@ class SearchResultsFragment : Fragment() {
 
     fun updateImage(placeId: Int){
         this.placeId = placeId
-        city_image?.load("${AppSettings.apiUrl}/places/photo/$placeId")
+        city_image?.load("${AppSettings.apiUrl}/places/photo/$placeId", {
+            activity?.supportStartPostponedEnterTransition()
+        })
     }
 
     override fun onAttach(context: Context?) {

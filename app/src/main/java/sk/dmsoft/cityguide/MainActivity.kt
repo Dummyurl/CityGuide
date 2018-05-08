@@ -99,6 +99,10 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
         addFragment(editProposalFragment, R.id.bottom_sheet_wrapper)
         if (AccountManager.accountType == EAccountType.tourist)
             checkPaymentMethod()
+
+        open_profile.setOnClickListener{
+            startActivity(Intent(this, ProfileActivity::class.java))
+        }
     }
 
     override fun onBackPressed() {

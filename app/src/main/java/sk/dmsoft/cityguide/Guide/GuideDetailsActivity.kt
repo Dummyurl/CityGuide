@@ -3,8 +3,10 @@ package sk.dmsoft.cityguide.Guide
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.Snackbar
+import android.support.transition.TransitionListenerAdapter
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.transition.Transition
 import android.util.Log
 import sk.dmsoft.cityguide.R
 
@@ -34,6 +36,15 @@ import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatter.ofLocalizedDate
 import java.time.format.FormatStyle
+import android.view.ViewAnimationUtils
+import android.animation.Animator
+import android.opengl.ETC1.getHeight
+import android.opengl.ETC1.getWidth
+import android.view.View
+import android.view.ViewTreeObserver
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.AlphaAnimation
+import android.view.animation.DecelerateInterpolator
 
 
 class GuideDetailsActivity : AppCompatActivity() {
@@ -56,6 +67,8 @@ class GuideDetailsActivity : AppCompatActivity() {
         initDatePickers()
 
         guideId = intent.extras.getString("GUIDE_ID", "")
+
+        supportPostponeEnterTransition()
 
         user_photo.loadCircle("${AppSettings.apiUrl}/users/photo/${guideId}")
         guide_photo.loadCircle("${AppSettings.apiUrl}/users/photo/${guideId}")
@@ -99,7 +112,6 @@ class GuideDetailsActivity : AppCompatActivity() {
             guide_photo.scaleX = 1 - offsetFactor * 0.85f
             guide_photo.scaleY =  1 - offsetFactor * 0.85f
         }
-
     }
 
     fun initDatePickers(){
@@ -157,8 +169,9 @@ class GuideDetailsActivity : AppCompatActivity() {
     }
 
     fun fillDetails(){
-        city_image.load("${AppSettings.apiUrl}/places/photo/${guideInfo.place?.id}")
-
+        city_image.load("${AppSettings.apiUrl}/places/photo/${guideInfo.place?.id}", {
+            supportStartPostponedEnterTransition()
+        })
         guide_about.text = guideInfo.about
 
         user_rating.rating = 3f
@@ -182,6 +195,58 @@ class GuideDetailsActivity : AppCompatActivity() {
         }
         ratingBar.rating = sum/guideInfo.ratings.size
         user_rating.rating = if (sum == 0f) sum/guideInfo.ratings.size else 3f
+
+        showRevealAnim()
+    }
+
+
+    fun showRevealAnim(){
+        val fadeIn = AlphaAnimation(0f, 1f)
+        fadeIn.interpolator = DecelerateInterpolator()
+        fadeIn.duration = 1000
+        toolbar.animation = fadeIn
+        toolbar.visibility = View.VISIBLE
+        val x = nested_view.width / 2
+        val y = (nested_view.top / 2) * -1
+
+        val startRadius = 0
+        val endRadius = Math.hypot(nested_view.width.toDouble(), nested_view.height.toDouble()).toInt()
+
+        val anim = ViewAnimationUtils.createCircularReveal(nested_view, x, y, startRadius.toFloat(), endRadius.toFloat())
+
+        nested_view.visibility = View.VISIBLE
+        anim.duration = 800
+        anim.start()
+    }
+
+    override fun onBackPressed() {
+        val x = nested_view.width / 2
+        val y = (nested_view.top / 2) * -1
+
+        val startRadius = 0
+        val endRadius = Math.hypot(nested_view.width.toDouble(), nested_view.height.toDouble()).toInt()
+
+        val anim = ViewAnimationUtils.createCircularReveal(nested_view, x, y, endRadius.toFloat(), startRadius.toFloat())
+
+        nested_view.visibility = View.VISIBLE
+        anim.duration = 600
+        anim.start()
+        anim.addListener(object: Animator.AnimatorListener {
+            override fun onAnimationRepeat(p0: Animator?) {}
+
+            override fun onAnimationEnd(p0: Animator?) {
+                nested_view.visibility = View.GONE
+            }
+
+            override fun onAnimationCancel(p0: Animator?) {}
+
+            override fun onAnimationStart(p0: Animator?) {}
+
+        })
+
+        toolbar.animate().alpha(0f).setDuration(300).withEndAction {
+            super.onBackPressed()
+        }
     }
 
 }
