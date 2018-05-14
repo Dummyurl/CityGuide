@@ -77,7 +77,8 @@
         <activity android:name=".CheckoutActivity" />
         <activity android:name=".CreatePaymentMethodActivity" />
         <activity android:name=".Proposal.CompletedProposalGuideDetails" />
-        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".Account.ChangePasswordActivity"></activity>
     </application>
 
 </manifest>

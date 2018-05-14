@@ -27,6 +27,10 @@ class LoginActivity : AppCompatActivity() {
 
         val api = Api(this)
 
+        forgotten_password.setOnClickListener {
+
+        }
+
         login.setOnClickListener({
             val model = Login()
             model.email = email.text.toString()
