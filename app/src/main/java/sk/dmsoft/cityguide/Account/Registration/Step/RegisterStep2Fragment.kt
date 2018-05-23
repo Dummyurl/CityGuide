@@ -8,8 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_register_step2.*
+import sk.dmsoft.cityguide.Commons.AccountManager
+import sk.dmsoft.cityguide.Commons.AppSettings
 import sk.dmsoft.cityguide.Commons.load
+import sk.dmsoft.cityguide.Commons.loadCircle
 import sk.dmsoft.cityguide.Models.Account.Registration2
+import sk.dmsoft.cityguide.Models.Guides.GuideDetails
 
 import sk.dmsoft.cityguide.R
 
@@ -27,6 +31,7 @@ private const val ARG_PARAM2 = "param2"
  */
 class RegisterStep2Fragment : Fragment() {
     private var listener: Step2Listener? = null
+    val model = Registration2()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -38,17 +43,29 @@ class RegisterStep2Fragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         select_photo.setOnClickListener { listener?.onPhotoSelect() }
         next.setOnClickListener { CompleteStep2() }
+        fillFields()
     }
 
     fun loadPhoto(uri: String){
-        photo_image.load(uri)
+        photo_image.loadCircle(uri)
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     fun CompleteStep2() {
-        val model = Registration2()
         model.aboutMe = about_me.text.toString()
         listener?.onStep2Completed(model)
+    }
+
+    fun init(info: GuideDetails){
+        model.aboutMe = info.about
+
+        if (this.view != null)
+            fillFields()
+    }
+
+    fun fillFields(){
+        about_me.setText(model.aboutMe)
+        photo_image.loadCircle("${AppSettings.apiUrl}/users/photo/${AccountManager.userId}")
     }
 
     override fun onAttach(context: Context) {

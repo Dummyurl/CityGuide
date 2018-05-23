@@ -21,6 +21,8 @@ import android.support.annotation.RequiresApi
 import sk.dmsoft.cityguide.MainActivity
 import android.widget.DatePicker
 import org.joda.time.DateTime
+import sk.dmsoft.cityguide.Models.Guides.GuideDetails
+import sk.dmsoft.cityguide.Models.Guides.GuideInfo
 
 
 /**
@@ -75,11 +77,23 @@ class RegisterStep1Fragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         next.setOnClickListener { completeStep1() }
         birth_date.onFocusChangeListener = View.OnFocusChangeListener { _, p1 -> if(p1) datePickerDialog.show() }
+
+        fillFields()
     }
 
     override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
         model.birthDate = DateTime(p1, p2, p3, 0, 0).toString()
         birth_date.setText(DateTime(p1, p2, p3, 0, 0).toLocalDate().toString())
+    }
+
+    fun init(info: GuideDetails){
+        model.firstName = info.firstName
+        model.secondName = info.secondName
+        model.placeId = info.place!!.id
+
+
+        if (this.view != null)
+            fillFields()
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -104,6 +118,11 @@ class RegisterStep1Fragment : Fragment(), DatePickerDialog.OnDateSetListener {
     override fun onDetach() {
         super.onDetach()
         mListener = null
+    }
+
+    fun fillFields(){
+        first_name.setText(model.firstName)
+        second_name.setText(model.secondName)
     }
 
     /**

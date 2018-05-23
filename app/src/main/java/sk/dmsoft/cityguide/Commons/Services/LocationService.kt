@@ -23,7 +23,7 @@ interface LocationUpdateCallback{
 class LocationService : Service(), LocationListener{
     val TAG = "Location manager"
     var mLocationManager: LocationManager? = null
-    val LOCATION_INTERVAL: Long = 10
+    val LOCATION_INTERVAL: Long = 1
     val LOCATION_DISTANCE = 1f
 
 

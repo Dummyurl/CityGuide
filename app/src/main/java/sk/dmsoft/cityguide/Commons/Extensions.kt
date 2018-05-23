@@ -21,12 +21,15 @@ fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false): View {
     return LayoutInflater.from(context).inflate(layoutId, this, attachToRoot)
 }
 
-fun ImageView.load(url : String){
+fun ImageView.load(url : String, callback: () -> Unit){
     PicassoCache.instance?.load(url)?.networkPolicy(NetworkPolicy.OFFLINE)?.into(this, object: com.squareup.picasso.Callback{
-        override fun onSuccess() {}
+        override fun onSuccess() {
+            callback()
+        }
 
         override fun onError() {
             PicassoCache.instance?.load(url)?.fit()?.transform(CropCircleTransformation())?.into(this@load)
+            callback()
         }
     })
 }

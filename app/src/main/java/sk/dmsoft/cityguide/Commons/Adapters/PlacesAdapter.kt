@@ -34,7 +34,7 @@ class PlacesAdapter(val activity: Activity, var places: ArrayList<Place>, val cl
         fun bind(item: Place, listener: (Place, Int, View) -> Unit) = with(itemView) {
 
             city_name.text = item.city
-            city_image.load("${AppSettings.apiUrl}places/photo/${item.id}")
+            city_image.load("${AppSettings.apiUrl}places/photo/${item.id}", {})
             available_guides.text = "${item.gurusCount} gurus available"
 
             setOnClickListener {

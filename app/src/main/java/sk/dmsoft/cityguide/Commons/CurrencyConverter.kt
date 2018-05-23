@@ -13,7 +13,6 @@ object CurrencyConverter {
     }
 
     fun convert(value: Double): String{
-        AccountManager.currency = "EUR"
         if (AccountManager.currency == "EUR")
             return "$value€"
         val currency = currencies.find { it.id == AccountManager.currency }

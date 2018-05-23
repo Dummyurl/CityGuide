@@ -26,6 +26,7 @@ import sk.dmsoft.cityguide.Commons.EAccountType
 import sk.dmsoft.cityguide.Models.AccessToken
 import sk.dmsoft.cityguide.MainActivity
 import sk.dmsoft.cityguide.Models.Account.*
+import sk.dmsoft.cityguide.Models.Guides.GuideDetails
 
 
 class RegistrationActivity : AppCompatActivity(),
@@ -37,6 +38,13 @@ class RegistrationActivity : AppCompatActivity(),
         RegisterGuideInfoFragment.OnRegistrationGuideInfo{
 
     var guideMode = false
+    var editMode = false
+
+    val registerTouristFragment = RegisterTouristFragment()
+    val registerGuideFragment = RegisterGuideFragment()
+    val step1Fragment = RegisterStep1Fragment()
+    val step2Fragment = RegisterStep2Fragment()
+    val step3Fragment = RegisterStep3Fragment()
 
     override fun onSwitchToGuide() {
         AccountManager.accountType = EAccountType.guide
@@ -56,7 +64,6 @@ class RegistrationActivity : AppCompatActivity(),
 
     val registrationSteps: ArrayList<Fragment> = ArrayList()
     val REQUEST_SELECT_IMAGE_IN_ALBUM = 1
-    val step2Fragment: RegisterStep2Fragment = RegisterStep2Fragment()
     var profilePhotoUri: Uri = Uri.EMPTY
 
     lateinit var api: Api
@@ -70,8 +77,11 @@ class RegistrationActivity : AppCompatActivity(),
             override fun onResponse(call: Call<AccessToken>?, response: Response<AccessToken>) {
                 if (response.code() == 200) {
                     AccountManager.LogIn(response.body()!!)
-                    api = Api(this@RegistrationActivity)
                     AccountManager.registrationStep = 1
+
+                    if (editMode)
+                        finish()
+
                     pager.setCurrentItem(1, true)
                 }
             }
@@ -89,6 +99,10 @@ class RegistrationActivity : AppCompatActivity(),
                 if (response.code() == 200) {
                     AccountManager.LogIn(response.body()!!)
                     AccountManager.registrationStep = 1
+
+                    if (editMode)
+                        finish()
+
                     pager.setCurrentItem(1, true)
                 }
             }
@@ -105,6 +119,10 @@ class RegistrationActivity : AppCompatActivity(),
             override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
                 if (response.code() == 200){
                     AccountManager.registrationStep = 2
+
+                    if (editMode)
+                        finish()
+
                     pager.setCurrentItem(2, true)
                 }
             }
@@ -129,6 +147,10 @@ class RegistrationActivity : AppCompatActivity(),
             override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
                 if (response.code() == 200){
                     AccountManager.registrationStep = 3
+
+                    if (editMode)
+                        finish()
+
                     pager.setCurrentItem(3, true)
                 }
             }
@@ -136,6 +158,9 @@ class RegistrationActivity : AppCompatActivity(),
         })
         else {
             AccountManager.registrationStep = 3
+
+            if (editMode)
+                finish()
 
             if (AccountManager.accountType == EAccountType.guide)
                 pager.setCurrentItem(3, true)
@@ -157,6 +182,10 @@ class RegistrationActivity : AppCompatActivity(),
             override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
                 if (response.code() == 200){
                     AccountManager.registrationStep = 4
+
+                    if (editMode)
+                        finish()
+
                     if (AccountManager.accountType == EAccountType.guide)
                         pager.setCurrentItem(4, true)
 
@@ -178,6 +207,10 @@ class RegistrationActivity : AppCompatActivity(),
             override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
                 if (response?.code() == 200) {
                     AccountManager.registrationStep = 5
+
+                    if (editMode)
+                        finish()
+
                     startActivity(Intent(this@RegistrationActivity, MainActivity::class.java))
                     finish()
                 }
@@ -198,16 +231,25 @@ class RegistrationActivity : AppCompatActivity(),
         checkPermissions()
         api = Api(this)
 
-        registrationSteps.add(RegisterTouristFragment())
-        registrationSteps.add(RegisterStep1Fragment())
+        editMode = intent.getBooleanExtra("EDIT_MODE", false)
+
+        if (editMode)
+            fillFragments()
+
+        registrationSteps.add(registerTouristFragment)
+        registrationSteps.add(step1Fragment)
         registrationSteps.add(step2Fragment)
-        registrationSteps.add(RegisterStep3Fragment())
+        registrationSteps.add(step3Fragment)
 
         if (AccountManager.accountType == EAccountType.guide)
-            registrationSteps.add(RegisterGuideInfoFragment())
+            registrationSteps.add(registerGuideFragment)
 
         pager.adapter = PagerAdapter(supportFragmentManager)
-        pager.setCurrentItem(AccountManager.registrationStep, true)
+
+        if (editMode)
+            pager.setCurrentItem(intent.getIntExtra("REGISTRATION_STEP", 0), false)
+        else
+            pager.setCurrentItem(AccountManager.registrationStep, true)
     }
 
 
@@ -241,6 +283,22 @@ class RegistrationActivity : AppCompatActivity(),
 
         if(!permissionArrayList.isEmpty())
             ActivityCompat.requestPermissions(this,permissionArrayList.toTypedArray(),1)
+    }
+
+    fun fillFragments(){
+        api.guideDetails(AccountManager.userId).enqueue(object: Callback<GuideDetails>{
+            override fun onFailure(call: Call<GuideDetails>?, t: Throwable?) {
+
+            }
+
+            override fun onResponse(call: Call<GuideDetails>?, response: Response<GuideDetails>) {
+                if (response.code() == 200){
+                    val model = response.body()!!
+                    step1Fragment.init(model)
+                    step2Fragment.init(model)
+                }
+            }
+        })
     }
 
 }

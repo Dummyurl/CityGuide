@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context="sk.dmsoft.cityguide.Account.Login.LoginActivity">
 
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/login_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -32,7 +43,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="blah blah" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:text="Login" />
             </android.support.v7.widget.LinearLayoutCompat>
 
             <android.support.design.widget.TextInputLayout
@@ -72,6 +84,18 @@
                 android:text="@string/login" />
 
         </android.support.v7.widget.LinearLayoutCompat>
+
+        <Button
+            android:id="@+id/forgotten_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:text="@string/forgotten_password"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            style="@style/Widget.AppCompat.Button.Borderless"/>
     </android.support.constraint.ConstraintLayout>
 
 </android.support.design.widget.CoordinatorLayout>
