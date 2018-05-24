@@ -40,6 +40,7 @@ import android.view.ViewAnimationUtils
 import android.animation.Animator
 import android.opengl.ETC1.getHeight
 import android.opengl.ETC1.getWidth
+import android.support.design.widget.BottomSheetBehavior
 import android.view.View
 import android.view.ViewTreeObserver
 import android.view.animation.AccelerateInterpolator
@@ -99,7 +100,8 @@ class GuideDetailsActivity : AppCompatActivity() {
 
                 override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
                     if(response?.code() == 201){
-                        Snackbar.make(it, "Proposal sended", Snackbar.LENGTH_LONG).show()
+                        Snackbar.make(findViewById(android.R.id.content), "Proposal sended", Snackbar.LENGTH_LONG).show()
+                        BottomSheetBehavior.from(bottom_sheet).state = BottomSheetBehavior.STATE_COLLAPSED
                     }
                 }
 
@@ -126,8 +128,9 @@ class GuideDetailsActivity : AppCompatActivity() {
         startDateTimeFragment.setOnButtonClickListener(object: SwitchDateTimeDialogFragment.OnButtonClickListener{
             override fun onPositiveButtonClick(date: Date) {
                 val locale = SimpleDateFormat("dd.MM.YYYY HH:mm")
+                val locale2 = SimpleDateFormat("YYYY-MM-dd'T'HH:mm:ss")
+                proposalRequest.start = locale2.format(date)
                 start_date.setText(locale.format(date))
-                proposalRequest.start = DateTime(date).toString()
             }
 
             override fun onNegativeButtonClick(p0: Date?) {
@@ -153,8 +156,9 @@ class GuideDetailsActivity : AppCompatActivity() {
         endDateTimeFragment.setOnButtonClickListener(object: SwitchDateTimeDialogFragment.OnButtonClickListener{
             override fun onPositiveButtonClick(date: Date) {
                 val locale = SimpleDateFormat("dd.MM.YYYY HH:mm")
+                val locale2 = SimpleDateFormat("YYYY-MM-dd'T'HH:mm:ss")
                 end_date.setText(locale.format(date))
-                proposalRequest.end = DateTime(date).toString()
+                proposalRequest.end = locale2.format(date)
             }
 
             override fun onNegativeButtonClick(p0: Date?) {
