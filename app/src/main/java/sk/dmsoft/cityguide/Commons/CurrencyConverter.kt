@@ -13,11 +13,10 @@ object CurrencyConverter {
     }
 
     fun convert(value: Double): String{
-        if (AccountManager.currency == "EUR")
-            return "$value€"
+
         val currency = currencies.find { it.id == AccountManager.currency }
         if (currency != null)
-            return "${(currency.rate.toBigDecimal() * value.toBigDecimal()).setScale(2)}${currency.symbol}"
+            return "${currency.symbolBefore}${(currency.rate.toBigDecimal() * value.toBigDecimal()).setScale(2)}${currency.symbolAfter}"
         return "${value}€"
     }
 
