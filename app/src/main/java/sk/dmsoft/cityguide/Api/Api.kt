@@ -169,6 +169,10 @@ class Api constructor(private val activity : Context? = null) {
         return api.getGuideDetails(id)
     }
 
+    fun facebookRegister(model: RegisterExternal): Call<AccessToken>{
+        return api.facebookRegister(model)
+    }
+
     fun registerFcm(model: RegisterFcm): Call<ResponseBody>{
         return api.registerFcm(model)
     }

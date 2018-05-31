@@ -14,7 +14,7 @@ import sk.dmsoft.cityguide.R
 import kotlinx.android.synthetic.main.activity_registration.*
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.content.ContextCompat
-import android.util.Log
+import com.facebook.*
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -27,6 +27,16 @@ import sk.dmsoft.cityguide.Models.AccessToken
 import sk.dmsoft.cityguide.MainActivity
 import sk.dmsoft.cityguide.Models.Account.*
 import sk.dmsoft.cityguide.Models.Guides.GuideDetails
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import kotlinx.android.synthetic.main.fragment_register_tourist.*
+import sk.dmsoft.cityguide.Account.External.Facebook
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import android.R.attr.data
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.paypal.android.sdk.onetouch.core.metadata.w
+import com.google.android.gms.common.api.ApiException
+import android.util.Log
+import com.google.android.gms.tasks.Task
 
 
 class RegistrationActivity : AppCompatActivity(),
@@ -35,6 +45,7 @@ class RegistrationActivity : AppCompatActivity(),
         RegisterStep1Fragment.Step1Listener,
         RegisterStep2Fragment.Step2Listener,
         RegisterStep3Fragment.Step3Listener,
+        Facebook.FacebookInterface,
         RegisterGuideInfoFragment.OnRegistrationGuideInfo{
 
     var guideMode = false
@@ -45,6 +56,8 @@ class RegistrationActivity : AppCompatActivity(),
     val step1Fragment = RegisterStep1Fragment()
     val step2Fragment = RegisterStep2Fragment()
     val step3Fragment = RegisterStep3Fragment()
+
+    lateinit var callbackManager : CallbackManager
 
     override fun onSwitchToGuide() {
         AccountManager.accountType = EAccountType.guide
@@ -64,6 +77,8 @@ class RegistrationActivity : AppCompatActivity(),
 
     val registrationSteps: ArrayList<Fragment> = ArrayList()
     val REQUEST_SELECT_IMAGE_IN_ALBUM = 1
+    val REQUEST_FACEBOOK_LOGIN = 64206
+    val GOOGLE_SIGN_IN = 2
     var profilePhotoUri: Uri = Uri.EMPTY
 
     lateinit var api: Api
@@ -221,8 +236,19 @@ class RegistrationActivity : AppCompatActivity(),
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
-        profilePhotoUri = data.data
-        step2Fragment.loadPhoto(data.data.toString())
+        if (requestCode == REQUEST_SELECT_IMAGE_IN_ALBUM) {
+            profilePhotoUri = data.data
+            step2Fragment.loadPhoto(data.data.toString())
+        }
+        else if (requestCode == REQUEST_FACEBOOK_LOGIN){
+            callbackManager.onActivityResult(requestCode, resultCode, data)
+        }
+        else if (requestCode == GOOGLE_SIGN_IN) {
+            // The Task returned from this call is always completed, no need to attach
+            // a listener.
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            handleSignInResult(task)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -230,6 +256,8 @@ class RegistrationActivity : AppCompatActivity(),
         setContentView(R.layout.activity_registration)
         checkPermissions()
         api = Api(this)
+        FacebookSdk.sdkInitialize(this)
+
 
         editMode = intent.getBooleanExtra("EDIT_MODE", false)
 
@@ -296,6 +324,67 @@ class RegistrationActivity : AppCompatActivity(),
                     val model = response.body()!!
                     step1Fragment.init(model)
                     step2Fragment.init(model)
+                }
+            }
+        })
+    }
+
+    override fun registerGoogleCallback(){
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build()
+        val mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+        val signInIntent = mGoogleSignInClient.signInIntent
+        startActivityForResult(signInIntent, GOOGLE_SIGN_IN)
+    }
+
+    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
+        try {
+            val account = completedTask.getResult(ApiException::class.java)
+
+            // Signed in successfully, show authenticated UI.
+            FacebookCompleted(account.email!!, "")
+        } catch (e: ApiException) {
+            // The ApiException status code indicates the detailed failure reason.
+            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+            Log.w("GOOGLE SIGNIN", "signInResult:failed code=" + e.statusCode)
+        }
+
+    }
+
+    override fun registerFacebookCallback(){
+        callbackManager = CallbackManager.Factory.create()
+
+        registerTouristFragment.login_button.setOnClickListener {
+            val fbManager = Facebook(this)
+            fbManager.register(callbackManager)
+        }
+    }
+
+    override fun FacebookCompleted(email: String, accessToken: String){
+        val model = RegisterExternal()
+        model.email = email
+        model.accountType = EAccountType.tourist
+        model.fcmId = AccountManager.fcmTokenId
+
+        api.facebookRegister(model).enqueue(object: Callback<AccessToken>{
+            override fun onFailure(call: Call<AccessToken>?, t: Throwable?) {
+
+            }
+
+            override fun onResponse(call: Call<AccessToken>?, response: Response<AccessToken>) {
+                if (response.code() == 200){
+                    AccountManager.LogIn(response.body()!!)
+
+                    if (AccountManager.isRegistrationCompleted){
+                        startActivity(Intent(this@RegistrationActivity, MainActivity::class.java))
+                        finish()
+                    }
+                    else{
+                        AccountManager.registrationStep = response.body()!!.registrationStep
+                        pager.setCurrentItem(response.body()!!.registrationStep, true)
+                    }
+
                 }
             }
         })
