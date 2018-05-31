@@ -31,6 +31,13 @@ import sk.dmsoft.cityguide.Commons.EAccountType
 import sk.dmsoft.cityguide.Commons.PicassoCache
 import sk.dmsoft.cityguide.Models.*
 import sk.dmsoft.cityguide.Proposal.ActiveProposalActivity
+import android.provider.SyncStateContract.Helpers.update
+import android.content.pm.PackageInfo
+import android.support.v4.app.FragmentActivity
+import android.util.Base64
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
+import kotlin.experimental.and
 
 
 /**
@@ -60,6 +67,8 @@ class SplashActivity : AppCompatActivity() {
 
         if (!AccountManager.isFcmRegistered)
             RegisterFcm()
+
+        printHashKey(this)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -176,6 +185,24 @@ class SplashActivity : AppCompatActivity() {
         else
             startActivity(Intent(this, RegistrationActivity::class.java))
         finish()
+    }
+
+    val TAG = "SIGNIN"
+
+    fun printHashKey(pContext: Context) {
+        try {
+            val info = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
+            for (signature in info.signatures) {
+                val md = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                val hashKey = String(Base64.encode(md.digest(), 0))
+                Log.e(TAG, "printHashKey() Hash Key: $hashKey")
+            }
+        } catch (e: NoSuchAlgorithmException) {
+            Log.e(TAG, "printHashKey()", e)
+        } catch (e: Exception) {
+            Log.e(TAG, "printHashKey()", e)
+        }
     }
 
 }

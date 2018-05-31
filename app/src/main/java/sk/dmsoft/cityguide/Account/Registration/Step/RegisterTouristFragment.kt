@@ -4,14 +4,26 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.facebook.CallbackManager
 import kotlinx.android.synthetic.main.fragment_register_tourist.*
 import sk.dmsoft.cityguide.Account.Login.LoginActivity
 import sk.dmsoft.cityguide.Models.Account.Registration
 
 import sk.dmsoft.cityguide.R
+import com.facebook.FacebookException
+import com.facebook.login.LoginResult
+import com.facebook.FacebookCallback
+import com.facebook.GraphResponse
+import org.json.JSONObject
+import com.facebook.GraphRequest
+
+
+
+
 
 /**
  * A simple [Fragment] subclass.
@@ -37,6 +49,10 @@ class RegisterTouristFragment : Fragment() {
         register.setOnClickListener {
             CompleteRegistration()
         }
+        google_sign_in_button.setOnClickListener {
+            mListener?.registerGoogleCallback()
+        }
+        mListener?.registerFacebookCallback()
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -77,5 +93,7 @@ class RegisterTouristFragment : Fragment() {
         // TODO: Update argument type and name
         fun onRegistrationComplete(model: Registration)
         fun onSwitchToGuide()
+        fun registerFacebookCallback()
+        fun registerGoogleCallback()
     }
 }// Required empty public constructor

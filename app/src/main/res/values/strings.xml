@@ -3,6 +3,9 @@
     <string name="title_activity_registration">RegistrationActivity</string>
     <string name="google_maps_key">AIzaSyCumbJjzosVkOQ88Yg_XkW0IzcLN-4s42A</string>
 
+    <string name="facebook_app_id">447180619060798</string>
+    <string name="fb_login_protocol_scheme">fb447180619060798</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="email">Email</string>

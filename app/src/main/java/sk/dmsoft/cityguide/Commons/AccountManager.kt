@@ -3,6 +3,7 @@ package sk.dmsoft.cityguide.Commons
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import com.facebook.login.LoginManager
 import sk.dmsoft.cityguide.Models.AccessToken
 import java.util.*
 
@@ -99,5 +100,7 @@ object AccountManager {
         val editor = _sharedPreferences.edit()
         editor.clear()
         editor.apply()
+        val loginManager = LoginManager.getInstance()
+        loginManager.logOut()
     }
 }
