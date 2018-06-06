@@ -206,6 +206,7 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
     }
 
     fun showMap(){
+        mapFragment.updateMode()
         isMapVisible = true
         map_fragment_wrapper.visibility = View.VISIBLE
     }
