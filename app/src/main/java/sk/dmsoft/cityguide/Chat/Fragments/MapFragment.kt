@@ -30,10 +30,6 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 
 
-
-
-
-
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
@@ -96,7 +92,8 @@ class MapFragment : Fragment(), LocationUpdateCallback {
             meeting_point_controls.visibility = View.GONE
         else {
             meeting_point_confirm.setOnClickListener {
-                mListener?.setMeetingPoint(meetingPointPosition)
+                mListener?.setMeetingPoint(googleMap!!.cameraPosition.target)
+                meetingPoint?.position = googleMap!!.cameraPosition.target
             }
             cancel.setOnClickListener {
                 mListener?.hideMap()
@@ -115,19 +112,22 @@ class MapFragment : Fragment(), LocationUpdateCallback {
         userMarker?.position = position
     }
 
-    fun updateMode(mode: MapMode){
-        if (mapMode != mode) {
-            when (mode) {
-                MapMode.SetMeetingPoint -> meeting_point_controls.visibility = View.VISIBLE
-                MapMode.GoToMeetingPoint -> {
-                    meeting_point_controls.visibility = View.GONE
-                    val serviceIntent = Intent(activity, LocationService::class.java)
-                    activity?.bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
-                }
+    fun updateMode(mode: MapMode = mapMode){
+        when (mode) {
+            MapMode.SetMeetingPoint -> {
+                meeting_point_controls.visibility = View.VISIBLE
+                meetingPoint?.alpha = 0f
             }
-
-            mapMode = mode
+            MapMode.GoToMeetingPoint -> {
+                meeting_point_controls.visibility = View.GONE
+                val serviceIntent = Intent(activity, LocationService::class.java)
+                activity?.bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+                meetingPoint?.alpha = 1f
+            }
         }
+
+        mapMode = mode
+
     }
 
     fun updateMeetingPointPosition(position: LatLng){
