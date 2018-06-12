@@ -221,6 +221,14 @@ class Api constructor(private val activity : Context? = null) {
         return api.savePaymentMethod(model)
     }
 
+    fun forgottenPassword(model: ForgottenPassword): Call<PasswordResetCode>{
+        return api.forgottenPassword(model)
+    }
+
+    fun resetPassword(model: PasswordResetModel): Call<ResponseBody>{
+        return api.resetPassword(model)
+    }
+
     //fun uploadImages(image: NoteImage) : Call<ResponseBody> {
     //    val file : RequestBody = RequestBody.create(MediaType.parse("image/*"), image.image)
     //    val imagePart = MultipartBody.Part.createFormData("image", image.image?.name, file)

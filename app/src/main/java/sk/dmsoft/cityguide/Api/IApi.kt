@@ -111,4 +111,10 @@ interface IApi {
 
     @POST("checkout/paymentMethod")
     fun savePaymentMethod(@Body model: CreatePaymentMethodRequest): Call<ResponseBody>
+
+    @POST("account/forgotPassword")
+    fun forgottenPassword(@Body model: ForgottenPassword): Call<PasswordResetCode>
+
+    @POST("account/resetPassword")
+    fun resetPassword(@Body model: PasswordResetModel): Call<ResponseBody>
 }

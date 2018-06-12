@@ -304,12 +304,13 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
 
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
         format.timeZone = TimeZone.getTimeZone("UTC")
-        val spendTime = Date().time - format.parse(proposal!!.realStart).time
+        val spendTime = (proposal!!.actualTime * 1000) - format.parse(proposal!!.realStart).time
 
-        val diff = proposal!!.actualTime - (System.currentTimeMillis() / 1000)
         chronometer2.format = "%s"
-        chronometer2.base = proposal!!.actualTime - spendTime
+        chronometer2.base = (SystemClock.elapsedRealtime()) - spendTime
         chronometer2.start()
+
+        per_hour.text = "${CurrencyConverter.convert(proposal!!.perHourSalary)}"
     }
 
     fun endProposal(){
