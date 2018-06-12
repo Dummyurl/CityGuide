@@ -66,5 +66,13 @@
     <string name="new_password">New password</string>
     <string name="confirm">Confirm</string>
     <string name="forgotten_password">Forgotten password</string>
+    <string name="select_account_type">Select account type</string>
+    <string name="tourist_text">Discover new places, our gurus will guide you!</string>
+    <string name="kaktus_guru">Kaktus Guru</string>
+    <string name="guru_text">Earn money by guiding total strangers in your city!</string>
+    <string name="google_login">Sign up with Google</string>
+    <string name="facebook_login">Sign up with Facebook</string>
+    <string name="email_login">Sign up with Email</string>
+    <string name="sign_up_text">Kaktus let\'s you discover amazing places you\'ve never even heard of</string>
 
 </resources>

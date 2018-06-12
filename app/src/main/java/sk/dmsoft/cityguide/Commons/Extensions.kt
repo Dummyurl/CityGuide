@@ -61,3 +61,7 @@ fun AppCompatActivity.addFragment(fragment: Fragment, frameId: Int, addToBacksta
 fun AppCompatActivity.replaceFragment(fragment: Fragment, frameId: Int, addToBackstack: Boolean = false, sharedTransActionItem: View? = null) {
     supportFragmentManager.inTransaction({replace(frameId, fragment)}, addToBackstack, sharedTransActionItem)
 }
+
+fun AppCompatActivity.removeFragment(fragment: Fragment, addToBackstack: Boolean = false){
+    supportFragmentManager.inTransaction({remove(fragment)}, addToBackstack)
+}

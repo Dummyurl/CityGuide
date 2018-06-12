@@ -7,6 +7,7 @@ import android.content.ServiceConnection
 import android.location.Location
 import android.os.Bundle
 import android.os.IBinder
+import android.os.SystemClock
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -48,6 +49,8 @@ import sk.dmsoft.cityguide.Proposal.CompletedProposalGuideDetails
 import java.lang.Exception
 import java.net.URI
 import java.net.URLDecoder
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener, MapFragment.OnFragmentInteractionListener {
 
@@ -142,6 +145,8 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
         }
 
         end_proposal.setOnClickListener { endProposal() }
+        if (AccountManager.accountType == EAccountType.guide)
+            end_proposal.visibility = View.GONE
     }
 
     override fun onRestart() {
@@ -187,7 +192,7 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
     }
 
     fun connectWebsocket(){
-        wsClient = object: WebSocketClient(URI("ws://cityguide.dmsoft.sk/chat"), Draft_17(), mapOf("authorization" to "bearer ${AccountManager.accessToken}"), 1000){
+        wsClient = object: WebSocketClient(URI("ws://kaktus-app.azurewebsites.net/chat"), Draft_17(), mapOf("authorization" to "bearer ${AccountManager.accessToken}"), 1000){
             override fun onOpen(handshakedata: ServerHandshake?) {
                 Log.e(WS_TAG, handshakedata.toString())
             }
@@ -294,6 +299,17 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
         window.statusBarColor = 0xff00C853.toInt()
         waiting_toolbar_layout.visibility = View.GONE
         active_proposal.visibility = View.VISIBLE
+
+
+
+        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+        format.timeZone = TimeZone.getTimeZone("UTC")
+        val spendTime = Date().time - format.parse(proposal!!.realStart).time
+
+        val diff = proposal!!.actualTime - (System.currentTimeMillis() / 1000)
+        chronometer2.format = "%s"
+        chronometer2.base = proposal!!.actualTime - spendTime
+        chronometer2.start()
     }
 
     fun endProposal(){

@@ -121,6 +121,10 @@ class Api constructor(private val activity : Context? = null) {
         return api.registration3(model)
     }
 
+    fun setAccountType(model: SetAccountTypeModel): Call<ResponseBody>{
+        return api.setAccountType(model)
+    }
+
     fun init(): Call<InitResponse>{
         return api.init()
     }

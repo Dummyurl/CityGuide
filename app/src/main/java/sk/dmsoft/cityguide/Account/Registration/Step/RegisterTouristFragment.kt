@@ -44,15 +44,10 @@ class RegisterTouristFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        login.setOnClickListener { startActivity(Intent(context, LoginActivity::class.java)) }
-        guide_registration.setOnClickListener { mListener?.onSwitchToGuide() }
+
         register.setOnClickListener {
             CompleteRegistration()
         }
-        google_sign_in_button.setOnClickListener {
-            mListener?.registerGoogleCallback()
-        }
-        mListener?.registerFacebookCallback()
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -93,7 +88,5 @@ class RegisterTouristFragment : Fragment() {
         // TODO: Update argument type and name
         fun onRegistrationComplete(model: Registration)
         fun onSwitchToGuide()
-        fun registerFacebookCallback()
-        fun registerGoogleCallback()
     }
 }// Required empty public constructor
