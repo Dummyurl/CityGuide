@@ -7,6 +7,7 @@ import android.content.ServiceConnection
 import android.location.Location
 import android.os.Bundle
 import android.os.IBinder
+import android.os.SystemClock
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -32,8 +33,10 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.http.Url
 import sk.dmsoft.cityguide.Api.Api
+import sk.dmsoft.cityguide.Api.DB
 import sk.dmsoft.cityguide.Chat.Fragments.ChatFragment
 import sk.dmsoft.cityguide.Chat.Fragments.MapFragment
+import sk.dmsoft.cityguide.CheckoutActivity
 import sk.dmsoft.cityguide.Commons.*
 import sk.dmsoft.cityguide.Commons.Services.LocationService
 import sk.dmsoft.cityguide.Commons.Services.LocationUpdateCallback
@@ -42,9 +45,12 @@ import sk.dmsoft.cityguide.Models.Chat.MessageType
 import sk.dmsoft.cityguide.Models.Proposal.MeetingPoint
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
 import sk.dmsoft.cityguide.Proposal.ActiveProposalActivity
+import sk.dmsoft.cityguide.Proposal.CompletedProposalGuideDetails
 import java.lang.Exception
 import java.net.URI
 import java.net.URLDecoder
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener, MapFragment.OnFragmentInteractionListener {
 
@@ -94,6 +100,8 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
 
     var shareLocation = true
 
+    lateinit var db: DB
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
@@ -104,6 +112,7 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
 
         connectWebsocket()
         api = Api(this)
+        db = DB(this)
 
         chatFragment.init(proposalId, userId)
         mapFragment.init(proposalId, userId)
@@ -116,7 +125,7 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
 
         getProposal()
 
-        user_photo.loadCircle("${AppSettings.apiUrl}/users/photo/$userId")
+        //user_photo.loadCircle("${AppSettings.apiUrl}/users/photo/$userId")
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         switchStartSet()
@@ -134,6 +143,10 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
                 }
             })
         }
+
+        end_proposal.setOnClickListener { endProposal() }
+        if (AccountManager.accountType == EAccountType.guide)
+            end_proposal.visibility = View.GONE
     }
 
     override fun onRestart() {
@@ -156,6 +169,12 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
             override fun onResponse(call: Call<Proposal>?, response: Response<Proposal>?) {
                 if (response?.code() == 200){
                     proposal = response.body()
+                    place_name.text = db.GetPlace(proposal!!.placeId).city
+                    user_name.text = "${proposal?.user?.firstName} ${proposal?.user?.secondName}"
+
+                    if (proposal?.state == 5)
+                        startProposal()
+
                     if (proposal?.meetingPoint != null) {
                         val meetingPointPosition = LatLng(proposal?.meetingPoint?.latitude!!, proposal?.meetingPoint?.longitude!!)
                         mapFragment.updateMeetingPointPosition(meetingPointPosition)
@@ -164,13 +183,16 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
                         }
                         switchStartSet()
                     }
+                    else {
+                        changeMeetingPoint()
+                    }
                 }
             }
         })
     }
 
     fun connectWebsocket(){
-        wsClient = object: WebSocketClient(URI("ws://cityguide.dmsoft.sk/chat"), Draft_17(), mapOf("authorization" to "bearer ${AccountManager.accessToken}"), 1000){
+        wsClient = object: WebSocketClient(URI("ws://kaktus-app.azurewebsites.net/chat"), Draft_17(), mapOf("authorization" to "bearer ${AccountManager.accessToken}"), 1000){
             override fun onOpen(handshakedata: ServerHandshake?) {
                 Log.e(WS_TAG, handshakedata.toString())
             }
@@ -193,6 +215,7 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
                         }
                         MessageType.MeetingPoint.value -> getMeetingPoint(Gson().fromJson(URLDecoder.decode(message.Text, "UTF-8"), MeetingPoint::class.java))
                         MessageType.ProposalStart.value -> startProposal()
+                        MessageType.ProposalEnd.value -> goToCheckout()
                     }
                 })
             }
@@ -271,11 +294,50 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
     }
 
     fun startProposal(){
-        if (wsClient.connection.isOpen)
-            wsClient.close()
-        val intent = Intent(this@ChatActivity, ActiveProposalActivity::class.java)
-        intent.putExtra("PROPOSAL_ID", proposalId)
-        startActivity(intent)
+        // 0x0000FF00
+        toolbar.setBackgroundColor(0xff00C853.toInt())
+        window.statusBarColor = 0xff00C853.toInt()
+        waiting_toolbar_layout.visibility = View.GONE
+        active_proposal.visibility = View.VISIBLE
+
+
+
+        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+        format.timeZone = TimeZone.getTimeZone("UTC")
+        val spendTime = Date().time - format.parse(proposal!!.realStart).time
+
+        val diff = proposal!!.actualTime - (System.currentTimeMillis() / 1000)
+        chronometer2.format = "%s"
+        chronometer2.base = proposal!!.actualTime - spendTime
+        chronometer2.start()
+    }
+
+    fun endProposal(){
+        api.endProposal(proposalId).enqueue(object: Callback<Proposal>{
+            override fun onFailure(call: Call<Proposal>?, t: Throwable?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onResponse(call: Call<Proposal>?, response: Response<Proposal>) {
+                if (response.code() == 200){
+                    proposal = response.body()!!
+
+                }
+            }
+        })
+    }
+
+    fun goToCheckout(){
+        if (AccountManager.accountType == EAccountType.tourist) {
+            val intent = Intent(this@ChatActivity, CheckoutActivity::class.java)
+            intent.putExtra("PROPOSAL_ID", proposalId)
+            startActivity(intent)
+        }
+        else {
+            val intent = Intent(this, CompletedProposalGuideDetails::class.java)
+            intent.putExtra("PROPOSAL_ID", proposalId)
+            startActivity(intent)
+        }
     }
 
     override fun onBackPressed() {

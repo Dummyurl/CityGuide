@@ -46,6 +46,9 @@ interface IApi {
     @POST("account/register/facebook")
     fun facebookRegister(@Body model: RegisterExternal): Call<AccessToken>
 
+    @POST("account/register/accountType")
+    fun setAccountType(@Body model: SetAccountTypeModel): Call<ResponseBody>
+
     @GET("countries")
     fun getCountries(): Call<ArrayList<Country>>
 

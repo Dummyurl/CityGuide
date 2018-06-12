@@ -37,42 +37,47 @@ import com.paypal.android.sdk.onetouch.core.metadata.w
 import com.google.android.gms.common.api.ApiException
 import android.util.Log
 import com.google.android.gms.tasks.Task
+import sk.dmsoft.cityguide.Commons.addFragment
+import sk.dmsoft.cityguide.Commons.removeFragment
 
 
 class RegistrationActivity : AppCompatActivity(),
         RegisterTouristFragment.OnRegistration,
-        RegisterGuideFragment.OnRegistrationGuide,
         RegisterStep1Fragment.Step1Listener,
         RegisterStep2Fragment.Step2Listener,
         RegisterStep3Fragment.Step3Listener,
         Facebook.FacebookInterface,
+        RegistrationMethodFragment.OnFragmentInteractionListener,
+        SelectAccountTypeFragment.OnAccountTypeSelected,
         RegisterGuideInfoFragment.OnRegistrationGuideInfo{
 
     var guideMode = false
     var editMode = false
 
+    val registerMethodFragment: RegistrationMethodFragment = RegistrationMethodFragment()
     val registerTouristFragment = RegisterTouristFragment()
-    val registerGuideFragment = RegisterGuideFragment()
     val step1Fragment = RegisterStep1Fragment()
     val step2Fragment = RegisterStep2Fragment()
     val step3Fragment = RegisterStep3Fragment()
+    val accountTypeFragment = SelectAccountTypeFragment()
 
     lateinit var callbackManager : CallbackManager
 
     override fun onSwitchToGuide() {
         AccountManager.accountType = EAccountType.guide
-        registrationSteps[0] = RegisterGuideFragment()
         registrationSteps.add(RegisterGuideInfoFragment())
         pager.adapter = PagerAdapter(supportFragmentManager)
         guideMode = true
+        pager.setCurrentItem(2, true)
+
     }
 
     fun onSwitchToTourist(){
         AccountManager.accountType = EAccountType.tourist
-        registrationSteps[0] = RegisterTouristFragment()
         registrationSteps.remove(registrationSteps.last())
         pager.adapter = PagerAdapter(supportFragmentManager)
         guideMode = false
+        pager.setCurrentItem(2, true)
     }
 
     val registrationSteps: ArrayList<Fragment> = ArrayList()
@@ -104,26 +109,6 @@ class RegistrationActivity : AppCompatActivity(),
         })
     }
 
-    override fun onRegistrationGuideComplete(model: Registration) {
-        api.registration(model).enqueue(object: Callback<AccessToken>{
-            override fun onFailure(call: Call<AccessToken>?, t: Throwable?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onResponse(call: Call<AccessToken>?, response: Response<AccessToken>) {
-                if (response.code() == 200) {
-                    AccountManager.LogIn(response.body()!!)
-                    AccountManager.registrationStep = 1
-
-                    if (editMode)
-                        finish()
-
-                    pager.setCurrentItem(1, true)
-                }
-            }
-
-        })
-    }
 
     override fun onStep1Completed(model: Registration1) {
         api.registration1(model).enqueue(object: Callback<ResponseBody>{
@@ -138,7 +123,7 @@ class RegistrationActivity : AppCompatActivity(),
                     if (editMode)
                         finish()
 
-                    pager.setCurrentItem(2, true)
+                    pager.setCurrentItem(3, true)
                 }
             }
         })
@@ -166,7 +151,7 @@ class RegistrationActivity : AppCompatActivity(),
                     if (editMode)
                         finish()
 
-                    pager.setCurrentItem(3, true)
+                    pager.setCurrentItem(4, true)
                 }
             }
 
@@ -178,7 +163,7 @@ class RegistrationActivity : AppCompatActivity(),
                 finish()
 
             if (AccountManager.accountType == EAccountType.guide)
-                pager.setCurrentItem(3, true)
+                pager.setCurrentItem(4, true)
 
             else {
                 startActivity(Intent(this@RegistrationActivity, MainActivity::class.java))
@@ -202,7 +187,7 @@ class RegistrationActivity : AppCompatActivity(),
                         finish()
 
                     if (AccountManager.accountType == EAccountType.guide)
-                        pager.setCurrentItem(4, true)
+                        pager.setCurrentItem(5, true)
 
                     else {
                         startActivity(Intent(this@RegistrationActivity, MainActivity::class.java))
@@ -231,6 +216,29 @@ class RegistrationActivity : AppCompatActivity(),
                 }
             }
 
+        })
+    }
+
+
+    override fun AccountTypeSelected(accountType: EAccountType) {
+        val model = SetAccountTypeModel()
+        model.accountType = accountType
+        api.setAccountType(model).enqueue(object: Callback<ResponseBody>{
+            override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
+                if (response.isSuccessful){
+                    pager.setCurrentItem(2, true)
+                    AccountManager.accountType = accountType
+
+                    if (accountType == EAccountType.guide){
+                        guideMode = true
+                        onSwitchToGuide()
+                    }
+                }
+            }
         })
     }
 
@@ -264,13 +272,13 @@ class RegistrationActivity : AppCompatActivity(),
         if (editMode)
             fillFragments()
 
+        addFragment(registerMethodFragment, android.R.id.content)
+
         registrationSteps.add(registerTouristFragment)
+        registrationSteps.add(accountTypeFragment)
         registrationSteps.add(step1Fragment)
         registrationSteps.add(step2Fragment)
         registrationSteps.add(step3Fragment)
-
-        if (AccountManager.accountType == EAccountType.guide)
-            registrationSteps.add(registerGuideFragment)
 
         pager.adapter = PagerAdapter(supportFragmentManager)
 
@@ -278,6 +286,9 @@ class RegistrationActivity : AppCompatActivity(),
             pager.setCurrentItem(intent.getIntExtra("REGISTRATION_STEP", 0), false)
         else
             pager.setCurrentItem(AccountManager.registrationStep, true)
+
+        if (AccountManager.registrationStep > 0)
+            removeFragment(registerMethodFragment, false)
     }
 
 
@@ -292,12 +303,12 @@ class RegistrationActivity : AppCompatActivity(),
         }
     }
 
-    override fun onBackPressed() {
-        if (guideMode)
-            onSwitchToTourist()
-        else
-            super.onBackPressed()
-    }
+    //override fun onBackPressed() {
+    //    if (guideMode)
+    //        onSwitchToTourist()
+    //    else
+    //        super.onBackPressed()
+    //}
 
 
     fun checkPermissions(){
@@ -352,13 +363,16 @@ class RegistrationActivity : AppCompatActivity(),
 
     }
 
+
+    override fun registerEmailCallback() {
+        removeFragment(registerMethodFragment, true)
+    }
+
     override fun registerFacebookCallback(){
         callbackManager = CallbackManager.Factory.create()
-
-        registerTouristFragment.login_button.setOnClickListener {
             val fbManager = Facebook(this)
             fbManager.register(callbackManager)
-        }
+
     }
 
     override fun FacebookCompleted(email: String, accessToken: String){
@@ -375,7 +389,7 @@ class RegistrationActivity : AppCompatActivity(),
             override fun onResponse(call: Call<AccessToken>?, response: Response<AccessToken>) {
                 if (response.code() == 200){
                     AccountManager.LogIn(response.body()!!)
-
+                    removeFragment(registerMethodFragment, true)
                     if (AccountManager.isRegistrationCompleted){
                         startActivity(Intent(this@RegistrationActivity, MainActivity::class.java))
                         finish()

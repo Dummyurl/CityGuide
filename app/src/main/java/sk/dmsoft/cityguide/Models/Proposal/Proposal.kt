@@ -33,4 +33,6 @@ class Proposal {
     var state : Int = 0
 
     var user: UserInfo = UserInfo()
+
+    var actualTime: Long = 0
 }

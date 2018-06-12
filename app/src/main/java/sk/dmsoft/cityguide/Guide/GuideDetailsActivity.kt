@@ -63,6 +63,8 @@ class GuideDetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_guide_details)
         setSupportActionBar(toolbar)
 
+        BottomSheetBehavior.from(bottom_sheet).state = BottomSheetBehavior.STATE_EXPANDED
+
         api = Api(this)
         db = DB(this)
         initDatePickers()
@@ -74,6 +76,10 @@ class GuideDetailsActivity : AppCompatActivity() {
         user_photo.loadCircle("${AppSettings.apiUrl}/users/photo/${guideId}")
         guide_photo.loadCircle("${AppSettings.apiUrl}/users/photo/${guideId}")
 
+
+        book_user.setOnClickListener {
+            BottomSheetBehavior.from(bottom_sheet).state = BottomSheetBehavior.STATE_EXPANDED
+        }
 
         api.guideDetails(guideId).enqueue(object: Callback<GuideDetails>{
             override fun onFailure(call: Call<GuideDetails>?, t: Throwable?) {
@@ -114,6 +120,8 @@ class GuideDetailsActivity : AppCompatActivity() {
             guide_photo.scaleX = 1 - offsetFactor * 0.85f
             guide_photo.scaleY =  1 - offsetFactor * 0.85f
         }
+
+
     }
 
     fun initDatePickers(){
@@ -170,6 +178,7 @@ class GuideDetailsActivity : AppCompatActivity() {
             if (b)
                 endDateTimeFragment.show(supportFragmentManager, "dialog_end")
         }
+
     }
 
     fun fillDetails(){
@@ -221,6 +230,23 @@ class GuideDetailsActivity : AppCompatActivity() {
         nested_view.visibility = View.VISIBLE
         anim.duration = 800
         anim.start()
+        anim.addListener(object: Animator.AnimatorListener{
+            override fun onAnimationRepeat(p0: Animator?) {
+
+            }
+
+            override fun onAnimationEnd(p0: Animator?) {
+                BottomSheetBehavior.from(bottom_sheet).state = BottomSheetBehavior.STATE_COLLAPSED
+
+            }
+
+            override fun onAnimationCancel(p0: Animator?) {
+            }
+
+            override fun onAnimationStart(p0: Animator?) {
+            }
+
+        })
     }
 
     override fun onBackPressed() {

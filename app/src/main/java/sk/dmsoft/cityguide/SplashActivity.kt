@@ -35,6 +35,7 @@ import android.provider.SyncStateContract.Helpers.update
 import android.content.pm.PackageInfo
 import android.support.v4.app.FragmentActivity
 import android.util.Base64
+import sk.dmsoft.cityguide.Chat.ChatActivity
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import kotlin.experimental.and
@@ -117,8 +118,9 @@ class SplashActivity : AppCompatActivity() {
                         AccountManager.isPaymentMethodSaved = initResponse.braintreeConnected
 
                     if (initResponse.activeProposal != null){
-                        val intent = Intent(this@SplashActivity, ActiveProposalActivity::class.java)
+                        val intent = Intent(this@SplashActivity, ChatActivity::class.java)
                         intent.putExtra("PROPOSAL_ID", initResponse.activeProposal?.id)
+                        intent.putExtra("USER_ID", initResponse.activeProposal?.user?.id)
                         startActivity(intent)
                         finish()
                         continueToMainScreen = false
