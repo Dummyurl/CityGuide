@@ -99,6 +99,7 @@ class RegisterStep1Fragment : Fragment(), DatePickerDialog.OnDateSetListener {
     // TODO: Rename method, update argument and hook method into UI event
     fun completeStep1() {
         if (mListener != null) {
+            next.isEnabled = false
             model.firstName = first_name.text.toString()
             model.secondName = second_name.text.toString()
             model.placeId = db.GetPlaces().filter { it.city == places_spinner.selectedItem.toString() }[0].id

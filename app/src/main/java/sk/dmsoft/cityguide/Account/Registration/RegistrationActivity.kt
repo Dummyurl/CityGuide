@@ -280,12 +280,15 @@ class RegistrationActivity : AppCompatActivity(),
         registrationSteps.add(step2Fragment)
         registrationSteps.add(step3Fragment)
 
+        if (AccountManager.accountType == EAccountType.guide)
+            onSwitchToGuide()
+
         pager.adapter = PagerAdapter(supportFragmentManager)
 
         if (editMode)
-            pager.setCurrentItem(intent.getIntExtra("REGISTRATION_STEP", 0), false)
+            pager.setCurrentItem(intent.getIntExtra("REGISTRATION_STEP", 0) +1, false)
         else
-            pager.setCurrentItem(AccountManager.registrationStep, true)
+            pager.setCurrentItem(if (AccountManager.registrationStep == 0) AccountManager.registrationStep else AccountManager.registrationStep +1, true)
 
         if (AccountManager.registrationStep > 0)
             removeFragment(registerMethodFragment, false)

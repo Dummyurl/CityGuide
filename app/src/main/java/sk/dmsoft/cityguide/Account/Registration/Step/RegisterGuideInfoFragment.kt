@@ -37,6 +37,7 @@ class RegisterGuideInfoFragment : Fragment() {
     // TODO: Rename method, update argument and hook method into UI event
     fun CompleteGuideInfoRegistration() {
         if (mListener != null) {
+            finish.isEnabled = false
             val model = RegistrationGuideInfo()
             model.salary = salary.text.toString().toInt()
             model.paypalEmail = paypal_email.text.toString()
