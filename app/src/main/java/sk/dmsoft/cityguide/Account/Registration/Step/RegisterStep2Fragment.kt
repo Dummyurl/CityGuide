@@ -69,6 +69,11 @@ class RegisterStep2Fragment : Fragment() {
         photo_image.loadCircle("${AppSettings.apiUrl}/users/photo/${AccountManager.userId}")
     }
 
+    fun showProgressBar(){
+        next.visibility = View.GONE
+        upload_progressbar.visibility = View.VISIBLE
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is Step2Listener) {

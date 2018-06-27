@@ -37,6 +37,8 @@ import com.paypal.android.sdk.onetouch.core.metadata.w
 import com.google.android.gms.common.api.ApiException
 import android.util.Log
 import com.google.android.gms.tasks.Task
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
 import sk.dmsoft.cityguide.Commons.addFragment
 import sk.dmsoft.cityguide.Commons.removeFragment
 
@@ -130,32 +132,40 @@ class RegistrationActivity : AppCompatActivity(),
     }
 
     override fun onPhotoSelect() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "image/*"
-        if (intent.resolveActivity(packageManager) != null) {
-            startActivityForResult(intent, REQUEST_SELECT_IMAGE_IN_ALBUM)
-        }
+        //val intent = Intent(Intent.ACTION_GET_CONTENT)
+        //intent.type = "image/*"
+        //if (intent.resolveActivity(packageManager) != null) {
+        //    startActivityForResult(intent, REQUEST_SELECT_IMAGE_IN_ALBUM)
+        //}
+        CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setCropShape(CropImageView.CropShape.OVAL)
+                .setAspectRatio(1, 1)
+                .setGuidelines(CropImageView.Guidelines.OFF)
+                .start(this)
     }
 
     override fun onStep2Completed(model: Registration2) {
-        if (profilePhotoUri.toString().length > 5)
-        api.registration2(model, profilePhotoUri).enqueue(object: Callback<ResponseBody>{
-            override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
-                if (response.code() == 200){
-                    AccountManager.registrationStep = 3
-
-                    if (editMode)
-                        finish()
-
-                    pager.setCurrentItem(4, true)
+        if (profilePhotoUri.toString().length > 5) {
+            api.registration2(model, profilePhotoUri).enqueue(object : Callback<ResponseBody> {
+                override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 }
-            }
 
-        })
+                override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
+                    if (response.code() == 200) {
+                        AccountManager.registrationStep = 3
+
+                        if (editMode)
+                            finish()
+
+                        pager.setCurrentItem(4, true)
+                    }
+                }
+
+            })
+            step2Fragment.showProgressBar()
+        }
         else {
             AccountManager.registrationStep = 3
 
@@ -242,20 +252,28 @@ class RegistrationActivity : AppCompatActivity(),
         })
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_SELECT_IMAGE_IN_ALBUM) {
-            profilePhotoUri = data.data
-            step2Fragment.loadPhoto(data.data.toString())
-        }
-        else if (requestCode == REQUEST_FACEBOOK_LOGIN){
-            callbackManager.onActivityResult(requestCode, resultCode, data)
-        }
-        else if (requestCode == GOOGLE_SIGN_IN) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            handleSignInResult(task)
+        when (requestCode) {
+            REQUEST_SELECT_IMAGE_IN_ALBUM -> {
+                profilePhotoUri = data!!.data
+                step2Fragment.loadPhoto(data.data.toString())
+            }
+            REQUEST_FACEBOOK_LOGIN -> callbackManager.onActivityResult(requestCode, resultCode, data)
+            GOOGLE_SIGN_IN -> {
+                // The Task returned from this call is always completed, no need to attach
+                // a listener.
+                val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+                handleSignInResult(task)
+            }
+            CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE -> {
+                val result = CropImage.getActivityResult(data)
+                if (resultCode == RESULT_OK) {
+                  step2Fragment.loadPhoto(result.uri.toString())
+                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                  val error = result.error
+                }
+            }
         }
     }
 
