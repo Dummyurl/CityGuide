@@ -21,8 +21,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import sk.dmsoft.cityguide.Account.Registration.Step.*
 import sk.dmsoft.cityguide.Api.Api
-import sk.dmsoft.cityguide.Commons.AccountManager
-import sk.dmsoft.cityguide.Commons.EAccountType
 import sk.dmsoft.cityguide.Models.AccessToken
 import sk.dmsoft.cityguide.MainActivity
 import sk.dmsoft.cityguide.Models.Account.*
@@ -37,10 +35,11 @@ import com.paypal.android.sdk.onetouch.core.metadata.w
 import com.google.android.gms.common.api.ApiException
 import android.util.Log
 import com.google.android.gms.tasks.Task
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
-import sk.dmsoft.cityguide.Commons.addFragment
-import sk.dmsoft.cityguide.Commons.removeFragment
+import sk.dmsoft.cityguide.Commons.*
 
 
 class RegistrationActivity : AppCompatActivity(),
@@ -107,7 +106,10 @@ class RegistrationActivity : AppCompatActivity(),
                     pager.setCurrentItem(1, true)
                 }
                 else if (response.code() == 400){
-                    var errors = response.errorBody()
+                    val errors = Gson().fromJson(response.errorBody()?.charStream(), Array<ServerError>::class.java)
+                    //registerTouristFragment.email.error = errors.firstOrNull()?.description
+                    val passwordErrors = errors.filter { it.code.startsWith("Password") }
+                    registerTouristFragment.password_layout.error = passwordErrors.firstOrNull()?.description
                 }
             }
 
