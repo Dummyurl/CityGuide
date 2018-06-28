@@ -91,24 +91,24 @@ class Api constructor(private val activity : Context? = null) {
     }
 
     fun registration2(model: Registration2, photoUri: Uri): Call<ResponseBody> {
-        val wholeID = DocumentsContract.getDocumentId(photoUri)
-        val id = wholeID.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
-        val column = arrayOf(MediaStore.Images.Media.DATA)
-        val sel = MediaStore.Images.Media._ID + "=?"
+        //val wholeID = DocumentsContract.getDocumentId(photoUri)
+        //val id = wholeID.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
+        //val column = arrayOf(MediaStore.Images.Media.DATA)
+        //val sel = MediaStore.Images.Media._ID + "=?"
 
-        val cursor = activity?.contentResolver?.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                column, sel, arrayOf(id), null)
+        //val cursor = activity?.contentResolver?.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+        //        column, sel, arrayOf(id), null)
 
-        var filePath = ""
+        //var filePath = ""
 
-        val columnIndex = cursor?.getColumnIndex(column[0])
+        //val columnIndex = cursor?.getColumnIndex(column[0])
 
-        if (cursor!!.moveToFirst()) {
-            filePath = cursor.getString(columnIndex!!)
-        }
+        //if (cursor!!.moveToFirst()) {
+        //    filePath = cursor.getString(columnIndex!!)
+        //}
 
-        cursor.close()
-        val image = File(filePath)
+        //cursor.close()
+        val image = File(photoUri.path)
 
         val imageBody : RequestBody = RequestBody.create(MediaType.parse("image/*"), image)
         val imagePart = MultipartBody.Part.createFormData("profilePhoto", image.name, imageBody)
@@ -219,6 +219,14 @@ class Api constructor(private val activity : Context? = null) {
 
     fun savePaymentMethod(model: CreatePaymentMethodRequest): Call<ResponseBody>{
         return api.savePaymentMethod(model)
+    }
+
+    fun forgottenPassword(model: ForgottenPassword): Call<PasswordResetCode>{
+        return api.forgottenPassword(model)
+    }
+
+    fun resetPassword(model: PasswordResetModel): Call<ResponseBody>{
+        return api.resetPassword(model)
     }
 
     //fun uploadImages(image: NoteImage) : Call<ResponseBody> {

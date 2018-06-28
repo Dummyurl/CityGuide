@@ -1,14 +1,17 @@
 package sk.dmsoft.cityguide.Chat.Fragments
 
+import android.Manifest
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.content.pm.PackageManager
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.os.IBinder
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -85,7 +88,9 @@ class MapFragment : Fragment(), LocationUpdateCallback {
                     .title("Meeting point")
                     .draggable(true))
             initCamera()
-            googleMap?.isMyLocationEnabled = true
+            if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                googleMap?.isMyLocationEnabled = true
+
             setMarkerCallback()
         }
         if (mapMode == MapMode.GoToMeetingPoint)
@@ -117,12 +122,14 @@ class MapFragment : Fragment(), LocationUpdateCallback {
             MapMode.SetMeetingPoint -> {
                 meeting_point_controls.visibility = View.VISIBLE
                 meetingPoint?.alpha = 0f
+                marker_icon.visibility = View.VISIBLE
             }
             MapMode.GoToMeetingPoint -> {
                 meeting_point_controls.visibility = View.GONE
                 val serviceIntent = Intent(activity, LocationService::class.java)
                 activity?.bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
                 meetingPoint?.alpha = 1f
+                marker_icon.visibility = View.GONE
             }
         }
 

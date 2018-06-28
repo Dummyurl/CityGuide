@@ -52,6 +52,7 @@ class RegisterStep2Fragment : Fragment() {
 
     // TODO: Rename method, update argument and hook method into UI event
     fun CompleteStep2() {
+        next.isEnabled = false
         model.aboutMe = about_me.text.toString()
         listener?.onStep2Completed(model)
     }
@@ -66,6 +67,11 @@ class RegisterStep2Fragment : Fragment() {
     fun fillFields(){
         about_me.setText(model.aboutMe)
         photo_image.loadCircle("${AppSettings.apiUrl}/users/photo/${AccountManager.userId}")
+    }
+
+    fun showProgressBar(){
+        next.visibility = View.GONE
+        upload_progressbar.visibility = View.VISIBLE
     }
 
     override fun onAttach(context: Context) {

@@ -52,7 +52,6 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:text="@string/start"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/user_name" />
 
@@ -87,33 +86,19 @@
                     android:id="@+id/chronometer2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:textColor="@color/white"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
 
                 <TextView
-                    android:id="@+id/textView16"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="2 hours 12 minutes"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/white"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/textView15"
+                    android:id="@+id/per_hour"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="20€"
                     android:textColor="@color/white"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView16" />
+                    app:layout_constraintTop_toBottomOf="@+id/chronometer2" />
 
                 <Button
                     android:id="@+id/end_proposal"
@@ -122,7 +107,7 @@
                     android:text="@string/end_proposal"
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:textColor="@color/white"
-                    app:layout_constraintTop_toBottomOf="@+id/textView15"/>
+                    app:layout_constraintTop_toBottomOf="@+id/per_hour"/>
 
             </android.support.constraint.ConstraintLayout>
 

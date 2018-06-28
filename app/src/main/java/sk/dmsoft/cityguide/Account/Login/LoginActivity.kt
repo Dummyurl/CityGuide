@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_registration.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import sk.dmsoft.cityguide.Account.ForgottenPassword.ForgottenPasswordActivity
 import sk.dmsoft.cityguide.Account.Registration.RegistrationActivity
 import sk.dmsoft.cityguide.Api.Api
 import sk.dmsoft.cityguide.Commons.AccountManager
@@ -28,7 +29,7 @@ class LoginActivity : AppCompatActivity() {
         val api = Api(this)
 
         forgotten_password.setOnClickListener {
-
+            startActivity(Intent(this, ForgottenPasswordActivity::class.java))
         }
 
         login.setOnClickListener({

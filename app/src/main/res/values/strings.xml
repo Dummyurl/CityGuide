@@ -74,5 +74,9 @@
     <string name="facebook_login">Sign up with Facebook</string>
     <string name="email_login">Sign up with Email</string>
     <string name="sign_up_text">Kaktus let\'s you discover amazing places you\'ve never even heard of</string>
+    <string name="forgotten_password_text">Reset your password</string>
+    <string name="reset_code">Reset code</string>
+    <string name="congratulations">Congratulations</string>
+    <string name="you_have_earned">You have earned</string>
 
 </resources>

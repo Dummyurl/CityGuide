@@ -83,7 +83,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:background="@color/white"
-            android:drawableStart="@drawable/common_google_signin_btn_icon_light_normal"
+            android:drawableStart="@mipmap/google_logo"
+            android:drawablePadding="10dp"
+            android:paddingStart="10dp"
             android:text="@string/google_login"
             android:textAlignment="textStart" />
 
@@ -93,7 +95,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@color/white"
-            android:drawableStart="@drawable/com_facebook_button_login_logo"
+            android:drawableStart="@mipmap/facebook_logo"
+            android:drawablePadding="10dp"
+            android:paddingStart="10dp"
             android:text="@string/facebook_login"
             android:textAlignment="textStart" />
 
@@ -103,7 +107,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@color/white"
-            android:drawableStart="@drawable/com_facebook_button_login_logo"
+            android:drawableStart="@mipmap/mail_logo"
+            android:drawablePadding="10dp"
+            android:paddingStart="10dp"
             android:text="@string/email_login"
             android:textAlignment="textStart"
             android:layout_marginBottom="10dp"/>

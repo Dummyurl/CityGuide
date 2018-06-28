@@ -4,7 +4,6 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import com.braintreepayments.api.dropin.DropInRequest
 import com.braintreepayments.api.dropin.DropInResult
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_checkout.*
@@ -13,8 +12,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import sk.dmsoft.cityguide.Api.Api
+import sk.dmsoft.cityguide.Commons.AppSettings
 import sk.dmsoft.cityguide.Commons.CurrencyConverter
-import sk.dmsoft.cityguide.Models.CheckoutToken
+import sk.dmsoft.cityguide.Commons.loadCircle
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
 import sk.dmsoft.cityguide.Models.Rating
 import sk.dmsoft.cityguide.Models.TransactionRequest
@@ -35,12 +35,16 @@ class CheckoutActivity : AppCompatActivity() {
         if (proposalId == 0){
             val proposalJson = intent.getStringExtra("PROPOSAL")
             proposal = Gson().fromJson(proposalJson, Proposal::class.java)
-            if (proposal?.proposalPayment?.totalAmount != null)
-            total_amount.text = CurrencyConverter.convert(proposal!!.proposalPayment!!.totalAmount)
+            if (proposal!!.payment != null)
+            total_amount.text = CurrencyConverter.convert(proposal!!.payment!!.totalAmount)
+            user_name.text = "${proposal?.user?.firstName} ${proposal?.user?.secondName}"
+            total_hours.text = "${proposal!!.payment!!.totalHours}h"
+            user_photo.loadCircle("${AppSettings.apiUrl}/users/photo/${proposal?.user?.id}")
         }
         else {
             proposal = Proposal()
             proposal?.id = proposalId
+            initProposal(proposalId)
         }
 
         checkout_btn.setOnClickListener {
@@ -60,6 +64,24 @@ class CheckoutActivity : AppCompatActivity() {
 
             createTransaction("")
         }
+    }
+
+    fun initProposal(id: Int){
+        api.getProposal(id).enqueue(object: Callback<Proposal>{
+            override fun onFailure(call: Call<Proposal>?, t: Throwable?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onResponse(call: Call<Proposal>?, response: Response<Proposal>) {
+                if (response.isSuccessful){
+                    proposal = response.body()
+                    total_amount.text = CurrencyConverter.convert(proposal!!.payment!!.totalAmount)
+                    total_hours.text = "${proposal!!.payment!!.totalHours}h"
+                    user_name.text = "${proposal?.user?.firstName} ${proposal?.user?.secondName}"
+                    user_photo.loadCircle("${AppSettings.apiUrl}/users/photo/${proposal?.user?.id}")
+                }
+            }
+        })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

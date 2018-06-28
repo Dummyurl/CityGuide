@@ -9,14 +9,22 @@ object CurrencyConverter {
     var currencies = ArrayList<Currency>()
 
     fun init(context: Context){
-        currencies = DB(context).GetCurrencies()
+        try {
+            currencies = DB(context).GetCurrencies()
+        }
+        catch (e: Exception){}
     }
 
     fun convert(value: Double): String{
 
         val currency = currencies.find { it.id == AccountManager.currency }
-        if (currency != null)
+        if (currency != null) {
+            if (currency.symbolBefore == null)
+                currency.symbolBefore = ""
+            if (currency.symbolAfter == null)
+                currency.symbolAfter = ""
             return "${currency.symbolBefore}${(currency.rate.toBigDecimal() * value.toBigDecimal()).setScale(2)}${currency.symbolAfter}"
+        }
         return "${value}€"
     }
 

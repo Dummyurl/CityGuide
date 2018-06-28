@@ -66,6 +66,7 @@ class RegisterStep3Fragment : Fragment() {
     }
 
     fun completeStep3(){
+        next.isEnabled = false
         val model = Registration3()
         model.interests = selectedInterests
         listener?.onStep3Completed(model)

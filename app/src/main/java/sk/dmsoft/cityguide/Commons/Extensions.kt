@@ -3,6 +3,7 @@ package sk.dmsoft.cityguide.Commons
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
@@ -64,4 +65,16 @@ fun AppCompatActivity.replaceFragment(fragment: Fragment, frameId: Int, addToBac
 
 fun AppCompatActivity.removeFragment(fragment: Fragment, addToBackstack: Boolean = false){
     supportFragmentManager.inTransaction({remove(fragment)}, addToBackstack)
+}
+
+fun AppCompatActivity.showAlertDialog(dialogBuilder: AlertDialog.Builder.() -> Unit) {
+    val builder = AlertDialog.Builder(this)
+    builder.dialogBuilder()
+    val dialog = builder.create()
+
+    dialog.show()
+}
+
+fun AlertDialog.Builder.positiveButton(text: String = "Okay", handleClick: (which: Int) -> Unit = {}) {
+    this.setPositiveButton(text, { dialogInterface, which-> handleClick(which) })
 }
