@@ -106,6 +106,9 @@ class RegistrationActivity : AppCompatActivity(),
 
                     pager.setCurrentItem(1, true)
                 }
+                else if (response.code() == 400){
+                    var errors = response.errorBody()
+                }
             }
 
         })
@@ -269,6 +272,7 @@ class RegistrationActivity : AppCompatActivity(),
             CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE -> {
                 val result = CropImage.getActivityResult(data)
                 if (resultCode == RESULT_OK) {
+                    profilePhotoUri = result.uri
                   step2Fragment.loadPhoto(result.uri.toString())
                 } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                   val error = result.error
