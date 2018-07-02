@@ -21,8 +21,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import sk.dmsoft.cityguide.Account.Registration.Step.*
 import sk.dmsoft.cityguide.Api.Api
-import sk.dmsoft.cityguide.Commons.AccountManager
-import sk.dmsoft.cityguide.Commons.EAccountType
 import sk.dmsoft.cityguide.Models.AccessToken
 import sk.dmsoft.cityguide.MainActivity
 import sk.dmsoft.cityguide.Models.Account.*
@@ -37,8 +35,11 @@ import com.paypal.android.sdk.onetouch.core.metadata.w
 import com.google.android.gms.common.api.ApiException
 import android.util.Log
 import com.google.android.gms.tasks.Task
-import sk.dmsoft.cityguide.Commons.addFragment
-import sk.dmsoft.cityguide.Commons.removeFragment
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
+import sk.dmsoft.cityguide.Commons.*
 
 
 class RegistrationActivity : AppCompatActivity(),
@@ -104,6 +105,12 @@ class RegistrationActivity : AppCompatActivity(),
 
                     pager.setCurrentItem(1, true)
                 }
+                else if (response.code() == 400){
+                    val errors = Gson().fromJson(response.errorBody()?.charStream(), Array<ServerError>::class.java)
+                    //registerTouristFragment.email.error = errors.firstOrNull()?.description
+                    val passwordErrors = errors.filter { it.code.startsWith("Password") }
+                    registerTouristFragment.password_layout.error = passwordErrors.firstOrNull()?.description
+                }
             }
 
         })
@@ -130,32 +137,40 @@ class RegistrationActivity : AppCompatActivity(),
     }
 
     override fun onPhotoSelect() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "image/*"
-        if (intent.resolveActivity(packageManager) != null) {
-            startActivityForResult(intent, REQUEST_SELECT_IMAGE_IN_ALBUM)
-        }
+        //val intent = Intent(Intent.ACTION_GET_CONTENT)
+        //intent.type = "image/*"
+        //if (intent.resolveActivity(packageManager) != null) {
+        //    startActivityForResult(intent, REQUEST_SELECT_IMAGE_IN_ALBUM)
+        //}
+        CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setCropShape(CropImageView.CropShape.OVAL)
+                .setAspectRatio(1, 1)
+                .setGuidelines(CropImageView.Guidelines.OFF)
+                .start(this)
     }
 
     override fun onStep2Completed(model: Registration2) {
-        if (profilePhotoUri.toString().length > 5)
-        api.registration2(model, profilePhotoUri).enqueue(object: Callback<ResponseBody>{
-            override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
-                if (response.code() == 200){
-                    AccountManager.registrationStep = 3
-
-                    if (editMode)
-                        finish()
-
-                    pager.setCurrentItem(4, true)
+        if (profilePhotoUri.toString().length > 5) {
+            api.registration2(model, profilePhotoUri).enqueue(object : Callback<ResponseBody> {
+                override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 }
-            }
 
-        })
+                override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
+                    if (response.code() == 200) {
+                        AccountManager.registrationStep = 3
+
+                        if (editMode)
+                            finish()
+
+                        pager.setCurrentItem(4, true)
+                    }
+                }
+
+            })
+            step2Fragment.showProgressBar()
+        }
         else {
             AccountManager.registrationStep = 3
 
@@ -242,20 +257,29 @@ class RegistrationActivity : AppCompatActivity(),
         })
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_SELECT_IMAGE_IN_ALBUM) {
-            profilePhotoUri = data.data
-            step2Fragment.loadPhoto(data.data.toString())
-        }
-        else if (requestCode == REQUEST_FACEBOOK_LOGIN){
-            callbackManager.onActivityResult(requestCode, resultCode, data)
-        }
-        else if (requestCode == GOOGLE_SIGN_IN) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            handleSignInResult(task)
+        when (requestCode) {
+            REQUEST_SELECT_IMAGE_IN_ALBUM -> {
+                profilePhotoUri = data!!.data
+                step2Fragment.loadPhoto(data.data.toString())
+            }
+            REQUEST_FACEBOOK_LOGIN -> callbackManager.onActivityResult(requestCode, resultCode, data)
+            GOOGLE_SIGN_IN -> {
+                // The Task returned from this call is always completed, no need to attach
+                // a listener.
+                val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+                handleSignInResult(task)
+            }
+            CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE -> {
+                val result = CropImage.getActivityResult(data)
+                if (resultCode == RESULT_OK) {
+                    profilePhotoUri = result.uri
+                  step2Fragment.loadPhoto(result.uri.toString())
+                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                  val error = result.error
+                }
+            }
         }
     }
 
