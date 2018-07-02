@@ -144,6 +144,11 @@ class MapFragment : Fragment(), LocationUpdateCallback {
             initCamera()
     }
 
+    fun moveToUser(){
+        val cameraUpdate = CameraUpdateFactory.newLatLngZoom(userPosition, 10f)
+        googleMap?.animateCamera(cameraUpdate)
+    }
+
     fun initCamera(){
         val cameraUpdate = CameraUpdateFactory.newLatLngZoom(meetingPointPosition, 10f)
         googleMap?.animateCamera(cameraUpdate)

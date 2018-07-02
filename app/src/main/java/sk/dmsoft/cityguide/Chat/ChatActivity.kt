@@ -262,6 +262,12 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
         showMap()
     }
 
+    fun findUser(){
+        mapFragment.updateMode(MapMode.GoToMeetingPoint)
+        showMap()
+        mapFragment.moveToUser()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.chat_menu, menu)
@@ -273,6 +279,7 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
             R.id.cancel_proposal -> { cancelProposal() }
             R.id.change_meeting_point -> { changeMeetingPoint() }
             R.id.share_location -> { goToMeetingPoint() }
+            R.id.find_user -> { findUser() }
         }
         return true
     }
