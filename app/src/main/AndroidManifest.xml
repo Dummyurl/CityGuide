@@ -74,9 +74,6 @@
             android:name=".Proposal.ActiveProposalActivity"
             android:label="@string/title_activity_active_proposal"
             android:theme="@style/AppTheme" />
-        <activity android:name=".Account.ForgottenPassword.ForgottenPasswordActivity"
-            android:label="@string/forgotten_password"
-            android:theme="@style/AppTheme"/>
         <activity android:name=".CheckoutActivity" />
         <activity android:name=".CreatePaymentMethodActivity" />
         <activity android:name=".Proposal.CompletedProposalGuideDetails" />
