@@ -78,5 +78,6 @@
     <string name="reset_code">Reset code</string>
     <string name="congratulations">Congratulations</string>
     <string name="you_have_earned">You have earned</string>
+    <string name="find_user">Find user</string>
 
 </resources>

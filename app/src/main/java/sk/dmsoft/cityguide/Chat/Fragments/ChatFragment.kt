@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_chat.*
+import kotlinx.android.synthetic.main.fragment_map.*
 import sk.dmsoft.cityguide.Commons.Adapters.ChatAdapter
 import sk.dmsoft.cityguide.Models.Chat.Message
 import sk.dmsoft.cityguide.Models.Chat.MessageType
