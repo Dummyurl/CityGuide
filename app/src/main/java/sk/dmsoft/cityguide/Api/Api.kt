@@ -145,6 +145,10 @@ class Api constructor(private val activity : Context? = null) {
         return api.getProposals()
     }
 
+    fun getCompletedProposals(page: Int): Call<ArrayList<Proposal>>{
+        return api.getCompletedProposals((page))
+    }
+
     fun getUnconfirmedProposals(): Call<ArrayList<Proposal>> {
         return api.getUnconfirmedProposals()
     }

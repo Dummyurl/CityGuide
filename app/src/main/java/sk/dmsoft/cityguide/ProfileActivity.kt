@@ -18,6 +18,7 @@ import sk.dmsoft.cityguide.Commons.Adapters.SettingsAdapter
 import sk.dmsoft.cityguide.Commons.AppSettings
 import sk.dmsoft.cityguide.Commons.EAccountType
 import sk.dmsoft.cityguide.Commons.loadCircle
+import sk.dmsoft.cityguide.Proposal.CompletedProposalActivity
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -36,7 +37,7 @@ class ProfileActivity : AppCompatActivity() {
     )
 
     val accountFields: Array<String> = arrayOf(
-            "Change password"
+            "Change password", "History"
     )
 
     val settingsFields: ArrayList<String> = ArrayList()
@@ -73,17 +74,20 @@ class ProfileActivity : AppCompatActivity() {
 
         initFields()
 
-        val settingsAdapter = SettingsAdapter(settingsFields, { position ->
-            if (position < settingsFields.size - 2) {
+        val settingsAdapter = SettingsAdapter(settingsFields) { position ->
+            if (position < settingsFields.size - 3) {
                 val intent = Intent(this@ProfileActivity, RegistrationActivity::class.java)
                 intent.putExtra("EDIT_MODE", true)
                 intent.putExtra("REGISTRATION_STEP", position+1)
                 startActivity(intent)
             }
 
-            if (position == settingsFields.size - 1)
+            else if (position == settingsFields.size - 2)
                 startActivity(Intent(this@ProfileActivity, ChangePasswordActivity::class.java))
-        })
+
+            else if (position == settingsFields.size - 1)
+                startActivity(Intent(this, CompletedProposalActivity::class.java))
+        }
 
         settings_recycler.setHasFixedSize(true)
         settings_recycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)

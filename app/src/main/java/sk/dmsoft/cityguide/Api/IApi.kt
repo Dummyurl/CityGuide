@@ -61,6 +61,9 @@ interface IApi {
     @GET("proposals/{id}")
     fun getProposal(@Path("id") id: Int): Call<Proposal>
 
+    @GET("proposals/completed/{page}")
+    fun getCompletedProposals(@Path("page") page: Int): Call<ArrayList<Proposal>>
+
     @GET("proposals/unconfirmed")
     fun getUnconfirmedProposals(): Call<ArrayList<Proposal>>
 
