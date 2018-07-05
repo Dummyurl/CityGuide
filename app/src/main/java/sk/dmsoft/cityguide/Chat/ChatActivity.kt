@@ -100,6 +100,10 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
 
     var shareLocation = true
 
+    var waitingForUser = false
+
+    var unreadMessagesCount = 0
+
     lateinit var db: DB
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -139,7 +143,7 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
                 }
 
                 override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
-                    Snackbar.make(chat_wrapper, "Wait for other side", Snackbar.LENGTH_LONG).show()
+                    showWaitingtext()
                 }
             })
         }
@@ -147,6 +151,13 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
         end_proposal.setOnClickListener { endProposal() }
         if (AccountManager.accountType == EAccountType.guide)
             end_proposal.visibility = View.GONE
+
+        switchable_chat_map.setOnClickListener {
+            if (isMapVisible)
+                hideMap()
+            else
+                goToMeetingPoint()
+        }
     }
 
     override fun onRestart() {
@@ -175,6 +186,12 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
                     if (proposal?.state == 5)
                         startProposal()
 
+                    if (AccountManager.accountType == EAccountType.tourist && proposal?.touristStart!!)
+                        showWaitingtext()
+
+                    if (AccountManager.accountType == EAccountType.guide && proposal?.guideStart!!)
+                        showWaitingtext()
+
                     if (proposal?.meetingPoint != null) {
                         val meetingPointPosition = LatLng(proposal?.meetingPoint?.latitude!!, proposal?.meetingPoint?.longitude!!)
                         mapFragment.updateMeetingPointPosition(meetingPointPosition)
@@ -202,11 +219,14 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
             }
 
             override fun onMessage(messageJson: String?) {
-                runOnUiThread({
+                runOnUiThread {
                     Log.e("chat", messageJson)
                     val message: Message = Gson().fromJson(messageJson, Message::class.java)
                     when (message.MessageType) {
-                        MessageType.Message.value -> chatFragment.addMessage(message)
+                        MessageType.Message.value -> {
+                            chatFragment.addMessage(message)
+                            addUnreadMessage()
+                        }
                         MessageType.Map.value -> {
                             if (message.From != AccountManager.userId) {
                                 val position = Gson().fromJson(URLDecoder.decode(message.Text, "UTF-8"), LatLng::class.java)
@@ -217,7 +237,7 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
                         MessageType.ProposalStart.value -> startProposal()
                         MessageType.ProposalEnd.value -> goToCheckout()
                     }
-                })
+                }
             }
 
             override fun onError(ex: Exception?) {
@@ -232,11 +252,29 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
         mapFragment.updateMode()
         isMapVisible = true
         map_fragment_wrapper.visibility = View.VISIBLE
+        switchable_chat_map.setImageResource(R.drawable.ic_message)
+        unreadMessagesCount = 0
+        updateUnreadMessages()
     }
 
     override fun hideMap(){
         isMapVisible = false
         map_fragment_wrapper.visibility = View.GONE
+        switchable_chat_map.setImageResource(R.drawable.ic_map)
+        updateUnreadMessages()
+    }
+
+    fun updateUnreadMessages(){
+        if (unreadMessagesCount == 0 || !isMapVisible)
+            unread_message_count.visibility = View.GONE
+        if (unreadMessagesCount > 0 && isMapVisible)
+            unread_message_count.visibility = View.VISIBLE
+    }
+
+    fun addUnreadMessage(){
+        if (isMapVisible)
+            unreadMessagesCount++
+        updateUnreadMessages()
     }
 
     fun cancelProposal(){
@@ -278,20 +316,21 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
         when (p0.itemId){
             R.id.cancel_proposal -> { cancelProposal() }
             R.id.change_meeting_point -> { changeMeetingPoint() }
-            R.id.share_location -> { goToMeetingPoint() }
+            //R.id.share_location -> { goToMeetingPoint() }
             R.id.find_user -> { findUser() }
         }
         return true
     }
 
     fun switchStartSet(){
-        if (proposal?.meetingPoint != null){
-            start_proposal.visibility = View.VISIBLE
-            set_meeting_point.visibility = View.GONE
-        }
-        else{
-            start_proposal.visibility = View.GONE
-            set_meeting_point.visibility = View.VISIBLE
+        if (!waitingForUser) {
+            if (proposal?.meetingPoint != null) {
+                start_proposal.visibility = View.VISIBLE
+                set_meeting_point.visibility = View.GONE
+            } else {
+                start_proposal.visibility = View.GONE
+                set_meeting_point.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -311,10 +350,10 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
 
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
         format.timeZone = TimeZone.getTimeZone("UTC")
-        val spendTime = (proposal!!.actualTime * 1000) - format.parse(proposal!!.realStart).time
+        val spendTime = proposal!!.actualTime - proposal!!.realStartTimeSpan
 
         chronometer2.format = "%s"
-        chronometer2.base = (SystemClock.elapsedRealtime()) - spendTime
+        chronometer2.base = (SystemClock.elapsedRealtime()) - (spendTime *1000)
         chronometer2.start()
 
         per_hour.text = "${CurrencyConverter.convert(proposal!!.perHourSalary)}"
@@ -353,5 +392,12 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
             hideMap()
         else
             super.onBackPressed()
+    }
+
+    fun showWaitingtext(){
+        waiting_text.visibility = View.VISIBLE
+        start_proposal.visibility = View.GONE
+        set_meeting_point.visibility = View.GONE
+        waitingForUser = true
     }
 }

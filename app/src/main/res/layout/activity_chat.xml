@@ -56,6 +56,20 @@
                     app:layout_constraintTop_toBottomOf="@+id/user_name" />
 
                 <TextView
+                    android:id="@+id/waiting_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/waiting"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/user_name"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:visibility="gone"/>
+
+                <TextView
                     android:id="@+id/place_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -72,6 +86,46 @@
                     android:text="TextView"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/place_name" />
+
+
+                <ImageView
+                    android:id="@+id/switchable_chat_map"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_map" />
+
+                <TextView
+                    android:id="@+id/unread_message_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="12dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/rounded_rectangle_green"
+                    android:gravity="center"
+                    android:minHeight="17sp"
+                    android:minWidth="17sp"
+                    android:padding="2dp"
+                    android:paddingBottom="1dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:scaleType="fitStart"
+                    android:text="0"
+                    android:textColor="#ffffffff"
+                    android:textSize="12sp"
+                    android:visibility="visible"
+                    app:layout_constraintStart_toStartOf="@+id/switchable_chat_map"
+                    app:layout_constraintTop_toTopOf="@+id/switchable_chat_map" />
+
 
             </android.support.constraint.ConstraintLayout>
 

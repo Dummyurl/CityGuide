@@ -35,4 +35,6 @@ class Proposal {
     var user: UserInfo = UserInfo()
 
     var actualTime: Long = 0
+
+    var realStartTimeSpan: Long = 0
 }

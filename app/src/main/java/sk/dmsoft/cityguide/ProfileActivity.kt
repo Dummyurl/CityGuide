@@ -15,16 +15,20 @@ import sk.dmsoft.cityguide.Api.Api
 import sk.dmsoft.cityguide.Api.DB
 import sk.dmsoft.cityguide.Commons.AccountManager
 import sk.dmsoft.cityguide.Commons.Adapters.SettingsAdapter
-import sk.dmsoft.cityguide.Commons.AppSettings
 import sk.dmsoft.cityguide.Commons.EAccountType
-import sk.dmsoft.cityguide.Commons.loadCircle
+import sk.dmsoft.cityguide.Commons.showAlertDialog
+import android.content.DialogInterface
+import android.support.v7.app.AlertDialog
+import android.widget.ListAdapter
+import sk.dmsoft.cityguide.Commons.positiveButton
 import sk.dmsoft.cityguide.Proposal.CompletedProposalActivity
+
 
 class ProfileActivity : AppCompatActivity() {
 
     val userFields: Array<String> = arrayOf(
             "Personal Info",
-            "About you",
+            "Profile info",
             "Interests"
     )
 
@@ -36,11 +40,12 @@ class ProfileActivity : AppCompatActivity() {
             "Payment method"
     )
 
-    val accountFields: Array<String> = arrayOf(
-            "Change password", "History"
+    val appSettingsFields: Array<String> = arrayOf(
+            "Change currency", "Change password"
     )
 
-    val settingsFields: ArrayList<String> = ArrayList()
+    val allAccountFields: ArrayList<String> = ArrayList()
+    val allAppSettingsFielda: ArrayList<String> = ArrayList()
 
     lateinit var db: DB
     lateinit var api: Api
@@ -50,21 +55,9 @@ class ProfileActivity : AppCompatActivity() {
         setContentView(R.layout.activity_profile)
         db = DB(this)
         api = Api(this)
-
-        val placesAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, db.GetCurrencies().map { it.id } )
-        placesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        currency_spinner.adapter = placesAdapter
-        currency_spinner.setSelection(db.GetCurrencies().indexOf(db.GetCurrencies().find { it.id == AccountManager.currency }))
-
-        currency_spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
-            override fun onNothingSelected(p0: AdapterView<*>?) {}
-
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                AccountManager.currency = db.GetCurrencies()[p2].id
-            }
-        }
-
-        profile_photo.loadCircle("${AppSettings.apiUrl}/users/photo/${AccountManager.userId}")
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Settings"
 
         logout.setOnClickListener {
             AccountManager.LogOut()
@@ -72,35 +65,71 @@ class ProfileActivity : AppCompatActivity() {
             finish()
         }
 
+        show_history.setOnClickListener { startActivity(Intent(this, CompletedProposalActivity::class.java)) }
+
         initFields()
 
-        val settingsAdapter = SettingsAdapter(settingsFields) { position ->
-            if (position < settingsFields.size - 3) {
+        val settingsAdapter = SettingsAdapter(allAccountFields) { position ->
                 val intent = Intent(this@ProfileActivity, RegistrationActivity::class.java)
                 intent.putExtra("EDIT_MODE", true)
                 intent.putExtra("REGISTRATION_STEP", position+1)
                 startActivity(intent)
+        }
+
+        val appSettingsAdapter = SettingsAdapter(allAppSettingsFielda) {position ->
+            if (AccountManager.accountType == EAccountType.tourist){
+                when (position) {
+                    0 -> showAlertDialog {
+                        setTitle("Add payment method")
+                        positiveButton("Ok") {  } }
+                    1 -> showChangeCurrencyDialog()
+                    2 -> changePassword()
+                }
             }
-
-            else if (position == settingsFields.size - 2)
-                startActivity(Intent(this@ProfileActivity, ChangePasswordActivity::class.java))
-
-            else if (position == settingsFields.size - 1)
-                startActivity(Intent(this, CompletedProposalActivity::class.java))
+            else {
+                when (position) {
+                    0 -> showChangeCurrencyDialog()
+                    1 -> changePassword()
+                }
+            }
         }
 
         settings_recycler.setHasFixedSize(true)
         settings_recycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         settings_recycler.adapter = settingsAdapter
         settings_recycler.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
+
+        app_settings_recycler.setHasFixedSize(true)
+        app_settings_recycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        app_settings_recycler.adapter = appSettingsAdapter
+        app_settings_recycler.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
     }
 
     fun initFields(){
-        settingsFields.addAll(userFields)
-        if (AccountManager.accountType == EAccountType.tourist)
-            settingsFields.addAll(touristFields)
+        allAccountFields.addAll(userFields)
+        if (AccountManager.accountType == EAccountType.guide)
+            allAccountFields.addAll(guideFields)
         else
-            settingsFields.addAll(guideFields)
-        settingsFields.addAll(accountFields)
+            allAppSettingsFielda.addAll(touristFields)
+
+        allAppSettingsFielda.addAll(appSettingsFields)
+    }
+
+    fun showChangeCurrencyDialog(){
+        // Creating and Building the Dialog
+        val currencies= db.GetCurrencies()
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Select The Difficulty Level")
+        val selectedCurrency = currencies.map { it.id }.indexOf(AccountManager.currency)
+        builder.setSingleChoiceItems(currencies.map { it.id }.toTypedArray(), selectedCurrency) { dialog, item ->
+            AccountManager.currency = currencies[item].id
+            dialog.dismiss()
+        }
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    fun changePassword(){
+        startActivity(Intent(this, ChangePasswordActivity::class.java))
     }
 }

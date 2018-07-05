@@ -8,11 +8,6 @@
         android:title="@string/change_meeting_point"
         android:icon="@drawable/ic_map"/>
     <item
-        android:id="@+id/share_location"
-        android:title="@string/show_map"
-        android:icon="@drawable/ic_map"
-        app:showAsAction="always"/>
-    <item
         android:id="@+id/find_user"
         android:title="@string/find_user"
         android:icon="@drawable/target"

@@ -32,7 +32,7 @@ class CompletedProposalsAdapter(val activity: Activity, val proposals: ArrayList
                 guide_name.text = "${item.user.firstName} ${item.user.secondName}"
                 guide_photo.loadCircle("${AppSettings.apiUrl}users/photo/${item.user.id}")
             }
-            proposal_info.text = "Paid ${CurrencyConverter.convert(item.payment!!.totalAmount)} # Lasted ${item.payment!!.totalHours}h"
+            proposal_info.text = "Paid ${CurrencyConverter.convert(item.payment!!.totalAmount)} ● Lasted ${item.payment!!.totalHours}h"
             val startDate = DateTime(item.start)
             proposal_date.text = "${startDate.dayOfMonth}. ${startDate.monthOfYear}."
             proposal_time.text = "Start at ${startDate.hourOfDay}:${startDate.minuteOfHour}"

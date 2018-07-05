@@ -79,5 +79,6 @@
     <string name="congratulations">Congratulations</string>
     <string name="you_have_earned">You have earned</string>
     <string name="find_user">Find user</string>
+    <string name="waiting">Waiting for user</string>
 
 </resources>
