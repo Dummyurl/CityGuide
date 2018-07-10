@@ -17,7 +17,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <FrameLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/completed_fragment_holder"
         android:layout_width="0dp"
         android:layout_height="0dp"
