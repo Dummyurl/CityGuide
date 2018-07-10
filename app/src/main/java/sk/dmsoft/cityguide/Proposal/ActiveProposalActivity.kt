@@ -3,19 +3,15 @@ package sk.dmsoft.cityguide.Proposal
 import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import sk.dmsoft.cityguide.R
 
 import kotlinx.android.synthetic.main.activity_active_proposal.*
-import okhttp3.ResponseBody
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.drafts.Draft_17
 import org.java_websocket.handshake.ServerHandshake
-import org.joda.time.DateTime
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,9 +24,9 @@ import sk.dmsoft.cityguide.Commons.loadCircle
 import sk.dmsoft.cityguide.Models.Chat.Message
 import sk.dmsoft.cityguide.Models.Chat.MessageType
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
+import sk.dmsoft.cityguide.Proposal.Completed.CompletedProposalGuideDetails
 import java.lang.Exception
 import java.net.URI
-import java.net.URLDecoder
 import java.text.SimpleDateFormat
 import java.util.*
 

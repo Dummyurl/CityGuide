@@ -21,6 +21,7 @@ import sk.dmsoft.cityguide.Models.Proposal.Proposal
 import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
 import sk.dmsoft.cityguide.Models.Proposal.ProposalState
 import sk.dmsoft.cityguide.Proposal.ActiveProposalActivity
+import sk.dmsoft.cityguide.Proposal.Completed.StatisticsActivity
 import sk.dmsoft.cityguide.Proposal.Fragments.EditProposalFragment
 import sk.dmsoft.cityguide.Search.SearchActivity
 
@@ -88,8 +89,11 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
             reloadProposals()
         }
 
-        if (AccountManager.accountType == EAccountType.guide)
+        if (AccountManager.accountType == EAccountType.guide) {
             open_search.visibility = View.GONE
+            open_statistics.visibility = View.VISIBLE
+            open_statistics.setOnClickListener { startActivity(Intent(this, StatisticsActivity::class.java)) }
+        }
         else
             open_search.setOnClickListener {
                 val intent = Intent(this, SearchActivity::class.java)

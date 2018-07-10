@@ -120,4 +120,7 @@ interface IApi {
 
     @POST("account/resetPassword")
     fun resetPassword(@Body model: PasswordResetModel): Call<ResponseBody>
+
+    @GET("account/stats")
+    fun getStats(): Call<Stats>
 }

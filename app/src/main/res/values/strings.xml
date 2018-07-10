@@ -80,5 +80,8 @@
     <string name="you_have_earned">You have earned</string>
     <string name="find_user">Find user</string>
     <string name="waiting">Waiting for user</string>
+    <string name="from">From</string>
+    <string name="total_earned">Total earned</string>
+    <string name="explorings">Explorings</string>
 
 </resources>

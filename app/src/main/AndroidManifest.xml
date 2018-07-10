@@ -76,11 +76,11 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".CheckoutActivity" />
         <activity android:name=".CreatePaymentMethodActivity" />
-        <activity android:name=".Proposal.CompletedProposalGuideDetails" />
+        <activity android:name=".Proposal.Completed.CompletedProposalGuideDetails" />
         <activity
             android:name=".ProfileActivity"
             android:label="Settings"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".Account.ChangePasswordActivity" />
 
         <meta-data
@@ -106,7 +106,13 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".Proposal.CompletedProposalActivity"></activity>
+        <activity
+            android:name=".Proposal.Completed.CompletedProposalActivity"
+            android:label="History"
+            android:parentActivityName=".ProfileActivity" />
+        <activity android:name=".Proposal.Completed.StatisticsActivity"
+            android:label="Statistics"
+            android:parentActivityName=".MainActivity"></activity>
     </application>
 
 </manifest>

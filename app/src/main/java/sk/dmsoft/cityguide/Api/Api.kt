@@ -233,6 +233,10 @@ class Api constructor(private val activity : Context? = null) {
         return api.resetPassword(model)
     }
 
+    fun getStats(): Call<Stats>{
+        return api.getStats()
+    }
+
     //fun uploadImages(image: NoteImage) : Call<ResponseBody> {
     //    val file : RequestBody = RequestBody.create(MediaType.parse("image/*"), image.image)
     //    val imagePart = MultipartBody.Part.createFormData("image", image.image?.name, file)
