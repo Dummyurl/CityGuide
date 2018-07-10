@@ -37,10 +37,12 @@ import com.paypal.android.sdk.onetouch.core.metadata.w
 import com.google.android.gms.common.api.ApiException
 import android.util.Log
 import com.google.android.gms.tasks.Task
+import com.google.gson.Gson
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import sk.dmsoft.cityguide.Commons.addFragment
 import sk.dmsoft.cityguide.Commons.removeFragment
+import sk.dmsoft.cityguide.Models.CustomError
 
 
 class RegistrationActivity : AppCompatActivity(),
@@ -107,7 +109,21 @@ class RegistrationActivity : AppCompatActivity(),
                     pager.setCurrentItem(1, true)
                 }
                 else if (response.code() == 400){
-                    var errors = response.errorBody()
+                    val errors = Gson().fromJson(response.errorBody()!!.charStream() , Array<CustomError>::class.java)
+                    if (errors.any{it.field == "Email"})
+                        email_layout.error = errors.first { it.field == "Email" }.description
+                    else
+                        email_layout.error = ""
+
+                    if (errors.any{it.field == "Password"})
+                        password_layout.error = errors.first { it.field == "Password" }.description
+                    else
+                        password_layout.error = ""
+
+                    if (errors.any{it.field == "ConfirmPassword"})
+                        confirm_password_layout.error = errors.first { it.field == "ConfirmPassword" }.description
+                    else
+                        confirm_password_layout.error = ""
                 }
             }
 

@@ -269,6 +269,8 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
             unread_message_count.visibility = View.GONE
         if (unreadMessagesCount > 0 && isMapVisible)
             unread_message_count.visibility = View.VISIBLE
+
+        unread_message_count.text = unreadMessagesCount.toString()
     }
 
     fun addUnreadMessage(){

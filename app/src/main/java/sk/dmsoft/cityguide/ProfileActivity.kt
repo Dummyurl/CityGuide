@@ -33,7 +33,7 @@ class ProfileActivity : AppCompatActivity() {
     )
 
     val guideFields: Array<String> = arrayOf(
-            "Guide info"
+            "Payment settings"
     )
 
     val touristFields: Array<String> = arrayOf(

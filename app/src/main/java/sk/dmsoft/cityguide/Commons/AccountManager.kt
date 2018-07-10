@@ -61,7 +61,7 @@ object AccountManager {
             return _sharedPreferences.getBoolean("FC_REGISTERED", false)
         }
         set(value) {
-            _sharedPreferences.edit().putBoolean("FC:_REGISTERED", value).apply()
+            _sharedPreferences.edit().putBoolean("FC_REGISTERED", value).commit()
         }
 
     val userId: String
