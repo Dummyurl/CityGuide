@@ -194,7 +194,7 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
     }
 
     fun connectWebsocket(){
-        wsClient = object: WebSocketClient(URI("ws://kaktus-app.azurewebsites.net/chat"), Draft_17(), mapOf("authorization" to "bearer ${AccountManager.accessToken}"), 1000){
+        wsClient = object: WebSocketClient(URI("ws://kaktus-app-service.azurewebsites.net/chat"), Draft_17(), mapOf("authorization" to "bearer ${AccountManager.accessToken}"), 1000){
             override fun onOpen(handshakedata: ServerHandshake?) {
                 Log.e(WS_TAG, handshakedata.toString())
             }
@@ -218,7 +218,10 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
                                 mapFragment.updateUserPosition(position)
                             }
                         }
-                        MessageType.MeetingPoint.value -> getMeetingPoint(Gson().fromJson(URLDecoder.decode(message.Text, "UTF-8"), MeetingPoint::class.java))
+                        MessageType.MeetingPoint.value -> {
+                            getMeetingPoint(Gson().fromJson(URLDecoder.decode(message.Text, "UTF-8"), MeetingPoint::class.java))
+                            hideMap()
+                        }
                         MessageType.ProposalStart.value -> startProposal()
                         MessageType.ProposalEnd.value -> goToCheckout()
                     }
