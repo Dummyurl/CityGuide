@@ -37,4 +37,6 @@ class Proposal {
     var actualTime: Long = 0
 
     var realStartTimeSpan: Long = 0
+
+    var lastChange = ""
 }
