@@ -330,6 +330,10 @@ class RegistrationActivity : AppCompatActivity(),
 
         if (AccountManager.registrationStep > 0)
             removeFragment(registerMethodFragment, false)
+
+        pager.setOnTouchListener { view, dragEvent ->
+            true
+        }
     }
 
 

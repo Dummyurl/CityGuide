@@ -116,7 +116,7 @@
                 android:text="0"
                 android:textColor="#ffffffff"
                 android:textSize="12sp"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@+id/open_drawer"
                 app:layout_constraintTop_toTopOf="@+id/open_drawer" />
 

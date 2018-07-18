@@ -46,7 +46,8 @@ object AccountManager {
             return _sharedPreferences.getInt("REGISTRATION_STEP", 0)
         }
         set(value) {
-            _sharedPreferences.edit().putInt("REGISTRATION_STEP", value).commit()
+            if (_sharedPreferences.getInt("REGISTRATION_STEP", 0) < value)
+                _sharedPreferences.edit().putInt("REGISTRATION_STEP", value).commit()
         }
 
     var fcmTokenId: String
