@@ -64,6 +64,9 @@ interface IApi {
     @GET("proposals/completed/{page}")
     fun getCompletedProposals(@Path("page") page: Int): Call<ArrayList<Proposal>>
 
+    @POST("proposals/completed/{page}")
+    fun getSpecifiedCompletedProposals(@Path("page") page: Int, @Body request: StatsRequest): Call<ArrayList<Proposal>>
+
     @GET("proposals/unconfirmed")
     fun getUnconfirmedProposals(): Call<ArrayList<Proposal>>
 
@@ -123,4 +126,7 @@ interface IApi {
 
     @GET("account/stats")
     fun getStats(): Call<Stats>
+
+    @POST("account/stats")
+    fun  getSpecifiedStats(@Body model: StatsRequest): Call<Stats>
 }

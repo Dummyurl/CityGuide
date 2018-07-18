@@ -58,7 +58,6 @@ class ProposalHistoryFragment : Fragment() {
         val layout = LinearLayoutManager(activity!!, LinearLayoutManager.VERTICAL, false)
         completed_proposals_recycler.layoutManager = layout
         completed_proposals_recycler.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
-
     }
 
 }

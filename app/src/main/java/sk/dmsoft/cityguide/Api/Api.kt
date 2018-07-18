@@ -149,6 +149,10 @@ class Api constructor(private val activity : Context? = null) {
         return api.getCompletedProposals((page))
     }
 
+    fun getSpecifiedCompletedProposals(page: Int, request: StatsRequest): Call<ArrayList<Proposal>>{
+        return api.getSpecifiedCompletedProposals(page, request)
+    }
+
     fun getUnconfirmedProposals(): Call<ArrayList<Proposal>> {
         return api.getUnconfirmedProposals()
     }
@@ -235,6 +239,10 @@ class Api constructor(private val activity : Context? = null) {
 
     fun getStats(): Call<Stats>{
         return api.getStats()
+    }
+
+    fun getSpecifiedStats(model: StatsRequest): Call<Stats>{
+        return api.getSpecifiedStats(model)
     }
 
     //fun uploadImages(image: NoteImage) : Call<ResponseBody> {

@@ -2,5 +2,5 @@ package sk.dmsoft.cityguide.Commons
 
 object AppSettings {
     val version = 0.1
-    val apiUrl = "http://kaktus-app.azurewebsites.net/"
+    val apiUrl = "http://kaktus-app-service.azurewebsites.net/"
 }

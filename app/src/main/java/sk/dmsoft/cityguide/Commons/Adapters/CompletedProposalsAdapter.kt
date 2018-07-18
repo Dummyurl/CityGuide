@@ -22,6 +22,11 @@ class CompletedProposalsAdapter(val activity: Activity, private val proposals: A
         return ViewHolder(activity, parent.inflate(R.layout.completed_proposal_item))
     }
 
+    fun update(newProposals: ArrayList<Proposal>){
+        proposals.clear()
+        proposals.addAll(newProposals)
+        notifyDataSetChanged()
+    }
 
     class ViewHolder(val activity: Activity, itemView: View) : RecyclerView.ViewHolder(itemView){
 
@@ -31,6 +36,7 @@ class CompletedProposalsAdapter(val activity: Activity, private val proposals: A
             val startDate = DateTime(item.start)
             date.text = "${startDate.dayOfMonth}. ${startDate.monthOfYear}."
             city_name.text = db.GetPlace(item.placeId).city
+            total_amount.text = CurrencyConverter.convert(item.payment!!.totalAmount)
         }
     }
 

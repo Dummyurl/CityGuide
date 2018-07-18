@@ -83,5 +83,6 @@
     <string name="from">From</string>
     <string name="total_earned">Total earned</string>
     <string name="explorings">Explorings</string>
+    <string name="to">To</string>
 
 </resources>
