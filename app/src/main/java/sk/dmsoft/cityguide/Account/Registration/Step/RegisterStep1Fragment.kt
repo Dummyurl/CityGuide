@@ -78,6 +78,8 @@ class RegisterStep1Fragment : Fragment(), DatePickerDialog.OnDateSetListener {
         birth_date.onFocusChangeListener = View.OnFocusChangeListener { _, p1 -> if(p1) datePickerDialog.showYearFirst() }
         birth_date.setOnClickListener { datePickerDialog.showYearFirst() }
 
+        birth_date.isFocusableInTouchMode = false
+
         fillFields()
     }
 
