@@ -15,23 +15,14 @@ import sk.dmsoft.cityguide.Api.DB
 import sk.dmsoft.cityguide.Models.Account.Registration1
 
 import sk.dmsoft.cityguide.R
-import android.R.attr.startYear
-import android.app.AlertDialog
 import android.os.Build
 import android.support.annotation.RequiresApi
-import android.util.Log
-import sk.dmsoft.cityguide.MainActivity
 import android.widget.DatePicker
 import org.joda.time.DateTime
+import sk.dmsoft.cityguide.Commons.showYearFirst
 import sk.dmsoft.cityguide.Models.Guides.GuideDetails
-import sk.dmsoft.cityguide.Models.Guides.GuideInfo
-import java.lang.reflect.AccessibleObject.setAccessible
-import java.lang.reflect.AccessibleObject.setAccessible
-
-
-
-
-
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * A simple [Fragment] subclass.
@@ -57,7 +48,6 @@ class RegisterStep1Fragment : Fragment(), DatePickerDialog.OnDateSetListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         datePickerDialog = DatePickerDialog(context, this, 2018, 1, 1)
-        showYear(datePickerDialog)
 
         val countriesAdapter = ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, db.GetCountries().filter { it.name != null }.map { it.name })
         countriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -85,8 +75,8 @@ class RegisterStep1Fragment : Fragment(), DatePickerDialog.OnDateSetListener {
         }
 
         next.setOnClickListener { completeStep1() }
-        birth_date.onFocusChangeListener = View.OnFocusChangeListener { _, p1 -> if(p1) showYear(datePickerDialog); datePickerDialog.show() }
-        birth_date.setOnClickListener { showYear(datePickerDialog); datePickerDialog.show() }
+        birth_date.onFocusChangeListener = View.OnFocusChangeListener { _, p1 -> if(p1) datePickerDialog.showYearFirst() }
+        birth_date.setOnClickListener { datePickerDialog.showYearFirst() }
 
         fillFields()
     }
@@ -100,6 +90,7 @@ class RegisterStep1Fragment : Fragment(), DatePickerDialog.OnDateSetListener {
         model.firstName = info.firstName
         model.secondName = info.secondName
         model.placeId = info.place!!.id
+        model.birthDate = info.birthDate
 
 
         if (this.view != null)
@@ -134,6 +125,10 @@ class RegisterStep1Fragment : Fragment(), DatePickerDialog.OnDateSetListener {
     fun fillFields(){
         first_name.setText(model.firstName)
         second_name.setText(model.secondName)
+        try {
+            birth_date.setText(DateTime(model.birthDate).toLocalDate().toString())
+        }
+        catch (e: Exception){}
     }
 
     /**
@@ -148,19 +143,5 @@ class RegisterStep1Fragment : Fragment(), DatePickerDialog.OnDateSetListener {
     interface Step1Listener {
         // TODO: Update argument type and name
         fun onStep1Completed(model: Registration1)
-    }
-
-    fun showYear(pickerDialog: DatePickerDialog){
-        try {
-            val mDelegateField = pickerDialog.datePicker.javaClass.getDeclaredField("mDelegate")
-            mDelegateField.setAccessible(true)
-            val delegate = mDelegateField.get(pickerDialog.datePicker)
-            val setCurrentViewMethod = delegate.javaClass.getDeclaredMethod("setCurrentView", Int::class.javaPrimitiveType)
-            setCurrentViewMethod.setAccessible(true)
-            setCurrentViewMethod.invoke(delegate, 1)
-        } catch (e: Exception) {
-            Log.e("Date picker", e.localizedMessage)
-        }
-
     }
 }// Required empty public constructor

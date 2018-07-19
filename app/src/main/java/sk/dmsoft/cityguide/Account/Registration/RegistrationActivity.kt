@@ -165,40 +165,20 @@ class RegistrationActivity : AppCompatActivity(),
     }
 
     override fun onStep2Completed(model: Registration2) {
-        if (profilePhotoUri.toString().length > 5) {
-            api.registration2(model, profilePhotoUri).enqueue(object : Callback<ResponseBody> {
-                override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
-
-                override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
-                    if (response.code() == 200) {
-                        AccountManager.registrationStep = 3
-
-                        if (editMode)
-                            finish()
-
-                        pager.setCurrentItem(4, true)
-                    }
-                }
-
-            })
-            step2Fragment.showProgressBar()
-        }
-        else {
-            AccountManager.registrationStep = 3
-
-            if (editMode)
-                finish()
-
-            if (AccountManager.accountType == EAccountType.guide)
-                pager.setCurrentItem(4, true)
-
-            else {
-                startActivity(Intent(this@RegistrationActivity, MainActivity::class.java))
-                finish()
+        api.registration2(model, profilePhotoUri).enqueue(object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
-        }
+            override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
+                if (response.code() == 200) {
+                    AccountManager.registrationStep = 3
+                    if (editMode)
+                        finish()
+                    pager.setCurrentItem(4, true)
+                }
+            }
+        })
+        step2Fragment.showProgressBar()
     }
 
 

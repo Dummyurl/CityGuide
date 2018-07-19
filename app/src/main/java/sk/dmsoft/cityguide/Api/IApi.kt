@@ -35,7 +35,7 @@ interface IApi {
 
     @Multipart
     @POST("account/register/2")
-    fun registration2(@Part aboutMe: MultipartBody.Part, @Part profilePhoto: MultipartBody.Part): Call<ResponseBody>
+    fun registration2(@Part aboutMe: MultipartBody.Part, @Part profilePhoto: MultipartBody.Part?): Call<ResponseBody>
 
     @POST("account/register/3")
     fun registration3(@Body model: Registration3): Call<ResponseBody>
@@ -123,6 +123,9 @@ interface IApi {
 
     @POST("account/resetPassword")
     fun resetPassword(@Body model: PasswordResetModel): Call<ResponseBody>
+
+    @POST("account/UpdatePassword")
+    fun changePassword(@Body model: UpdatePassword): Call<ResponseBody>
 
     @GET("account/stats")
     fun getStats(): Call<Stats>

@@ -1,10 +1,12 @@
 package sk.dmsoft.cityguide.Commons
 
+import android.app.DatePickerDialog
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +31,7 @@ fun ImageView.load(url : String, callback: () -> Unit){
         }
 
         override fun onError() {
-            PicassoCache.instance?.load(url)?.fit()?.transform(CropCircleTransformation())?.into(this@load)
+            PicassoCache.instance?.load(url)?.into(this@load)
             callback()
         }
     })
@@ -77,4 +79,18 @@ fun AppCompatActivity.showAlertDialog(dialogBuilder: AlertDialog.Builder.() -> U
 
 fun AlertDialog.Builder.positiveButton(text: String = "Okay", handleClick: (which: Int) -> Unit = {}) {
     this.setPositiveButton(text, { dialogInterface, which-> handleClick(which) })
+}
+
+fun DatePickerDialog.showYearFirst(){
+    try {
+        val mDelegateField = this.datePicker.javaClass.getDeclaredField("mDelegate")
+        mDelegateField.isAccessible = true
+        val delegate = mDelegateField.get(this.datePicker)
+        val setCurrentViewMethod = delegate.javaClass.getDeclaredMethod("setCurrentView", Int::class.javaPrimitiveType)
+        setCurrentViewMethod.isAccessible = true
+        setCurrentViewMethod.invoke(delegate, 1)
+    } catch (e: Exception) {
+        Log.e("Date picker", e.localizedMessage)
+    }
+    this.show()
 }
