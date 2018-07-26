@@ -30,8 +30,7 @@ import sk.dmsoft.cityguide.Models.Search.SearchRequest
 import sk.dmsoft.cityguide.Models.Search.SearchResluts
 import com.google.gson.GsonBuilder
 import com.google.gson.Gson
-
-
+import sk.dmsoft.cityguide.Models.Proposal.CompletedProposal
 
 
 /**
@@ -131,11 +130,11 @@ class Api constructor(private val activity : Context? = null) {
         return api.getProposals()
     }
 
-    fun getCompletedProposals(page: Int): Call<ArrayList<Proposal>>{
+    fun getCompletedProposals(page: Int): Call<ArrayList<CompletedProposal>>{
         return api.getCompletedProposals((page))
     }
 
-    fun getSpecifiedCompletedProposals(page: Int, request: StatsRequest): Call<ArrayList<Proposal>>{
+    fun getSpecifiedCompletedProposals(page: Int, request: StatsRequest): Call<ArrayList<CompletedProposal>>{
         return api.getSpecifiedCompletedProposals(page, request)
     }
 

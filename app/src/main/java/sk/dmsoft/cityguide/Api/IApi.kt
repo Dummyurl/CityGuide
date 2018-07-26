@@ -9,6 +9,7 @@ import sk.dmsoft.cityguide.Models.*
 import sk.dmsoft.cityguide.Models.Account.*
 import sk.dmsoft.cityguide.Models.Guides.GuideDetails
 import sk.dmsoft.cityguide.Models.Guides.GuideListItem
+import sk.dmsoft.cityguide.Models.Proposal.CompletedProposal
 import sk.dmsoft.cityguide.Models.Proposal.MeetingPoint
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
 import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
@@ -62,10 +63,10 @@ interface IApi {
     fun getProposal(@Path("id") id: Int): Call<Proposal>
 
     @GET("proposals/completed/{page}")
-    fun getCompletedProposals(@Path("page") page: Int): Call<ArrayList<Proposal>>
+    fun getCompletedProposals(@Path("page") page: Int): Call<ArrayList<CompletedProposal>>
 
     @POST("proposals/completed/{page}")
-    fun getSpecifiedCompletedProposals(@Path("page") page: Int, @Body request: StatsRequest): Call<ArrayList<Proposal>>
+    fun getSpecifiedCompletedProposals(@Path("page") page: Int, @Body request: StatsRequest): Call<ArrayList<CompletedProposal>>
 
     @GET("proposals/unconfirmed")
     fun getUnconfirmedProposals(): Call<ArrayList<Proposal>>
