@@ -47,6 +47,10 @@ fun ImageView.loadCircle(url: String){
     })
 }
 
+fun ImageView.loadCircleNoCache(url: String){
+    PicassoCache.instance?.load(url)?.fit()?.transform(CropCircleTransformation())?.into(this@loadCircleNoCache)
+}
+
 inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction, addToBackstack: Boolean, sharedTransActionItem: View? = null) {
     val transaction = beginTransaction().func()
     if (addToBackstack)

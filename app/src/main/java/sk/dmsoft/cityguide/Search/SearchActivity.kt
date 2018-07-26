@@ -1,11 +1,11 @@
 package sk.dmsoft.cityguide.Search
 
-import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.transition.*
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import kotlinx.android.synthetic.main.activity_search.*
 import retrofit2.Call
@@ -111,6 +111,23 @@ class SearchActivity : AppCompatActivity(), SearchRequestFragment.OnSearchTextIn
         searchRequest.maxHourlyRate = max_hourly_rate.progress
         searchRequest.minRating = min_rating.rating
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.search_menu, menu)
+        return true
+    }
+
+    fun openFilter(){
+        drawer_layout.openDrawer(nav_view)
+    }
+
+    override fun onOptionsItemSelected(p0: MenuItem): Boolean {
+        when (p0.itemId){
+            R.id.show_filter -> openFilter()
+        }
+        return true
+    }
 }
 
 class FragmentTransition() : TransitionSet() {init {
@@ -119,4 +136,5 @@ class FragmentTransition() : TransitionSet() {init {
             addTransition(ChangeTransform()).
             addTransition(ChangeImageTransform())
 }
+
 }

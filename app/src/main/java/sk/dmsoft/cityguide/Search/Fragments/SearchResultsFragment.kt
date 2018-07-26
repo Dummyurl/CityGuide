@@ -5,9 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_search_results.*
 import sk.dmsoft.cityguide.Commons.Adapters.GuidesAdapter
 import sk.dmsoft.cityguide.Commons.AppSettings
@@ -21,6 +18,8 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.app.FragmentActivity
 import android.support.v4.util.Pair
+import android.support.v7.app.AppCompatActivity
+import android.view.*
 
 
 /**
@@ -46,7 +45,7 @@ class SearchResultsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        guidesAdapter = GuidesAdapter(activity!!, guides, { guide, position, itemView ->
+        guidesAdapter = GuidesAdapter(activity!!, guides) { guide, position, itemView ->
             val intent = Intent(activity, GuideDetailsActivity::class.java)
             intent.putExtra("GUIDE_ID", guide.id)
 
@@ -57,7 +56,7 @@ class SearchResultsFragment : Fragment() {
                     ActivityOptionsCompat.makeSceneTransitionAnimation(activity as FragmentActivity, userPhotoPair, cityPhotoPair )
 
             ActivityCompat.startActivity(context!!, intent, options.toBundle())
-        })
+        }
 
         guides_list.setHasFixedSize(true)
         guides_list.layoutManager = LinearLayoutManager(activity)
@@ -66,9 +65,11 @@ class SearchResultsFragment : Fragment() {
         guides_list.isDrawingCacheEnabled = true
 
         activity?.supportPostponeEnterTransition()
-        city_image?.load("${AppSettings.apiUrl}/places/photo/$placeId", {
+        city_image?.load("${AppSettings.apiUrl}/places/photo/$placeId") {
             activity?.supportStartPostponedEnterTransition()
-        })
+        }
+
+        (activity as AppCompatActivity).setSupportActionBar(toolbar)
     }
 
     fun updateGuides(guides: ArrayList<GuideListItem>){
@@ -77,9 +78,9 @@ class SearchResultsFragment : Fragment() {
 
     fun updateImage(placeId: Int){
         this.placeId = placeId
-        city_image?.load("${AppSettings.apiUrl}/places/photo/$placeId", {
+        city_image?.load("${AppSettings.apiUrl}/places/photo/$placeId") {
             activity?.supportStartPostponedEnterTransition()
-        })
+        }
     }
 
     override fun onAttach(context: Context?) {
@@ -101,4 +102,5 @@ class SearchResultsFragment : Fragment() {
         fun onGuideSelected()
         fun onSearchUpdate()
     }
+
 }// Required empty public constructor

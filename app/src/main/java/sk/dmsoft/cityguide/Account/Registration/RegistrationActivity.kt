@@ -103,8 +103,10 @@ class RegistrationActivity : AppCompatActivity(),
                     AccountManager.LogIn(response.body()!!)
                     AccountManager.registrationStep = 1
 
-                    if (editMode)
+                    if (editMode) {
                         finish()
+                        return
+                    }
 
                     pager.setCurrentItem(1, true)
                 }
@@ -141,8 +143,10 @@ class RegistrationActivity : AppCompatActivity(),
                 if (response.code() == 200){
                     AccountManager.registrationStep = 2
 
-                    if (editMode)
+                    if (editMode) {
                         finish()
+                        return
+                    }
 
                     pager.setCurrentItem(3, true)
                 }
@@ -172,8 +176,10 @@ class RegistrationActivity : AppCompatActivity(),
             override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
                 if (response.code() == 200) {
                     AccountManager.registrationStep = 3
-                    if (editMode)
+                    if (editMode) {
                         finish()
+                        return
+                    }
                     pager.setCurrentItem(4, true)
                 }
             }
@@ -192,8 +198,10 @@ class RegistrationActivity : AppCompatActivity(),
                 if (response.code() == 200){
                     AccountManager.registrationStep = 4
 
-                    if (editMode)
+                    if (editMode) {
                         finish()
+                        return
+                    }
 
                     if (AccountManager.accountType == EAccountType.guide)
                         pager.setCurrentItem(5, true)
@@ -217,8 +225,10 @@ class RegistrationActivity : AppCompatActivity(),
                 if (response?.code() == 200) {
                     AccountManager.registrationStep = 5
 
-                    if (editMode)
+                    if (editMode) {
                         finish()
+                        return
+                    }
 
                     startActivity(Intent(this@RegistrationActivity, MainActivity::class.java))
                     finish()

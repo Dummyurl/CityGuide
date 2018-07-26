@@ -17,6 +17,7 @@ import sk.dmsoft.cityguide.Models.Account.Registration1
 import sk.dmsoft.cityguide.R
 import android.os.Build
 import android.support.annotation.RequiresApi
+import android.text.InputType
 import android.widget.DatePicker
 import org.joda.time.DateTime
 import sk.dmsoft.cityguide.Commons.showYearFirst
@@ -79,6 +80,7 @@ class RegisterStep1Fragment : Fragment(), DatePickerDialog.OnDateSetListener {
         birth_date.setOnClickListener { datePickerDialog.showYearFirst() }
 
         birth_date.isFocusableInTouchMode = false
+        birth_date.inputType = InputType.TYPE_NULL
 
         fillFields()
     }

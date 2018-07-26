@@ -3,10 +3,7 @@ package sk.dmsoft.cityguide.Api
 import android.content.Context
 import ninja.sakib.pultusorm.core.PultusORM
 import ninja.sakib.pultusorm.core.PultusORMCondition
-import sk.dmsoft.cityguide.Models.Country
-import sk.dmsoft.cityguide.Models.Currency
-import sk.dmsoft.cityguide.Models.Interest
-import sk.dmsoft.cityguide.Models.Place
+import sk.dmsoft.cityguide.Models.*
 
 /**
  * Created by Daniel on 23. 11. 2017.
@@ -50,6 +47,17 @@ class DB (val context: Context) {
 
     fun GetInterests(): ArrayList<Interest>{
         return pultusORM.find(Interest()) as ArrayList<Interest>
+    }
+
+    fun SaveSelectedInterests(items: ArrayList<SelectedInterest>){
+        Drop(SelectedInterest())
+        items.forEach {
+            pultusORM.save(it)
+        }
+    }
+
+    fun GetSelectedInterests(): ArrayList<SelectedInterest>{
+        return pultusORM.find(SelectedInterest()) as ArrayList<SelectedInterest>
     }
 
     fun SaveCurrencies(items: ArrayList<Currency>){

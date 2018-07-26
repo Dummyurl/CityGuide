@@ -8,10 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_register_step2.*
-import sk.dmsoft.cityguide.Commons.AccountManager
-import sk.dmsoft.cityguide.Commons.AppSettings
-import sk.dmsoft.cityguide.Commons.load
-import sk.dmsoft.cityguide.Commons.loadCircle
+import sk.dmsoft.cityguide.Commons.*
 import sk.dmsoft.cityguide.Models.Account.Registration2
 import sk.dmsoft.cityguide.Models.Guides.GuideDetails
 
@@ -66,7 +63,7 @@ class RegisterStep2Fragment : Fragment() {
 
     fun fillFields(){
         about_me.setText(model.aboutMe)
-        photo_image.loadCircle("${AppSettings.apiUrl}/users/photo/${AccountManager.userId}")
+        photo_image.loadCircleNoCache("${AppSettings.apiUrl}/users/photo/${AccountManager.userId}")
     }
 
     fun showProgressBar(){
