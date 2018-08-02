@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "499163473346",
-    "firebase_url": "https://cityguide-24f.firebaseio.com",
-    "project_id": "cityguide-24f",
-    "storage_bucket": "cityguide-24f.appspot.com"
+    "project_number": "308704019249",
+    "firebase_url": "https://kaktus-app.firebaseio.com",
+    "project_id": "kaktus-app",
+    "storage_bucket": "kaktus-app.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:499163473346:android:4fb872ff6b360668",
+        "mobilesdk_app_id": "1:308704019249:android:4fb872ff6b360668",
         "android_client_info": {
           "package_name": "sk.dmsoft.cityguide"
         }
       },
       "oauth_client": [
         {
-          "client_id": "499163473346-37lo6mvbik9h4voh8lmqnb2c24v2abdo.apps.googleusercontent.com",
+          "client_id": "308704019249-lk93okv5dgb6pr7u221go0pdlf4kaqja.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "sk.dmsoft.cityguide",
@@ -23,13 +23,13 @@
           }
         },
         {
-          "client_id": "499163473346-2g5ne649sm2d8vigsl3rjg8ivnv10jbr.apps.googleusercontent.com",
+          "client_id": "308704019249-k1pcnr8uoi3rauu3co09h6j7n68f11jg.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDbGAHSWVEIZwLYqIXoDXmzkd-PtVdh26k"
+          "current_key": "AIzaSyAVLKZSbQQzZCRCuFUzSFLKdat8Bc8FMzw"
         }
       ],
       "services": {
@@ -40,14 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "499163473346-kvbam2915bu33kgqh6q7addq4joe1ea0.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "sk.Appkaren.Kaktus"
-              }
-            },
-            {
-              "client_id": "499163473346-2g5ne649sm2d8vigsl3rjg8ivnv10jbr.apps.googleusercontent.com",
+              "client_id": "308704019249-k1pcnr8uoi3rauu3co09h6j7n68f11jg.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

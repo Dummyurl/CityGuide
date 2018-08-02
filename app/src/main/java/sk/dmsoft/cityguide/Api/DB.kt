@@ -60,6 +60,10 @@ class DB (val context: Context) {
         return pultusORM.find(SelectedInterest()) as ArrayList<SelectedInterest>
     }
 
+    fun DeleteSelectedInterests(){
+        Drop(SelectedInterest())
+    }
+
     fun SaveCurrencies(items: ArrayList<Currency>){
         items.forEach {
             pultusORM.save(it)

@@ -42,6 +42,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/estimated_time"
                 android:inputType="numberDecimal"
+                android:maxLength="2"
                 android:ems="7"/>
 
         </android.support.design.widget.TextInputLayout>

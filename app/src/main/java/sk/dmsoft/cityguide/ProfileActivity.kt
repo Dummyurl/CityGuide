@@ -57,6 +57,7 @@ class ProfileActivity : AppCompatActivity() {
         logout.setOnClickListener {
             AccountManager.LogOut()
             startActivity(Intent(this, RegistrationActivity::class.java))
+            db.DeleteSelectedInterests()
             finish()
         }
 
