@@ -5,9 +5,6 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_profile.*
 import sk.dmsoft.cityguide.Account.ChangePasswordActivity
 import sk.dmsoft.cityguide.Account.Registration.RegistrationActivity
@@ -17,11 +14,9 @@ import sk.dmsoft.cityguide.Commons.AccountManager
 import sk.dmsoft.cityguide.Commons.Adapters.SettingsAdapter
 import sk.dmsoft.cityguide.Commons.EAccountType
 import sk.dmsoft.cityguide.Commons.showAlertDialog
-import android.content.DialogInterface
 import android.support.v7.app.AlertDialog
-import android.widget.ListAdapter
 import sk.dmsoft.cityguide.Commons.positiveButton
-import sk.dmsoft.cityguide.Proposal.CompletedProposalActivity
+import sk.dmsoft.cityguide.Proposal.Completed.CompletedProposalActivity
 
 
 class ProfileActivity : AppCompatActivity() {
@@ -33,7 +28,7 @@ class ProfileActivity : AppCompatActivity() {
     )
 
     val guideFields: Array<String> = arrayOf(
-            "Guide info"
+            "Payment settings"
     )
 
     val touristFields: Array<String> = arrayOf(
@@ -62,6 +57,7 @@ class ProfileActivity : AppCompatActivity() {
         logout.setOnClickListener {
             AccountManager.LogOut()
             startActivity(Intent(this, RegistrationActivity::class.java))
+            db.DeleteSelectedInterests()
             finish()
         }
 

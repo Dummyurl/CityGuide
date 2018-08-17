@@ -187,7 +187,6 @@ class GuideDetailsActivity : AppCompatActivity() {
         })
         guide_about.text = guideInfo.about
 
-        user_rating.rating = 3f
         user_name.text = "${guideInfo.firstName} ${guideInfo.secondName}"
         place_name.text = guideInfo.place?.city
         total_amount.text = "${guideInfo.salary}€"
@@ -206,8 +205,10 @@ class GuideDetailsActivity : AppCompatActivity() {
         guideInfo.ratings.forEach {
             sum += it.ratingStars
         }
-        ratingBar.rating = sum/guideInfo.ratings.size
-        user_rating.rating = if (sum == 0f) sum/guideInfo.ratings.size else 3f
+
+        customRatingBar.reload((sum/guideInfo.ratings.size).toInt())
+
+        user_rating.reload(if (sum == 0f) (sum/guideInfo.ratings.size).toInt() else 3)
 
         showRevealAnim()
     }

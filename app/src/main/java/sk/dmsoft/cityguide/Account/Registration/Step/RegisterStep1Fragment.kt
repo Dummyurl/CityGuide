@@ -15,15 +15,15 @@ import sk.dmsoft.cityguide.Api.DB
 import sk.dmsoft.cityguide.Models.Account.Registration1
 
 import sk.dmsoft.cityguide.R
-import android.R.attr.startYear
 import android.os.Build
 import android.support.annotation.RequiresApi
-import sk.dmsoft.cityguide.MainActivity
+import android.text.InputType
 import android.widget.DatePicker
 import org.joda.time.DateTime
+import sk.dmsoft.cityguide.Commons.showYearFirst
 import sk.dmsoft.cityguide.Models.Guides.GuideDetails
-import sk.dmsoft.cityguide.Models.Guides.GuideInfo
-
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * A simple [Fragment] subclass.
@@ -76,20 +76,25 @@ class RegisterStep1Fragment : Fragment(), DatePickerDialog.OnDateSetListener {
         }
 
         next.setOnClickListener { completeStep1() }
-        birth_date.onFocusChangeListener = View.OnFocusChangeListener { _, p1 -> if(p1) datePickerDialog.show() }
+        birth_date.onFocusChangeListener = View.OnFocusChangeListener { _, p1 -> if(p1) datePickerDialog.showYearFirst() }
+        birth_date.setOnClickListener { datePickerDialog.showYearFirst() }
+
+        birth_date.isFocusableInTouchMode = false
+        birth_date.inputType = InputType.TYPE_NULL
 
         fillFields()
     }
 
     override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
-        model.birthDate = DateTime(p1, p2, p3, 0, 0).toString()
-        birth_date.setText(DateTime(p1, p2, p3, 0, 0).toLocalDate().toString())
+        model.birthDate = DateTime(p1, p2 +1, p3, 0, 0).toString()
+        birth_date.setText(DateTime(p1, p2 +1, p3, 0, 0).toLocalDate().toString())
     }
 
     fun init(info: GuideDetails){
         model.firstName = info.firstName
         model.secondName = info.secondName
         model.placeId = info.place!!.id
+        model.birthDate = info.birthDate
 
 
         if (this.view != null)
@@ -124,6 +129,10 @@ class RegisterStep1Fragment : Fragment(), DatePickerDialog.OnDateSetListener {
     fun fillFields(){
         first_name.setText(model.firstName)
         second_name.setText(model.secondName)
+        try {
+            birth_date.setText(DateTime(model.birthDate).toLocalDate().toString())
+        }
+        catch (e: Exception){}
     }
 
     /**

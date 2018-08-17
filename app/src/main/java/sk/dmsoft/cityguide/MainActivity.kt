@@ -3,11 +3,16 @@ package sk.dmsoft.cityguide
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
+import android.view.DragEvent
 import android.view.Gravity
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.ResponseBody
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,8 +26,12 @@ import sk.dmsoft.cityguide.Models.Proposal.Proposal
 import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
 import sk.dmsoft.cityguide.Models.Proposal.ProposalState
 import sk.dmsoft.cityguide.Proposal.ActiveProposalActivity
+import sk.dmsoft.cityguide.Proposal.Completed.StatisticsActivity
 import sk.dmsoft.cityguide.Proposal.Fragments.EditProposalFragment
 import sk.dmsoft.cityguide.Search.SearchActivity
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate {
 
@@ -30,6 +39,7 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
     lateinit var proposalsAdapter: ProposalsAdapter
     lateinit var unconfirmedProposalsAdapter: UnconfirmedProposalsAdapter
     val editProposalFragment = EditProposalFragment()
+    var unreadNotifications = 0
 
     override fun onProposalChange(id: Int, proposal: ProposalRequest) {
         api.editProposal(id, proposal).enqueue(object: Callback<ResponseBody>{
@@ -88,8 +98,11 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
             reloadProposals()
         }
 
-        if (AccountManager.accountType == EAccountType.guide)
+        if (AccountManager.accountType == EAccountType.guide) {
             open_search.visibility = View.GONE
+            open_statistics.visibility = View.VISIBLE
+            open_statistics.setOnClickListener { startActivity(Intent(this, StatisticsActivity::class.java)) }
+        }
         else
             open_search.setOnClickListener {
                 val intent = Intent(this, SearchActivity::class.java)
@@ -103,6 +116,23 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
         open_profile.setOnClickListener{
             startActivity(Intent(this, ProfileActivity::class.java))
         }
+
+        drawer_layout.addDrawerListener(object: DrawerLayout.DrawerListener{
+            override fun onDrawerStateChanged(newState: Int) {}
+
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
+
+            override fun onDrawerClosed(drawerView: View) {}
+
+            override fun onDrawerOpened(drawerView: View) {
+                val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                format.timeZone = TimeZone.getTimeZone("UTC")
+                AccountManager.lastReadNotificationTime = DateTime(format.format(Date()))
+                Log.e("Actual UTC time", AccountManager.lastReadNotificationTime.toString())
+                unreadNotifications = 0
+                setUnreadNotificationsText()
+            }
+        })
     }
 
     override fun onBackPressed() {
@@ -118,7 +148,7 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
     }
 
     private fun initProposals(proposals: ArrayList<Proposal>) {
-        proposalsAdapter = ProposalsAdapter(this, proposals, { proposal, _ ->
+        proposalsAdapter = ProposalsAdapter(this, proposals) { proposal, _ ->
             api.deleteProposal(proposal.id).enqueue(object: Callback<ResponseBody>{
                 override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
                     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -128,7 +158,7 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
                 }
 
             })
-        })
+        }
         proposals_recycler.setHasFixedSize(true)
         proposals_recycler.layoutManager = LinearLayoutManager(this)
         proposals_recycler.adapter = proposalsAdapter
@@ -145,11 +175,11 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
     }
 
     private fun initUnconfirmedProposals(proposals: ArrayList<Proposal>){
-        unconfirmedProposalsAdapter = UnconfirmedProposalsAdapter(this, proposals, { proposal, position ->
+        unconfirmedProposalsAdapter = UnconfirmedProposalsAdapter(this, proposals) { proposal, position ->
             editProposalFragment.setProposal(proposal)
             editProposalFragment.show()
             drawer_layout.closeDrawer(Gravity.START)
-        })
+        }
         unconfirmed_proposals_list.setHasFixedSize(true)
         unconfirmed_proposals_list.layoutManager = LinearLayoutManager(this)
         unconfirmed_proposals_list.adapter = unconfirmedProposalsAdapter
@@ -186,8 +216,13 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
             }
 
             override fun onResponse(call: Call<ArrayList<Proposal>>?, response: Response<ArrayList<Proposal>>?) {
-                if (response?.code() == 200)
-                    initUnconfirmedProposals(response.body()!!)
+                if (response?.code() == 200) {
+                    val proposals = response.body()!!
+                    initUnconfirmedProposals(proposals)
+                    unreadNotifications = proposals.count{ DateTime(it.lastChange) > AccountManager.lastReadNotificationTime}
+                    Log.e("Unread notifications", unreadNotifications.toString())
+                    setUnreadNotificationsText()
+                }
             }
 
         })
@@ -206,6 +241,15 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
         if (!AccountManager.isPaymentMethodSaved){
             val intent = Intent(this, CreatePaymentMethodActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    fun setUnreadNotificationsText(){
+        if (unreadNotifications == 0)
+            unread_notifications_count.visibility = View.GONE
+        else {
+            unread_notifications_count.visibility = View.VISIBLE
+            unread_notifications_count.text = unreadNotifications.toString()
         }
     }
 }

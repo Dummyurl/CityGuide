@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import com.facebook.login.LoginManager
+import org.joda.time.DateTime
 import sk.dmsoft.cityguide.Models.AccessToken
 import java.util.*
 
@@ -45,7 +46,8 @@ object AccountManager {
             return _sharedPreferences.getInt("REGISTRATION_STEP", 0)
         }
         set(value) {
-            _sharedPreferences.edit().putInt("REGISTRATION_STEP", value).commit()
+            if (_sharedPreferences.getInt("REGISTRATION_STEP", 0) < value)
+                _sharedPreferences.edit().putInt("REGISTRATION_STEP", value).commit()
         }
 
     var fcmTokenId: String
@@ -61,7 +63,7 @@ object AccountManager {
             return _sharedPreferences.getBoolean("FC_REGISTERED", false)
         }
         set(value) {
-            _sharedPreferences.edit().putBoolean("FC:_REGISTERED", value).apply()
+            _sharedPreferences.edit().putBoolean("FC_REGISTERED", value).commit()
         }
 
     val userId: String
@@ -84,6 +86,14 @@ object AccountManager {
         set(value){
             _sharedPreferences.edit().putString("CURRENCY", value).apply()
         }
+
+    var lastReadNotificationTime: DateTime
+    get() {
+        return DateTime(_sharedPreferences.getString("Last_READ_NOTIFICATION_TIME", DateTime().toString()))
+    }
+    set(value) {
+        _sharedPreferences.edit().putString("Last_READ_NOTIFICATION_TIME", value.toString()).apply()
+    }
 
     // Methods
     fun LogIn(accessToken: AccessToken){

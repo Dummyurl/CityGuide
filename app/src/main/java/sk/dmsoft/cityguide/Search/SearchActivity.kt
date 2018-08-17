@@ -1,18 +1,20 @@
 package sk.dmsoft.cityguide.Search
 
-import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.transition.*
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.SeekBar
 import kotlinx.android.synthetic.main.activity_search.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import sk.dmsoft.cityguide.Api.Api
 import sk.dmsoft.cityguide.Api.DB
+import sk.dmsoft.cityguide.Commons.CurrencyConverter
 import sk.dmsoft.cityguide.Commons.addFragment
 import sk.dmsoft.cityguide.Commons.replaceFragment
 import sk.dmsoft.cityguide.Models.Guides.GuideListItem
@@ -30,6 +32,7 @@ class SearchActivity : AppCompatActivity(), SearchRequestFragment.OnSearchTextIn
     val searchRequestFragment = SearchRequestFragment()
     val searchResultsFragment = SearchResultsFragment()
     lateinit var db: DB
+    var placeId = 0
 
     val searchRequest = SearchRequest()
 
@@ -44,6 +47,7 @@ class SearchActivity : AppCompatActivity(), SearchRequestFragment.OnSearchTextIn
     override fun onCitySelected(place: Place, itemView: View) {
         val model = SearchInCity()
         model.placeId = place.id
+        placeId = place.id
         api.searchInCity(model).enqueue(object: Callback<ArrayList<GuideListItem>>{
             override fun onFailure(call: Call<ArrayList<GuideListItem>>?, t: Throwable?) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -105,11 +109,60 @@ class SearchActivity : AppCompatActivity(), SearchRequestFragment.OnSearchTextIn
         }
 
         addFragment(searchRequestFragment, R.id.fragment_holder)
+
+        max_hourly_rate.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                max_price_text.text = CurrencyConverter.convert(p0?.progress!!.toDouble())
+            }
+
+            override fun onStartTrackingTouch(p0: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(p0: SeekBar?) {
+            }
+        })
     }
 
     fun applyFilters(){
         searchRequest.maxHourlyRate = max_hourly_rate.progress
         searchRequest.minRating = min_rating.rating
+        val model = SearchInCity()
+        model.placeId = placeId
+        model.maxPrice = max_hourly_rate.progress
+        model.minRating = min_rating.rating.toInt()
+        model.byMyInterests = by_interests.isChecked
+
+        api.searchInCity(model).enqueue(object: Callback<ArrayList<GuideListItem>>{
+            override fun onFailure(call: Call<ArrayList<GuideListItem>>?, t: Throwable?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onResponse(call: Call<ArrayList<GuideListItem>>?, response: Response<ArrayList<GuideListItem>>?) {
+                if (response?.code() == 200) {
+                    val guides = response.body()!!
+                    searchResultsFragment.updateGuides(guides)
+                }
+            }
+
+        })
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.search_menu, menu)
+        return true
+    }
+
+    fun openFilter(){
+        drawer_layout.openDrawer(nav_view)
+    }
+
+    override fun onOptionsItemSelected(p0: MenuItem): Boolean {
+        when (p0.itemId){
+            R.id.show_filter -> openFilter()
+        }
+        return true
     }
 }
 
@@ -119,4 +172,5 @@ class FragmentTransition() : TransitionSet() {init {
             addTransition(ChangeTransform()).
             addTransition(ChangeImageTransform())
 }
+
 }

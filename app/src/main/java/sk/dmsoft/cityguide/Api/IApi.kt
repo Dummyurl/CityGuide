@@ -9,6 +9,7 @@ import sk.dmsoft.cityguide.Models.*
 import sk.dmsoft.cityguide.Models.Account.*
 import sk.dmsoft.cityguide.Models.Guides.GuideDetails
 import sk.dmsoft.cityguide.Models.Guides.GuideListItem
+import sk.dmsoft.cityguide.Models.Proposal.CompletedProposal
 import sk.dmsoft.cityguide.Models.Proposal.MeetingPoint
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
 import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
@@ -35,7 +36,7 @@ interface IApi {
 
     @Multipart
     @POST("account/register/2")
-    fun registration2(@Part aboutMe: MultipartBody.Part, @Part profilePhoto: MultipartBody.Part): Call<ResponseBody>
+    fun registration2(@Part aboutMe: MultipartBody.Part, @Part profilePhoto: MultipartBody.Part?): Call<ResponseBody>
 
     @POST("account/register/3")
     fun registration3(@Body model: Registration3): Call<ResponseBody>
@@ -62,7 +63,10 @@ interface IApi {
     fun getProposal(@Path("id") id: Int): Call<Proposal>
 
     @GET("proposals/completed/{page}")
-    fun getCompletedProposals(@Path("page") page: Int): Call<ArrayList<Proposal>>
+    fun getCompletedProposals(@Path("page") page: Int): Call<ArrayList<CompletedProposal>>
+
+    @POST("proposals/completed/{page}")
+    fun getSpecifiedCompletedProposals(@Path("page") page: Int, @Body request: StatsRequest): Call<ArrayList<CompletedProposal>>
 
     @GET("proposals/unconfirmed")
     fun getUnconfirmedProposals(): Call<ArrayList<Proposal>>
@@ -120,4 +124,13 @@ interface IApi {
 
     @POST("account/resetPassword")
     fun resetPassword(@Body model: PasswordResetModel): Call<ResponseBody>
+
+    @POST("account/UpdatePassword")
+    fun changePassword(@Body model: UpdatePassword): Call<ResponseBody>
+
+    @GET("account/stats")
+    fun getStats(): Call<Stats>
+
+    @POST("account/stats")
+    fun  getSpecifiedStats(@Body model: StatsRequest): Call<Stats>
 }

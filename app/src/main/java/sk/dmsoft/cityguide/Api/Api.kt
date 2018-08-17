@@ -30,8 +30,7 @@ import sk.dmsoft.cityguide.Models.Search.SearchRequest
 import sk.dmsoft.cityguide.Models.Search.SearchResluts
 import com.google.gson.GsonBuilder
 import com.google.gson.Gson
-
-
+import sk.dmsoft.cityguide.Models.Proposal.CompletedProposal
 
 
 /**
@@ -91,27 +90,13 @@ class Api constructor(private val activity : Context? = null) {
     }
 
     fun registration2(model: Registration2, photoUri: Uri): Call<ResponseBody> {
-        //val wholeID = DocumentsContract.getDocumentId(photoUri)
-        //val id = wholeID.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
-        //val column = arrayOf(MediaStore.Images.Media.DATA)
-        //val sel = MediaStore.Images.Media._ID + "=?"
+        var imagePart: MultipartBody.Part? = null
+        if (photoUri.path.length > 5) {
+            val image = File(photoUri.path)
 
-        //val cursor = activity?.contentResolver?.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-        //        column, sel, arrayOf(id), null)
-
-        //var filePath = ""
-
-        //val columnIndex = cursor?.getColumnIndex(column[0])
-
-        //if (cursor!!.moveToFirst()) {
-        //    filePath = cursor.getString(columnIndex!!)
-        //}
-
-        //cursor.close()
-        val image = File(photoUri.path)
-
-        val imageBody : RequestBody = RequestBody.create(MediaType.parse("image/*"), image)
-        val imagePart = MultipartBody.Part.createFormData("profilePhoto", image.name, imageBody)
+            val imageBody: RequestBody = RequestBody.create(MediaType.parse("image/*"), image)
+            imagePart = MultipartBody.Part.createFormData("profilePhoto", image.name, imageBody)
+        }
 
         val aboutMePart = MultipartBody.Part.createFormData("aboutMe", model.aboutMe)
         return api.registration2(aboutMePart, imagePart)
@@ -145,8 +130,12 @@ class Api constructor(private val activity : Context? = null) {
         return api.getProposals()
     }
 
-    fun getCompletedProposals(page: Int): Call<ArrayList<Proposal>>{
+    fun getCompletedProposals(page: Int): Call<ArrayList<CompletedProposal>>{
         return api.getCompletedProposals((page))
+    }
+
+    fun getSpecifiedCompletedProposals(page: Int, request: StatsRequest): Call<ArrayList<CompletedProposal>>{
+        return api.getSpecifiedCompletedProposals(page, request)
     }
 
     fun getUnconfirmedProposals(): Call<ArrayList<Proposal>> {
@@ -231,6 +220,18 @@ class Api constructor(private val activity : Context? = null) {
 
     fun resetPassword(model: PasswordResetModel): Call<ResponseBody>{
         return api.resetPassword(model)
+    }
+
+    fun changePassword(model: UpdatePassword): Call<ResponseBody>{
+        return api.changePassword(model)
+    }
+
+    fun getStats(): Call<Stats>{
+        return api.getStats()
+    }
+
+    fun getSpecifiedStats(model: StatsRequest): Call<Stats>{
+        return api.getSpecifiedStats(model)
     }
 
     //fun uploadImages(image: NoteImage) : Call<ResponseBody> {

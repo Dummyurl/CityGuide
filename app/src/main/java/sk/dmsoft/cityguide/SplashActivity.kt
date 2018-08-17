@@ -66,7 +66,7 @@ class SplashActivity : AppCompatActivity() {
             createNotificationChannel()
 
 
-        if (!AccountManager.isFcmRegistered)
+//        if (!AccountManager.isFcmRegistered)
             RegisterFcm()
 
         printHashKey(this)
@@ -82,18 +82,19 @@ class SplashActivity : AppCompatActivity() {
 
     private fun RegisterFcm(){
         val model = sk.dmsoft.cityguide.Models.Account.RegisterFcm()
-        model.fcmId = AccountManager.fcmTokenId
-        api.registerFcm(model).enqueue(object: Callback<ResponseBody>{
-            override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
-                Log.e("", t.toString())
-            }
+        if (FirebaseInstanceId.getInstance().token != null) {
+            model.fcmId = FirebaseInstanceId.getInstance().token!!
+            api.registerFcm(model).enqueue(object : Callback<ResponseBody> {
+                override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
+                    Log.e("", t.toString())
+                }
 
-            override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
-                if (response?.code() == 200)
-                    AccountManager.isFcmRegistered = true
-            }
-
-        })
+                override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
+                    if (response?.code() == 200)
+                        AccountManager.isFcmRegistered = true
+                }
+            })
+        }
     }
 
     private fun init(){

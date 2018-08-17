@@ -6,14 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="sk.dmsoft.cityguide.Search.SearchActivity"
-    tools:openDrawer="end">
+    tools:openDrawer="end"
+    android:id="@+id/drawer_layout">
 
     <FrameLayout
         android:id="@+id/fragment_holder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:focusable="true"
-        android:layout_marginTop="24dp"
         android:focusableInTouchMode="true"/>
 
     <android.support.design.widget.NavigationView
@@ -80,7 +80,7 @@
                 android:text="@string/reset"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/min_rating" />
+                app:layout_constraintTop_toBottomOf="@+id/by_interests" />
 
             <Button
                 android:id="@+id/apply_filter_btn"
@@ -91,6 +91,26 @@
                 android:text="@string/apply_filters"
                 android:theme="@style/green_button"
                 app:layout_constraintEnd_toStartOf="@+id/reset_btn"
+                app:layout_constraintTop_toBottomOf="@+id/by_interests" />
+
+            <TextView
+                android:id="@+id/max_price_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:text="TextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/max_hourly_rate" />
+
+            <CheckBox
+                android:id="@+id/by_interests"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/sort_by_interests"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/min_rating" />
 
         </android.support.constraint.ConstraintLayout>

@@ -37,10 +37,12 @@ import com.paypal.android.sdk.onetouch.core.metadata.w
 import com.google.android.gms.common.api.ApiException
 import android.util.Log
 import com.google.android.gms.tasks.Task
+import com.google.gson.Gson
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import sk.dmsoft.cityguide.Commons.addFragment
 import sk.dmsoft.cityguide.Commons.removeFragment
+import sk.dmsoft.cityguide.Models.CustomError
 
 
 class RegistrationActivity : AppCompatActivity(),
@@ -62,12 +64,13 @@ class RegistrationActivity : AppCompatActivity(),
     val step2Fragment = RegisterStep2Fragment()
     val step3Fragment = RegisterStep3Fragment()
     val accountTypeFragment = SelectAccountTypeFragment()
+    val registerGuideInfoFragment = RegisterGuideInfoFragment()
 
     lateinit var callbackManager : CallbackManager
 
     override fun onSwitchToGuide() {
         AccountManager.accountType = EAccountType.guide
-        registrationSteps.add(RegisterGuideInfoFragment())
+        registrationSteps.add(registerGuideInfoFragment)
         pager.adapter = PagerAdapter(supportFragmentManager)
         guideMode = true
         pager.setCurrentItem(2, true)
@@ -101,13 +104,29 @@ class RegistrationActivity : AppCompatActivity(),
                     AccountManager.LogIn(response.body()!!)
                     AccountManager.registrationStep = 1
 
-                    if (editMode)
+                    if (editMode) {
                         finish()
+                        return
+                    }
 
                     pager.setCurrentItem(1, true)
                 }
                 else if (response.code() == 400){
-                    var errors = response.errorBody()
+                    val errors = Gson().fromJson(response.errorBody()!!.charStream() , Array<CustomError>::class.java)
+                    if (errors.any{it.field == "Email"})
+                        email_layout.error = errors.first { it.field == "Email" }.description
+                    else
+                        email_layout.error = ""
+
+                    if (errors.any{it.field == "Password"})
+                        password_layout.error = errors.first { it.field == "Password" }.description
+                    else
+                        password_layout.error = ""
+
+                    if (errors.any{it.field == "ConfirmPassword"})
+                        confirm_password_layout.error = errors.first { it.field == "ConfirmPassword" }.description
+                    else
+                        confirm_password_layout.error = ""
                 }
             }
 
@@ -125,8 +144,10 @@ class RegistrationActivity : AppCompatActivity(),
                 if (response.code() == 200){
                     AccountManager.registrationStep = 2
 
-                    if (editMode)
+                    if (editMode) {
                         finish()
+                        return
+                    }
 
                     pager.setCurrentItem(3, true)
                 }
@@ -149,40 +170,22 @@ class RegistrationActivity : AppCompatActivity(),
     }
 
     override fun onStep2Completed(model: Registration2) {
-        if (profilePhotoUri.toString().length > 5) {
-            api.registration2(model, profilePhotoUri).enqueue(object : Callback<ResponseBody> {
-                override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
-
-                override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
-                    if (response.code() == 200) {
-                        AccountManager.registrationStep = 3
-
-                        if (editMode)
-                            finish()
-
-                        pager.setCurrentItem(4, true)
-                    }
-                }
-
-            })
-            step2Fragment.showProgressBar()
-        }
-        else {
-            AccountManager.registrationStep = 3
-
-            if (editMode)
-                finish()
-
-            if (AccountManager.accountType == EAccountType.guide)
-                pager.setCurrentItem(4, true)
-
-            else {
-                startActivity(Intent(this@RegistrationActivity, MainActivity::class.java))
-                finish()
+        api.registration2(model, profilePhotoUri).enqueue(object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
-        }
+            override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
+                if (response.code() == 200) {
+                    AccountManager.registrationStep = 3
+                    if (editMode) {
+                        finish()
+                        return
+                    }
+                    pager.setCurrentItem(4, true)
+                }
+            }
+        })
+        step2Fragment.showProgressBar()
     }
 
 
@@ -196,8 +199,10 @@ class RegistrationActivity : AppCompatActivity(),
                 if (response.code() == 200){
                     AccountManager.registrationStep = 4
 
-                    if (editMode)
+                    if (editMode) {
                         finish()
+                        return
+                    }
 
                     if (AccountManager.accountType == EAccountType.guide)
                         pager.setCurrentItem(5, true)
@@ -221,8 +226,10 @@ class RegistrationActivity : AppCompatActivity(),
                 if (response?.code() == 200) {
                     AccountManager.registrationStep = 5
 
-                    if (editMode)
+                    if (editMode) {
                         finish()
+                        return
+                    }
 
                     startActivity(Intent(this@RegistrationActivity, MainActivity::class.java))
                     finish()
@@ -314,6 +321,10 @@ class RegistrationActivity : AppCompatActivity(),
 
         if (AccountManager.registrationStep > 0)
             removeFragment(registerMethodFragment, false)
+
+        pager.setOnTouchListener { view, dragEvent ->
+            true
+        }
     }
 
 
@@ -360,6 +371,8 @@ class RegistrationActivity : AppCompatActivity(),
                     val model = response.body()!!
                     step1Fragment.init(model)
                     step2Fragment.init(model)
+                    if (guideMode)
+                        registerGuideInfoFragment.init(model)
                 }
             }
         })

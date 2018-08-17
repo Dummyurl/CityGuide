@@ -11,6 +11,7 @@ import sk.dmsoft.cityguide.Commons.inflate
 import sk.dmsoft.cityguide.Commons.loadCircle
 import sk.dmsoft.cityguide.Models.Guides.GuideListItem
 import sk.dmsoft.cityguide.R
+import java.math.RoundingMode
 
 /**
  * Created by Daniel on 13. 3. 2018.
@@ -39,7 +40,11 @@ class GuidesAdapter(val activity: Activity, val guides: ArrayList<GuideListItem>
             guide_name.text = "${item.firstName} ${item.secondName}"
             guide_photo.loadCircle("${AppSettings.apiUrl}users/photo/${item.id}")
             salary.text = CurrencyConverter.convert(item.guideInfo?.salary!!)
-            interests.text = item.interests.joinToString(" - ")
+            interests.text = item.interestsString
+            if (item.ratingStars!!.isNotEmpty())
+                rating.text = "${item.ratingStars?.average()?.toBigDecimal()?.setScale(1, RoundingMode.UP)?.toDouble()}"
+            else
+                rating.text = "-"
 
             setOnClickListener {
                 listener(item, adapterPosition, guide_photo as View)

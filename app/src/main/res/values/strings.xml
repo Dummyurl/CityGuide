@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Kaktus</string>
     <string name="title_activity_registration">RegistrationActivity</string>
-    <string name="google_maps_key">AIzaSyCumbJjzosVkOQ88Yg_XkW0IzcLN-4s42A</string>
+    <string name="google_maps_key">AIzaSyAVLKZSbQQzZCRCuFUzSFLKdat8Bc8FMzw</string>
 
     <string name="facebook_app_id">447180619060798</string>
     <string name="fb_login_protocol_scheme">fb447180619060798</string>
@@ -80,5 +80,10 @@
     <string name="you_have_earned">You have earned</string>
     <string name="find_user">Find user</string>
     <string name="waiting">Waiting for user</string>
+    <string name="from">From</string>
+    <string name="total_earned">Total earned</string>
+    <string name="explorings">Explorings</string>
+    <string name="to">To</string>
+    <string name="sort_by_interests">Sort by interests</string>
 
 </resources>

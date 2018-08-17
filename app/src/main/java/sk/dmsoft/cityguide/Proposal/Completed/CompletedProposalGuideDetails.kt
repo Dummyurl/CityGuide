@@ -1,4 +1,4 @@
-package sk.dmsoft.cityguide.Proposal
+package sk.dmsoft.cityguide.Proposal.Completed
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity

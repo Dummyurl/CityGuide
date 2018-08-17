@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_register_guide_info.*
 import sk.dmsoft.cityguide.Models.Account.RegistrationGuideInfo
+import sk.dmsoft.cityguide.Models.Guides.GuideDetails
 
 import sk.dmsoft.cityguide.R
 
@@ -44,6 +45,10 @@ class RegisterGuideInfoFragment : Fragment() {
             model.estimatedTime = estimated_time.text.toString().toDouble()
             mListener!!.onRegistrationGuideInfoCompleted(model)
         }
+    }
+
+    fun init(info: GuideDetails){
+        salary?.setText(info.salary.toString())
     }
 
     override fun onAttach(context: Context?) {

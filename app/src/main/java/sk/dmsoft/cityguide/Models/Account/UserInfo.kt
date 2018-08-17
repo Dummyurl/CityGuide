@@ -12,4 +12,5 @@ class UserInfo {
     var secondName = ""
     var BirthDate: DateTime = DateTime()
     var about = ""
+    var interestsString = ""
 }

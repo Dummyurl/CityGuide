@@ -8,10 +8,11 @@ import kotlinx.android.synthetic.main.completed_proposal_item.view.*
 import org.joda.time.DateTime
 import sk.dmsoft.cityguide.Api.DB
 import sk.dmsoft.cityguide.Commons.*
+import sk.dmsoft.cityguide.Models.Proposal.CompletedProposal
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
 import sk.dmsoft.cityguide.R
 
-class CompletedProposalsAdapter(val activity: Activity, val proposals: ArrayList<Proposal>) : RecyclerView.Adapter<CompletedProposalsAdapter.ViewHolder>(){
+class CompletedProposalsAdapter(val activity: Activity, private val proposals: ArrayList<CompletedProposal>) : RecyclerView.Adapter<CompletedProposalsAdapter.ViewHolder>(){
 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(proposals[position])
@@ -22,21 +23,24 @@ class CompletedProposalsAdapter(val activity: Activity, val proposals: ArrayList
         return ViewHolder(activity, parent.inflate(R.layout.completed_proposal_item))
     }
 
+    fun update(newProposals: ArrayList<CompletedProposal>){
+        proposals.clear()
+        proposals.addAll(newProposals)
+        notifyDataSetChanged()
+    }
 
     class ViewHolder(val activity: Activity, itemView: View) : RecyclerView.ViewHolder(itemView){
 
-        fun bind(item: Proposal) = with(itemView) {
-            city_image.load("${AppSettings.apiUrl}places/photo/${item.placeId}", {})
-            val db = DB(activity)
-            if (item.user != null) {
-                guide_name.text = "${item.user.firstName} ${item.user.secondName}"
-                guide_photo.loadCircle("${AppSettings.apiUrl}users/photo/${item.user.id}")
+        fun bind(item: CompletedProposal) = with(itemView) {
+            try {
+                val db = DB(activity)
+                proposal_info.text = "${item.user?.firstName} ${item.user?.secondName} ● Lasted ${item.proposal.payment?.totalHours}h"
+                val startDate = DateTime(item.proposal.start)
+                date.text = "${startDate.dayOfMonth}. ${startDate.monthOfYear}."
+                city_name.text = db.GetPlace(item.proposal.placeId).city
+                total_amount.text = CurrencyConverter.convert(item.proposal.payment!!.totalAmount)
             }
-            proposal_info.text = "Paid ${CurrencyConverter.convert(item.payment!!.totalAmount)} ● Lasted ${item.payment!!.totalHours}h"
-            val startDate = DateTime(item.start)
-            proposal_date.text = "${startDate.dayOfMonth}. ${startDate.monthOfYear}."
-            proposal_time.text = "Start at ${startDate.hourOfDay}:${startDate.minuteOfHour}"
-            place_name.text = db.GetPlace(item.placeId).city
+            catch (e: Exception){}
         }
     }
 

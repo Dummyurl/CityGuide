@@ -39,4 +39,12 @@
         <item name="colorControlActivated">@color/white</item>
     </style>
 
+    <style name="KaktusRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/kaktus_rating_bar</item>
+        <item name="colorControlNormal">#f57c00</item>
+        <item name="colorControlActivated">#c51162</item>
+        <item name="android:minHeight">18dp</item>
+        <item name="android:maxHeight">18dp</item>
+    </style>
+
 </resources>

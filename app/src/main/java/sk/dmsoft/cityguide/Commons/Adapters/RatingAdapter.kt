@@ -27,7 +27,7 @@ class RatingAdapter(val ratings: ArrayList<Rating>) : RecyclerView.Adapter<Ratin
         fun bind(item: Rating) = with(itemView) {
             user_photo.loadCircle("${AppSettings.apiUrl}/users/photo/${item.userId}")
             user_name.text = "Daniel"
-            rating.rating = item.ratingStars
+            rating.reload(item.ratingStars.toInt())
             comment.text = item.comment
         }
     }

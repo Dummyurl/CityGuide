@@ -18,4 +18,6 @@ class GuideDetails {
     var totalHours = 0
     var totalProposals = 0
     var interests: ArrayList<Interest> = ArrayList()
+    var birthDate = ""
+    var interestsString = ""
 }

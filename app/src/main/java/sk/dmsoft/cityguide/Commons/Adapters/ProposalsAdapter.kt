@@ -44,6 +44,7 @@ class ProposalsAdapter(val activity: Activity, val proposals: ArrayList<Proposal
                 proposal_time.text = "Start at ${startDate.hourOfDay}:${startDate.minuteOfHour}"
                 place_name.text = db.GetPlace(item.placeId).city
                 guide_photo.loadCircle("${AppSettings.apiUrl}users/photo/${item.user.id}")
+                interests.text = item.user.interestsString
             }
             open_chat.setOnClickListener {
                 val intent = Intent(activity, ChatActivity::class.java)

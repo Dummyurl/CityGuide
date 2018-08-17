@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.fragment_register_step3.*
 import sk.dmsoft.cityguide.Api.DB
 import sk.dmsoft.cityguide.Models.Account.Registration3
 import sk.dmsoft.cityguide.Models.Interest
+import sk.dmsoft.cityguide.Models.SelectedInterest
 
 import sk.dmsoft.cityguide.R
 
@@ -34,12 +35,14 @@ class RegisterStep3Fragment : Fragment() {
     private var allInterests = ArrayList<Interest>()
     private var selectedInterests = ArrayList<Interest>()
     private lateinit var db: DB
+    private var beforeSelectedInterests = ArrayList<SelectedInterest>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         db = DB(context!!)
         allInterests = db.GetInterests()
+        beforeSelectedInterests = db.GetSelectedInterests()
         return inflater.inflate(R.layout.fragment_register_step3, container, false)
     }
 
@@ -54,6 +57,10 @@ class RegisterStep3Fragment : Fragment() {
             params.marginStart = 10
             params.bottomMargin = 20
             chip.layoutParams = LinearLayout.LayoutParams(params)
+            if (beforeSelectedInterests.count { it.id == item } > 0){
+                chip.isSelected = true
+                addInterest(item)
+            }
             interests_holder.addView(chip)
             chip.setOnSelectClickListener { _, selected ->
                 if (selected)
@@ -69,6 +76,7 @@ class RegisterStep3Fragment : Fragment() {
         next.isEnabled = false
         val model = Registration3()
         model.interests = selectedInterests
+        db.SaveSelectedInterests(selectedInterests.map { SelectedInterest(it.id) } as ArrayList<SelectedInterest>)
         listener?.onStep3Completed(model)
     }
 
