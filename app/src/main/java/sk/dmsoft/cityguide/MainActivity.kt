@@ -133,6 +133,16 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
                 setUnreadNotificationsText()
             }
         })
+
+        runLoadLoop()
+    }
+
+    fun runLoadLoop(){
+        Timer().scheduleAtFixedRate(object : TimerTask() {
+            override fun run() {
+                reloadProposals()
+            }
+        }, 0, 15000)
     }
 
     override fun onBackPressed() {

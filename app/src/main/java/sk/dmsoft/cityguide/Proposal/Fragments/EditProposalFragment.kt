@@ -107,8 +107,8 @@ class EditProposalFragment : Fragment() {
 
         startDateTimeFragment.setOnButtonClickListener(object: SwitchDateTimeDialogFragment.OnButtonClickListener{
             override fun onPositiveButtonClick(date: Date) {
-                val locale = SimpleDateFormat("dd.MM.YYYY HH:mm")
-                val locale2 = SimpleDateFormat("YYYY-MM-dd'T'HH:mm:ss")
+                val locale = SimpleDateFormat("dd.MM.yyyy HH:mm")
+                val locale2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
                 start_date.setText(locale.format(date))
                 proposalRequest.start = locale2.format(date)
             }
@@ -133,8 +133,8 @@ class EditProposalFragment : Fragment() {
 
         endDateTimeFragment.setOnButtonClickListener(object: SwitchDateTimeDialogFragment.OnButtonClickListener{
             override fun onPositiveButtonClick(date: Date) {
-                val locale = SimpleDateFormat("dd.MM.YYYY HH:mm")
-                val locale2 = SimpleDateFormat("YYYY-MM-dd'T'HH:mm:ss")
+                val locale = SimpleDateFormat("dd.MM.yyyy HH:mm")
+                val locale2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
                 end_date.setText(locale.format(date))
                 proposalRequest.end = locale2.format(date)
             }

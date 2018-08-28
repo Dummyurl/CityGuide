@@ -3,6 +3,7 @@ package sk.dmsoft.cityguide.Chat
 import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
@@ -268,16 +269,24 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
     }
 
     fun cancelProposal(){
-        api.deleteProposal(proposalId).enqueue(object: Callback<ResponseBody>{
-            override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
+        val builder = AlertDialog.Builder(this)
+            builder.setTitle("Cancel proposal?")
+                    .setMessage("Are you sure you want to cancel this proposal?")
+                    .setNegativeButton("No", null)
+                    .positiveButton ("Yes") {
+                        api.deleteProposal(proposalId).enqueue(object: Callback<ResponseBody>{
+                            override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
+                                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            }
 
-            override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
-                if(response.code() == 200)
-                    finish()
-            }
-        })
+                            override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>) {
+                                if(response.code() == 200)
+                                    finish()
+                            }
+                        })
+                    }
+        builder.show()
+
     }
 
     fun changeMeetingPoint(){
@@ -305,7 +314,6 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
     override fun onOptionsItemSelected(p0: MenuItem): Boolean {
         when (p0.itemId){
             R.id.cancel_proposal -> { cancelProposal() }
-            R.id.change_meeting_point -> { changeMeetingPoint() }
             //R.id.share_location -> { goToMeetingPoint() }
             R.id.find_user -> { findUser() }
         }

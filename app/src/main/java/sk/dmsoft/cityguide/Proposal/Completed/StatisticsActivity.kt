@@ -34,16 +34,16 @@ class StatisticsActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
     var isStartPicker = false
 
     override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
-        val locale2 = SimpleDateFormat("dd.MM.YYYY")
+        val locale2 = SimpleDateFormat("dd.MM.yyy")
 
         if (isStartPicker){
-            statsRequest.from = DateTime(p1, p2 +1, p3, 0, 0).toString()
-            date_from.setText(locale2.format( Date(p1-1900, p2 +1, p3)))
+            statsRequest.from = DateTime(p1, p2, p3, 0, 0).toString()
+            date_from.setText(locale2.format( Date(p1-1900, p2, p3)))
             updateStats()
         }
         else {
-            statsRequest.to = DateTime(p1, p2 +1, p3, 0, 0).toString()
-            date_to.setText(locale2.format( Date(p1-1900, p2 +1, p3)))
+            statsRequest.to = DateTime(p1, p2, p3, 0, 0).toString()
+            date_to.setText(locale2.format( Date(p1-1900, p2, p3)))
             updateStats()
         }
     }
@@ -107,7 +107,7 @@ class StatisticsActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
             completed_proposals_recycler.layoutManager = layout
             completed_proposals_recycler.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
             val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-            val locale = SimpleDateFormat("dd.MM.YYYY")
+            val locale = SimpleDateFormat("dd.MM.yyyy")
             val mappedDates = proposals.map { dateFormat.parse(it.proposal.realStart) }
             date_from.setText(locale.format(mappedDates.min()))
             date_to.setText(locale.format(Date()))

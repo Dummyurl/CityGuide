@@ -126,7 +126,6 @@
                     app:layout_constraintStart_toStartOf="@+id/switchable_chat_map"
                     app:layout_constraintTop_toTopOf="@+id/switchable_chat_map" />
 
-
             </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout

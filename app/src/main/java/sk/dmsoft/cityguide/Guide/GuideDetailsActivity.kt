@@ -46,6 +46,8 @@ import android.view.ViewTreeObserver
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
 import android.view.animation.DecelerateInterpolator
+import org.joda.time.LocalDate
+import org.joda.time.LocalDateTime
 
 
 class GuideDetailsActivity : AppCompatActivity() {
@@ -121,6 +123,9 @@ class GuideDetailsActivity : AppCompatActivity() {
             guide_photo.scaleY =  1 - offsetFactor * 0.85f
         }
 
+        if (intent.getBooleanExtra("DENY_BOOKING", false)){
+            bottom_sheet.visibility = View.GONE
+        }
 
     }
 
@@ -135,10 +140,11 @@ class GuideDetailsActivity : AppCompatActivity() {
 
         startDateTimeFragment.setOnButtonClickListener(object: SwitchDateTimeDialogFragment.OnButtonClickListener{
             override fun onPositiveButtonClick(date: Date) {
-                val locale = SimpleDateFormat("dd.MM.YYYY HH:mm")
-                val locale2 = SimpleDateFormat("YYYY-MM-dd'T'HH:mm:ss")
+                val locale = SimpleDateFormat("dd.MM.yyyy HH:mm")
+                val locale2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
                 proposalRequest.start = locale2.format(date)
                 start_date.setText(locale.format(date))
+                checkDateValidity()
             }
 
             override fun onNegativeButtonClick(p0: Date?) {
@@ -153,6 +159,8 @@ class GuideDetailsActivity : AppCompatActivity() {
                 startDateTimeFragment.show(supportFragmentManager, "dialog_start")
         }
 
+        start_date.setOnClickListener { startDateTimeFragment.show(supportFragmentManager, "dialog_start") }
+
         endDateTimeFragment = SwitchDateTimeDialogFragment.newInstance(
                 "Select date",
                 "OK",
@@ -163,10 +171,11 @@ class GuideDetailsActivity : AppCompatActivity() {
 
         endDateTimeFragment.setOnButtonClickListener(object: SwitchDateTimeDialogFragment.OnButtonClickListener{
             override fun onPositiveButtonClick(date: Date) {
-                val locale = SimpleDateFormat("dd.MM.YYYY HH:mm")
-                val locale2 = SimpleDateFormat("YYYY-MM-dd'T'HH:mm:ss")
+                val locale = SimpleDateFormat("dd.MM.yyyy HH:mm")
+                val locale2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
                 end_date.setText(locale.format(date))
                 proposalRequest.end = locale2.format(date)
+                checkDateValidity()
             }
 
             override fun onNegativeButtonClick(p0: Date?) {
@@ -179,6 +188,28 @@ class GuideDetailsActivity : AppCompatActivity() {
                 endDateTimeFragment.show(supportFragmentManager, "dialog_end")
         }
 
+        end_date.setOnClickListener { endDateTimeFragment.show(supportFragmentManager, "dialog_end") }
+
+    }
+
+    fun checkDateValidity(){
+        try {
+            val locale2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+            val actualDate = LocalDateTime().toDate()
+            val startDate = locale2.parse(proposalRequest.start)
+            when {
+                locale2.parse(proposalRequest.end) < locale2.parse(proposalRequest.start) -> {
+                    Snackbar.make(findViewById(android.R.id.content), "Start date has to be sooner than end date", Snackbar.LENGTH_LONG).show()
+                    send_proposal.isEnabled = false
+                }
+                startDate < actualDate -> {
+                    Snackbar.make(findViewById(android.R.id.content), "You can only plan to the future!", Snackbar.LENGTH_LONG).show()
+                    send_proposal.isEnabled = false
+                }
+                else -> send_proposal.isEnabled = true
+            }
+        }
+        catch (e: Exception){}
     }
 
     fun fillDetails(){
@@ -201,14 +232,14 @@ class GuideDetailsActivity : AppCompatActivity() {
         val linearLayout = LinearLayoutManager(this)
         ratings_recycler.layoutManager = linearLayout
         ratings_recycler.adapter = ratingsAdapter
-        var sum = 0f
+        var sum = 0.0
         guideInfo.ratings.forEach {
             sum += it.ratingStars
         }
 
-        customRatingBar.reload((sum/guideInfo.ratings.size).toInt())
+        customRatingBar.reload((sum/guideInfo.ratings.size))
 
-        user_rating.reload(if (sum == 0f) (sum/guideInfo.ratings.size).toInt() else 3)
+        user_rating.reload(if (sum == 0.0) (sum/guideInfo.ratings.size) else 3.0)
 
         showRevealAnim()
     }

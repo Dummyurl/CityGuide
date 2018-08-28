@@ -81,6 +81,10 @@ class Api constructor(private val activity : Context? = null) {
         return api.login(model)
     }
 
+    fun logout(): Call<ResponseBody>{
+        return api.logout()
+    }
+
     fun registration(model: Registration): Call<AccessToken> {
         return api.registration(model)
     }

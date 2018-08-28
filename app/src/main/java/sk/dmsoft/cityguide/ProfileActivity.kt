@@ -15,7 +15,12 @@ import sk.dmsoft.cityguide.Commons.Adapters.SettingsAdapter
 import sk.dmsoft.cityguide.Commons.EAccountType
 import sk.dmsoft.cityguide.Commons.showAlertDialog
 import android.support.v7.app.AlertDialog
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import sk.dmsoft.cityguide.Commons.positiveButton
+import sk.dmsoft.cityguide.Guide.GuideDetailsActivity
 import sk.dmsoft.cityguide.Proposal.Completed.CompletedProposalActivity
 
 
@@ -28,7 +33,8 @@ class ProfileActivity : AppCompatActivity() {
     )
 
     val guideFields: Array<String> = arrayOf(
-            "Payment settings"
+            "Payment settings",
+            "View profile"
     )
 
     val touristFields: Array<String> = arrayOf(
@@ -58,6 +64,13 @@ class ProfileActivity : AppCompatActivity() {
             AccountManager.LogOut()
             startActivity(Intent(this, RegistrationActivity::class.java))
             db.DeleteSelectedInterests()
+            api.logout().enqueue(object: Callback<ResponseBody>{
+                override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
+                }
+
+                override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
+                }
+            })
             finish()
         }
 
@@ -66,10 +79,19 @@ class ProfileActivity : AppCompatActivity() {
         initFields()
 
         val settingsAdapter = SettingsAdapter(allAccountFields) { position ->
+            if (AccountManager.accountType == EAccountType.guide && position == 4){
+                val intent = Intent(this, GuideDetailsActivity::class.java)
+                intent.putExtra("GUIDE_ID", AccountManager.userId)
+                intent.putExtra("DENY_BOOKING", true)
+                startActivity(intent)
+            }
+
+            else {
                 val intent = Intent(this@ProfileActivity, RegistrationActivity::class.java)
                 intent.putExtra("EDIT_MODE", true)
-                intent.putExtra("REGISTRATION_STEP", position+1)
+                intent.putExtra("REGISTRATION_STEP", position + 1)
                 startActivity(intent)
+            }
         }
 
         val appSettingsAdapter = SettingsAdapter(allAppSettingsFielda) {position ->
@@ -115,7 +137,7 @@ class ProfileActivity : AppCompatActivity() {
         // Creating and Building the Dialog
         val currencies= db.GetCurrencies()
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Select The Difficulty Level")
+        builder.setTitle("Select currency")
         val selectedCurrency = currencies.map { it.id }.indexOf(AccountManager.currency)
         builder.setSingleChoiceItems(currencies.map { it.id }.toTypedArray(), selectedCurrency) { dialog, item ->
             AccountManager.currency = currencies[item].id

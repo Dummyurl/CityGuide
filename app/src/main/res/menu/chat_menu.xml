@@ -1,15 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/cancel_proposal"
-        android:title="@string/cancel"/>
-    <item
-        android:id="@+id/change_meeting_point"
-        android:title="@string/change_meeting_point"
-        android:icon="@drawable/ic_map"/>
-    <item
         android:id="@+id/find_user"
         android:title="@string/find_user"
         android:icon="@drawable/target"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/cancel_proposal"
+        android:title="@string/cancel"
+        android:icon="@drawable/ic_clear"
         app:showAsAction="always"/>
 </menu>

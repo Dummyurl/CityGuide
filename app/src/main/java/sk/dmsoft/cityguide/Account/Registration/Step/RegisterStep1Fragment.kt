@@ -18,6 +18,7 @@ import sk.dmsoft.cityguide.R
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.text.InputType
+import android.view.inputmethod.InputMethodManager
 import android.widget.DatePicker
 import org.joda.time.DateTime
 import sk.dmsoft.cityguide.Commons.showYearFirst
@@ -76,8 +77,8 @@ class RegisterStep1Fragment : Fragment(), DatePickerDialog.OnDateSetListener {
         }
 
         next.setOnClickListener { completeStep1() }
-        birth_date.onFocusChangeListener = View.OnFocusChangeListener { _, p1 -> if(p1) datePickerDialog.showYearFirst() }
-        birth_date.setOnClickListener { datePickerDialog.showYearFirst() }
+        birth_date.onFocusChangeListener = View.OnFocusChangeListener { _, p1 -> if(p1) datePickerDialog.showYearFirst(); hideKeyboard() }
+        birth_date.setOnClickListener { datePickerDialog.showYearFirst(); hideKeyboard()}
 
         birth_date.isFocusableInTouchMode = false
         birth_date.inputType = InputType.TYPE_NULL
@@ -133,6 +134,14 @@ class RegisterStep1Fragment : Fragment(), DatePickerDialog.OnDateSetListener {
             birth_date.setText(DateTime(model.birthDate).toLocalDate().toString())
         }
         catch (e: Exception){}
+    }
+
+    fun hideKeyboard(){
+        val view = activity?.currentFocus
+        if (view != null) {
+            val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
     }
 
     /**

@@ -48,7 +48,7 @@ fun ImageView.loadCircle(url: String){
 }
 
 fun ImageView.loadCircleNoCache(url: String){
-    PicassoCache.instance?.load(url)?.memoryPolicy(MemoryPolicy.NO_CACHE)?.networkPolicy(NetworkPolicy.NO_CACHE)?.fit()?.transform(CropCircleTransformation())?.into(this@loadCircleNoCache)
+    PicassoCache.instance?.load(url)?.memoryPolicy(MemoryPolicy.NO_CACHE)?.networkPolicy(NetworkPolicy.NO_CACHE)?.fit()?.noPlaceholder()?.transform(CropCircleTransformation())?.into(this@loadCircleNoCache)
 }
 
 inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction, addToBackstack: Boolean, sharedTransActionItem: View? = null) {

@@ -104,6 +104,10 @@ class MapFragment : Fragment(), LocationUpdateCallback {
                 mListener?.hideMap()
             }
         }
+
+        change_meeting_point_card.setOnClickListener {
+            updateMode(MapMode.SetMeetingPoint)
+        }
     }
 
     fun updateUserPosition(position: LatLng){
@@ -123,6 +127,7 @@ class MapFragment : Fragment(), LocationUpdateCallback {
                 meeting_point_controls.visibility = View.VISIBLE
                 meetingPoint?.alpha = 0f
                 marker_icon.visibility = View.VISIBLE
+                change_meeting_point_card.visibility = View.GONE
             }
             MapMode.GoToMeetingPoint -> {
                 meeting_point_controls.visibility = View.GONE
@@ -130,6 +135,7 @@ class MapFragment : Fragment(), LocationUpdateCallback {
                 activity?.bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
                 meetingPoint?.alpha = 1f
                 marker_icon.visibility = View.GONE
+                change_meeting_point_card.visibility = View.VISIBLE
             }
         }
 

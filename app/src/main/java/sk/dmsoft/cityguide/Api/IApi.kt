@@ -50,6 +50,9 @@ interface IApi {
     @POST("account/register/accountType")
     fun setAccountType(@Body model: SetAccountTypeModel): Call<ResponseBody>
 
+    @GET("account/logout")
+    fun logout(): Call<ResponseBody>
+
     @GET("countries")
     fun getCountries(): Call<ArrayList<Country>>
 

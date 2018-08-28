@@ -30,12 +30,33 @@ class GreenKaktusReview : LinearLayout {
         orientation = LinearLayout.HORIZONTAL
     }
 
-    fun reload(count: Int){
+    fun reload(count: Double){
         if (childCount > 0)
             removeAllViews()
-        for(i in 1..count){
+        var kaktusCount = count
+
+        while (kaktusCount > 1.0){
             val kaktusImage = ImageView(context)
             kaktusImage.setImageDrawable(context.getDrawable(R.drawable.logo))
+            val lp = LinearLayout.LayoutParams(50, 50)
+            lp.marginEnd = 5
+            kaktusImage.layoutParams = lp
+            this@GreenKaktusReview.addView(kaktusImage)
+            kaktusCount -= 1.0
+        }
+
+        if (kaktusCount > 0.65){
+            val kaktusImage = ImageView(context)
+            kaktusImage.setImageDrawable(context.getDrawable(R.drawable.logo))
+            val lp = LinearLayout.LayoutParams(50, 50)
+            lp.marginEnd = 5
+            kaktusImage.layoutParams = lp
+            this@GreenKaktusReview.addView(kaktusImage)
+        }
+
+        else if (kaktusCount > 0.35){
+            val kaktusImage = ImageView(context)
+            kaktusImage.setImageDrawable(context.getDrawable(R.drawable.logo_half))
             val lp = LinearLayout.LayoutParams(50, 50)
             lp.marginEnd = 5
             kaktusImage.layoutParams = lp

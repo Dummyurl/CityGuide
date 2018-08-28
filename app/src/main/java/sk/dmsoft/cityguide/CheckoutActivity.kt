@@ -97,7 +97,7 @@ class CheckoutActivity : AppCompatActivity() {
 
         if (ratingbar.rating > 0){
             rating = Rating()
-            rating.ratingStars = ratingbar.rating
+            rating.ratingStars = ratingbar.rating.toDouble()
             rating.comment = comment.text.toString()
         }
 
