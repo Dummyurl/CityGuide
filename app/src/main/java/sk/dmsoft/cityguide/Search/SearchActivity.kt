@@ -164,6 +164,23 @@ class SearchActivity : AppCompatActivity(), SearchRequestFragment.OnSearchTextIn
         }
         return true
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.search_menu, menu)
+        return true
+    }
+
+    fun openFilter(){
+        drawer_layout.openDrawer(nav_view)
+    }
+
+    override fun onOptionsItemSelected(p0: MenuItem): Boolean {
+        when (p0.itemId){
+            R.id.show_filter -> openFilter()
+        }
+        return true
+    }
 }
 
 class FragmentTransition() : TransitionSet() {init {
