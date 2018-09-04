@@ -81,6 +81,10 @@ class Api constructor(private val activity : Context? = null) {
         return api.login(model)
     }
 
+    fun refreshToken(): Call<AccessToken> {
+        return api.refreshToken()
+    }
+
     fun logout(): Call<ResponseBody>{
         return api.logout()
     }

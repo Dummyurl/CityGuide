@@ -131,6 +131,7 @@ class SearchActivity : AppCompatActivity(), SearchRequestFragment.OnSearchTextIn
         model.maxPrice = max_hourly_rate.progress
         model.minRating = min_rating.rating.toInt()
         model.byMyInterests = by_interests.isChecked
+        model.freeGuiding = free_guiding.isChecked
 
         api.searchInCity(model).enqueue(object: Callback<ArrayList<GuideListItem>>{
             override fun onFailure(call: Call<ArrayList<GuideListItem>>?, t: Throwable?) {
@@ -146,23 +147,6 @@ class SearchActivity : AppCompatActivity(), SearchRequestFragment.OnSearchTextIn
 
         })
 
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        super.onCreateOptionsMenu(menu)
-        menuInflater.inflate(R.menu.search_menu, menu)
-        return true
-    }
-
-    fun openFilter(){
-        drawer_layout.openDrawer(nav_view)
-    }
-
-    override fun onOptionsItemSelected(p0: MenuItem): Boolean {
-        when (p0.itemId){
-            R.id.show_filter -> openFilter()
-        }
-        return true
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

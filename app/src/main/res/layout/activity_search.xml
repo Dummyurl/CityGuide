@@ -80,7 +80,7 @@
                 android:text="@string/reset"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/by_interests" />
+                app:layout_constraintTop_toBottomOf="@+id/free_guiding" />
 
             <Button
                 android:id="@+id/apply_filter_btn"
@@ -91,7 +91,7 @@
                 android:text="@string/apply_filters"
                 android:theme="@style/green_button"
                 app:layout_constraintEnd_toStartOf="@+id/reset_btn"
-                app:layout_constraintTop_toBottomOf="@+id/by_interests" />
+                app:layout_constraintTop_toBottomOf="@+id/free_guiding" />
 
             <TextView
                 android:id="@+id/max_price_text"
@@ -112,6 +112,16 @@
                 android:text="@string/sort_by_interests"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/min_rating" />
+
+            <CheckBox
+                android:id="@+id/free_guiding"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/free_guiding"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/by_interests" />
 
         </android.support.constraint.ConstraintLayout>
 

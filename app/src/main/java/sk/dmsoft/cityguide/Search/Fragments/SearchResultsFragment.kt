@@ -20,6 +20,7 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.util.Pair
 import android.support.v7.app.AppCompatActivity
 import android.view.*
+import sk.dmsoft.cityguide.Api.DB
 
 
 /**
@@ -34,11 +35,12 @@ class SearchResultsFragment : Fragment() {
     var guidesAdapter: GuidesAdapter? = null
     var guides: ArrayList<GuideListItem> = ArrayList()
     var placeId = 0
+    lateinit var db: DB
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-
+        db = DB(context!!)
         return inflater.inflate(R.layout.fragment_search_results, container, false)
     }
 
@@ -69,7 +71,11 @@ class SearchResultsFragment : Fragment() {
             activity?.supportStartPostponedEnterTransition()
         }
 
+        toolbar.title = db.GetPlace(placeId).city
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
+        (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(true)
+        collapsing_toolbar.isTitleEnabled = false
+
     }
 
     fun updateGuides(guides: ArrayList<GuideListItem>){
@@ -81,6 +87,7 @@ class SearchResultsFragment : Fragment() {
         this.placeId = placeId
         city_image?.load("${AppSettings.apiUrl}/places/photo/$placeId") {
             activity?.supportStartPostponedEnterTransition()
+            (activity as AppCompatActivity).supportActionBar?.title = db.GetPlace(placeId).city
         }
     }
 

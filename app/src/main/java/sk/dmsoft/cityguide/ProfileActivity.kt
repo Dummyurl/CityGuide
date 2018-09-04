@@ -33,8 +33,7 @@ class ProfileActivity : AppCompatActivity() {
     )
 
     val guideFields: Array<String> = arrayOf(
-            "Payment settings",
-            "View profile"
+            "Payment settings"
     )
 
     val touristFields: Array<String> = arrayOf(
@@ -79,7 +78,7 @@ class ProfileActivity : AppCompatActivity() {
         initFields()
 
         val settingsAdapter = SettingsAdapter(allAccountFields) { position ->
-            if (AccountManager.accountType == EAccountType.guide && position == 4){
+            if (AccountManager.accountType == EAccountType.guide && position == 0){
                 val intent = Intent(this, GuideDetailsActivity::class.java)
                 intent.putExtra("GUIDE_ID", AccountManager.userId)
                 intent.putExtra("DENY_BOOKING", true)
@@ -124,6 +123,8 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     fun initFields(){
+        if (AccountManager.accountType == EAccountType.guide)
+            allAccountFields.add(0, "View profile")
         allAccountFields.addAll(userFields)
         if (AccountManager.accountType == EAccountType.guide)
             allAccountFields.addAll(guideFields)

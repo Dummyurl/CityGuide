@@ -39,9 +39,9 @@
     <string name="title_activity_chat">ChatActivity</string>
     <string name="cancel">Cancel</string>
     <string name="set_meeting_point">Set meeting point</string>
-    <string name="start">Start</string>
+    <string name="start">Start guiding</string>
     <string name="title_activity_active_proposal">ActiveProposalActivity</string>
-    <string name="end_proposal">End proposal</string>
+    <string name="end_proposal">End guiding</string>
     <string name="apply_filters">Apply filters</string>
     <string name="reset">Reset</string>
     <string name="max_hourly_rate">Max. hourly rate</string>
@@ -85,5 +85,8 @@
     <string name="explorings">Explorings</string>
     <string name="to">To</string>
     <string name="sort_by_interests">Sort by interests</string>
+    <string name="free_guiding">Free guiding</string>
+    <string name="satellite">Satellite</string>
+    <string name="map">Map</string>
 
 </resources>

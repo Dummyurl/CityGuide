@@ -17,10 +17,14 @@ import sk.dmsoft.cityguide.Models.Account.Registration1
 import sk.dmsoft.cityguide.R
 import android.os.Build
 import android.support.annotation.RequiresApi
+import android.support.design.widget.Snackbar
 import android.text.InputType
 import android.view.inputmethod.InputMethodManager
 import android.widget.DatePicker
 import org.joda.time.DateTime
+import org.joda.time.LocalDateTime
+import sk.dmsoft.cityguide.Commons.AccountManager
+import sk.dmsoft.cityguide.Commons.EAccountType
 import sk.dmsoft.cityguide.Commons.showYearFirst
 import sk.dmsoft.cityguide.Models.Guides.GuideDetails
 import java.text.SimpleDateFormat
@@ -84,11 +88,23 @@ class RegisterStep1Fragment : Fragment(), DatePickerDialog.OnDateSetListener {
         birth_date.inputType = InputType.TYPE_NULL
 
         fillFields()
+
+        if (AccountManager.accountType == EAccountType.tourist)
+            places_spinner.visibility = View.GONE
     }
 
     override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
-        model.birthDate = DateTime(p1, p2 +1, p3, 0, 0).toString()
+        model.birthDate = DateTime(p1, p2 +1, p3+1, 0, 0).toString()
         birth_date.setText(DateTime(p1, p2 +1, p3, 0, 0).toLocalDate().toString())
+
+        if (LocalDateTime(p1, p2 +1, p3, 0, 0) > LocalDateTime.now().minusYears(18)) {
+            birth_date_layout.error = "You must be older than 18 years"
+            next.isEnabled = false
+        }
+        else {
+            next.isEnabled = true
+            birth_date_layout.error = ""
+        }
     }
 
     fun init(info: GuideDetails){
@@ -104,7 +120,25 @@ class RegisterStep1Fragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
     // TODO: Rename method, update argument and hook method into UI event
     fun completeStep1() {
-        if (mListener != null) {
+        var isValid = true
+
+        if (first_name.text.toString().isEmpty()){
+            first_name_layout.error = "Field is required"
+            isValid = false
+        }
+
+        else
+            first_name_layout.error = ""
+
+        if (second_name.text.toString().isEmpty()){
+            second_name_layout.error = "Field is required"
+            isValid = false
+        }
+
+        else
+            second_name_layout.error = ""
+
+        if (mListener != null && isValid) {
             next.isEnabled = false
             model.firstName = first_name.text.toString()
             model.secondName = second_name.text.toString()

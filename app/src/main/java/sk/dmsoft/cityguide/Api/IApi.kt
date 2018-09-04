@@ -28,6 +28,9 @@ interface IApi {
     @POST("account/getToken")
     fun login(@Body model: Login): Call<AccessToken>
 
+    @GET("account/refreshToken")
+    fun refreshToken(): Call<AccessToken>
+
     @POST("account/register")
     fun registration(@Body model: Registration): Call<AccessToken>
 

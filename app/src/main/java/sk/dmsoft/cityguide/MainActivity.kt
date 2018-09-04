@@ -22,6 +22,7 @@ import sk.dmsoft.cityguide.Commons.*
 import sk.dmsoft.cityguide.Commons.Adapters.ProposalsAdapter
 import sk.dmsoft.cityguide.Commons.Adapters.UnconfirmedProposalsAdapter
 import sk.dmsoft.cityguide.Guide.GuideDetailsActivity
+import sk.dmsoft.cityguide.Models.AccessToken
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
 import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
 import sk.dmsoft.cityguide.Models.Proposal.ProposalState
@@ -135,6 +136,7 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
         })
 
         runLoadLoop()
+        refreshToken()
     }
 
     fun runLoadLoop(){
@@ -143,6 +145,19 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
                 reloadProposals()
             }
         }, 0, 15000)
+    }
+
+    fun refreshToken(){
+        api.refreshToken().enqueue(object: Callback<AccessToken>{
+            override fun onFailure(call: Call<AccessToken>?, t: Throwable?) {
+            }
+
+            override fun onResponse(call: Call<AccessToken>?, response: Response<AccessToken>) {
+                if (response.code() == 200) {
+                    AccountManager.LogIn(response.body()!!)
+                }
+            }
+        })
     }
 
     override fun onBackPressed() {

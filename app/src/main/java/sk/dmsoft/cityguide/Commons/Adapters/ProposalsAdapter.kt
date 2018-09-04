@@ -46,15 +46,12 @@ class ProposalsAdapter(val activity: Activity, val proposals: ArrayList<Proposal
                 guide_photo.loadCircle("${AppSettings.apiUrl}users/photo/${item.user.id}")
                 interests.text = item.user.interestsString
             }
-            open_chat.setOnClickListener {
+
+            setOnClickListener {
                 val intent = Intent(activity, ChatActivity::class.java)
                 intent.putExtra("PROPOSAL_ID", item.id)
                 intent.putExtra("USER_ID", item.user.id)
                 activity.startActivity(intent)
-            }
-
-            setOnClickListener {
-
             }
 
             setOnLongClickListener {

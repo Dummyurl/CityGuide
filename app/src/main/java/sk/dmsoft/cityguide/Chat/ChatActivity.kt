@@ -3,12 +3,14 @@ package sk.dmsoft.cityguide.Chat
 import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Chronometer
 import com.google.android.gms.maps.model.*
 import com.google.gson.Gson
 import sk.dmsoft.cityguide.R
@@ -31,6 +33,7 @@ import sk.dmsoft.cityguide.Models.Chat.Message
 import sk.dmsoft.cityguide.Models.Chat.MessageType
 import sk.dmsoft.cityguide.Models.Proposal.MeetingPoint
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
+import sk.dmsoft.cityguide.Models.Proposal.ProposalState
 import sk.dmsoft.cityguide.Proposal.Completed.CompletedProposalGuideDetails
 import java.lang.Exception
 import java.net.URI
@@ -129,7 +132,10 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
                 }
 
                 override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
-                    showWaitingtext()
+                    if (response?.code() == 200)
+                        showWaitingtext()
+                    else if (response?.code() == 401)
+                        Snackbar.make(findViewById(android.R.id.content), "Bad time", Snackbar.LENGTH_LONG).show()
                 }
             })
         }
@@ -144,6 +150,8 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
             else
                 goToMeetingPoint()
         }
+
+        waiting_text.text = "waiting for ${if (AccountManager.accountType == EAccountType.guide) "Tourist" else "Guide"}"
     }
 
     override fun onRestart() {
@@ -220,10 +228,12 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
                             }
                         }
                         MessageType.MeetingPoint.value -> {
-                            getMeetingPoint(Gson().fromJson(URLDecoder.decode(message.Text, "UTF-8"), MeetingPoint::class.java))
+                            val positionText = URLDecoder.decode(message.Text, "UTF-8")
+                            getMeetingPoint(Gson().fromJson(positionText, MeetingPoint::class.java))
                             hideMap()
+                            goToMeetingPoint()
                         }
-                        MessageType.ProposalStart.value -> startProposal()
+                        MessageType.ProposalStart.value ->{ getProposal(); startProposal()}
                         MessageType.ProposalEnd.value -> goToCheckout()
                     }
                 }
@@ -301,13 +311,16 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
 
     fun findUser(){
         mapFragment.updateMode(MapMode.GoToMeetingPoint)
-        showMap()
-        mapFragment.moveToUser()
+        if (mapFragment.moveToUser())
+            showMap()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         super.onCreateOptionsMenu(menu)
-        menuInflater.inflate(R.menu.chat_menu, menu)
+        if (proposal?.state == ProposalState.InProgress.value)
+            menuInflater.inflate(R.menu.chat_menu_active, menu)
+        else
+            menuInflater.inflate(R.menu.chat_menu, menu)
         return true
     }
 
@@ -316,6 +329,16 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
             R.id.cancel_proposal -> { cancelProposal() }
             //R.id.share_location -> { goToMeetingPoint() }
             R.id.find_user -> { findUser() }
+            R.id.show_map -> {
+                if (isMapVisible) {
+                    hideMap()
+                    p0.icon = getDrawable(R.drawable.ic_map)
+                }
+                else{
+                    showMap()
+                    p0.icon = getDrawable(R.drawable.ic_chat)
+                }
+            }
         }
         return true
     }
@@ -334,17 +357,19 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
 
     fun getMeetingPoint(meetingPoint: MeetingPoint){
         proposal?.meetingPoint = meetingPoint
+        mapFragment.updateMeetingPointPosition(LatLng(meetingPoint.latitude, meetingPoint.longitude))
         switchStartSet()
     }
 
     fun startProposal(){
         // 0x0000FF00
+        invalidateOptionsMenu()
+        mapFragment.hideChangeMeetingPoint()
         toolbar.setBackgroundColor(0xff00C853.toInt())
         window.statusBarColor = 0xff00C853.toInt()
         waiting_toolbar_layout.visibility = View.GONE
         active_proposal.visibility = View.VISIBLE
-
-
+        mapFragment.hideChangeMeetingPoint()
 
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
         format.timeZone = TimeZone.getTimeZone("UTC")
@@ -352,6 +377,22 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
 
         chronometer2.format = "%s"
         chronometer2.base = (SystemClock.elapsedRealtime()) - (spendTime *1000)
+
+        chronometer2.setOnChronometerTickListener {
+            val time = SystemClock.elapsedRealtime() - it.getBase()
+            val h = (time / 3600000).toInt()
+            val m = (time - h * 3600000).toInt() / 60000
+            var hh = if (h == 1) "$h hour " else h.toString() + " hours "
+            val mm = if (m == 1) "$m minute" else m.toString() + " minutes"
+
+            if (h < 1)
+                hh = ""
+
+            it.text = "$hh$mm"
+
+            per_hour.text = "${CurrencyConverter.convert(proposal!!.perHourSalary * (h +1))}"
+        }
+
         chronometer2.start()
 
         per_hour.text = "${CurrencyConverter.convert(proposal!!.perHourSalary)}"

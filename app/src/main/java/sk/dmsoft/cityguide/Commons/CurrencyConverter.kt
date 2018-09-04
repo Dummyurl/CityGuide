@@ -23,6 +23,8 @@ object CurrencyConverter {
                 currency.symbolBefore = ""
             if (currency.symbolAfter == null)
                 currency.symbolAfter = ""
+            if (currency.rate * value < 0.1)
+                return "FREE"
             return "${currency.symbolBefore}${(currency.rate.toBigDecimal() * value.toBigDecimal()).setScale(2)}${currency.symbolAfter}"
         }
         return "${value}€"
