@@ -57,6 +57,18 @@ class RegisterGuideInfoFragment : Fragment() {
 
         }
 
+        free_guiding_cb.setOnCheckedChangeListener { cb, isChecked ->
+            if (isChecked){
+                currencies_spinner.isEnabled = false
+                salary.isEnabled = false
+                salary.setText("0")
+            }
+            else {
+                currencies_spinner.isEnabled = true
+                salary.isEnabled = true
+            }
+        }
+
         finish.setOnClickListener { CompleteGuideInfoRegistration() }
     }
 

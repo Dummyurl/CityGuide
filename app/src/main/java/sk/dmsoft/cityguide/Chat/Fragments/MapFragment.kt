@@ -110,6 +110,16 @@ class MapFragment : Fragment(), LocationUpdateCallback {
         change_meeting_point_card.setOnClickListener {
             updateMode(MapMode.SetMeetingPoint)
         }
+
+        map_switcher.setTintColor(activity!!.resources.getColor(R.color.colorPrimary))
+
+        map_switcher.setOnCheckedChangeListener { _, i ->
+            if (i == R.id.normal_map)
+                showNormalMap()
+
+            else
+                showSatelliteMap()
+        }
     }
 
     fun updateUserPosition(position: LatLng){
@@ -122,16 +132,6 @@ class MapFragment : Fragment(), LocationUpdateCallback {
                             .title(if (AccountManager.accountType == EAccountType.guide) "Tourist" else "Guide"))
 
         userMarker?.position = position
-
-        map_switcher.setTintColor(activity!!.resources.getColor(R.color.colorPrimary))
-
-        map_switcher.setOnCheckedChangeListener { _, i ->
-            if (i == R.id.normal_map)
-                showNormalMap()
-
-            else
-                showSatelliteMap()
-        }
     }
 
     fun showNormalMap(){
