@@ -51,13 +51,17 @@ class Api constructor(private val activity : Context? = null) {
                     .setLenient()
                     .create()
 
-            val client = OkHttpClient().newBuilder()
-                    .addInterceptor(AuthenticationInterceptor())
+            val clientBuilder = OkHttpClient().newBuilder()
                     .addInterceptor(logInterceptor)
                     .readTimeout(30, TimeUnit.SECONDS)
                     .writeTimeout(30, TimeUnit.SECONDS)
                     .connectTimeout(30, TimeUnit.SECONDS)
-                    .build()
+
+
+            if (AccountManager.accessToken != "")
+                clientBuilder.addInterceptor(AuthenticationInterceptor())
+
+            val client = clientBuilder.build()
 
             val retrofit = Retrofit.Builder()
                     .baseUrl(AppSettings.apiUrl +"api/")
@@ -262,12 +266,12 @@ class Api constructor(private val activity : Context? = null) {
 class AuthenticationInterceptor() : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        val originalRequest = chain.request()
-        Log.e("Interceptor", "ACCESS TOKEN bearer ${AccountManager.accessToken}")
-        // Add authorization header with updated authorization value to intercepted request
-        val authorisedRequest = originalRequest.newBuilder()
-                .header("Authorization", "bearer " +AccountManager.accessToken)
-                .build()
+            val originalRequest = chain.request()
+            Log.e("Interceptor", "ACCESS TOKEN bearer ${AccountManager.accessToken}")
+            // Add authorization header with updated authorization value to intercepted request
+            val authorisedRequest = originalRequest.newBuilder()
+                    .header("Authorization", "bearer " + AccountManager.accessToken)
+                    .build()
         return chain.proceed(authorisedRequest)
     }
 }

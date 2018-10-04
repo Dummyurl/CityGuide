@@ -134,14 +134,16 @@ class SplashActivity : AppCompatActivity() {
                         finish()
                         continueToMainScreen = false
                     }
-                    if (initResponse.places.size > 0)
-                        savePlaces(initResponse.places)
 
                     if (initResponse.currencyRates.size > 0)
                         saveCurrencies(initResponse.currencyRates)
 
-                    if (initResponse.countries.size > 0)
+                    if (initResponse.countries.size > 0) {
                         saveCountries(initResponse.countries)
+                        val places: ArrayList<Place> = initResponse.countries.map { it.places }.flatten() as ArrayList<Place>
+                        if (places.any())
+                            savePlaces(places)
+                    }
 
                     if (continueToMainScreen)
                         closeSplashScreen()

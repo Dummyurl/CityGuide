@@ -11,6 +11,6 @@ class GuideListItem {
     var secondName: String = ""
     var interests : ArrayList<Interest> = ArrayList()
     var guideInfo: GuideInfo? = null
-    var ratingStars: Array<Float>? = null
+    var RatingAvg: Double = 0.0
     var interestsString: String = ""
 }

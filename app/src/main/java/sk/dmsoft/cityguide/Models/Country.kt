@@ -12,4 +12,5 @@ class Country {
 
     var id: Int = 0
     var name: String = ""
+    var places: ArrayList<Place> = ArrayList()
 }

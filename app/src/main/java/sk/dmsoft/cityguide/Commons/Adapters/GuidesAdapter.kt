@@ -41,8 +41,8 @@ class GuidesAdapter(val activity: Activity, val guides: ArrayList<GuideListItem>
             guide_photo.loadCircle("${AppSettings.apiUrl}users/photo/${item.id}")
             salary.text = CurrencyConverter.convert(item.guideInfo?.salary!!)
             interests.text = item.interestsString
-            if (item.ratingStars!!.isNotEmpty())
-                rating.text = "${item.ratingStars?.average()?.toBigDecimal()?.setScale(1, RoundingMode.UP)?.toDouble()}"
+            if (item.RatingAvg == 0.0)
+                rating.text = "${item.RatingAvg}"
             else
                 rating.text = "-"
 
