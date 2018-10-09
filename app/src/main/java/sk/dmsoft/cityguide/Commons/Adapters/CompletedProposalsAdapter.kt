@@ -37,7 +37,7 @@ class CompletedProposalsAdapter(val activity: Activity, private val proposals: A
                 proposal_info.text = "${item.user?.firstName} ${item.user?.secondName} ● Lasted ${item.proposal.payment?.totalHours}h"
                 val startDate = DateTime(item.proposal.start)
                 date.text = "${startDate.dayOfMonth}. ${startDate.monthOfYear}."
-                city_name.text = db.GetPlace(item.proposal.placeId).city
+                city_name.text = item.proposal.place?.city
                 total_amount.text = CurrencyConverter.convert(item.proposal.payment!!.totalAmount)
             }
             catch (e: Exception){}

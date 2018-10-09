@@ -74,7 +74,7 @@ class EditProposalFragment : Fragment() {
         start_date.setText(DateTime(proposal.start).toLocalDateTime().toString())
         end_date.setText(DateTime(proposal.start).toLocalDateTime().toString())
         user_name.text = "${proposal.user.firstName} ${proposal.user.secondName}"
-        place_name.text = db.GetPlace(proposal.placeId).city
+        place_name.text = proposal.place?.city
         user_photo.loadCircle("${AppSettings.apiUrl}/users/photo/${proposal.user.id}")
         total_amount.text = "${proposal.perHourSalary}€"
     }

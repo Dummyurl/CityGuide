@@ -2,19 +2,18 @@ package sk.dmsoft.cityguide.Models.Proposal
 
 import org.joda.time.DateTime
 import sk.dmsoft.cityguide.Models.Account.UserInfo
+import sk.dmsoft.cityguide.Models.Place
 
 /**
  * Created by Daniel on 27. 2. 2018.
  */
 class Proposal {
     var id = 0
-    var touristId = ""
-    var guideId = ""
     var start = ""
     var realStart = ""
     var end = ""
     var realEnd = ""
-    var placeId = 0
+    var place : Place? = null
 
     var touristStart = false
     var guideStart = false

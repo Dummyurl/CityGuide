@@ -36,13 +36,13 @@ class ProposalsAdapter(val activity: Activity, val proposals: ArrayList<Proposal
 
         fun bind(item: Proposal, listener: (Proposal, Int) -> Unit) = with(itemView) {
             val db = DB(activity)
-            city_image.load("${AppSettings.apiUrl}places/photo/${item.placeId}", {})
+            city_image.load("${AppSettings.apiUrl}places/photo/${item.place?.id}", {})
             if (item.user != null) {
                 guide_name.text = "${item.user.firstName} ${item.user.secondName}"
                 val startDate = DateTime(item.start)
                 proposal_date.text = "${startDate.dayOfMonth}. ${startDate.monthOfYear}."
                 proposal_time.text = "Start at ${startDate.hourOfDay}:${startDate.minuteOfHour}"
-                place_name.text = db.GetPlace(item.placeId).city
+                place_name.text = item.place?.city
                 guide_photo.loadCircle("${AppSettings.apiUrl}users/photo/${item.user.id}")
                 interests.text = item.user.interestsString
             }

@@ -174,7 +174,7 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
             override fun onResponse(call: Call<Proposal>?, response: Response<Proposal>?) {
                 if (response?.code() == 200){
                     proposal = response.body()
-                    place_name.text = db.GetPlace(proposal!!.placeId).city
+                    place_name.text = proposal?.place?.city
                     user_name.text = "${proposal?.user?.firstName} ${proposal?.user?.secondName}"
 
                     if (proposal?.state == 5)
