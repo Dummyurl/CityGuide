@@ -33,7 +33,6 @@ import sk.dmsoft.cityguide.Account.External.Facebook
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import android.R.attr.data
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.paypal.android.sdk.onetouch.core.metadata.w
 import com.google.android.gms.common.api.ApiException
 import android.util.Log
 import com.google.android.gms.tasks.Task

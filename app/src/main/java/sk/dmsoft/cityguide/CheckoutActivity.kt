@@ -4,7 +4,6 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import com.braintreepayments.api.dropin.DropInResult
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_checkout.*
 import okhttp3.ResponseBody
@@ -86,9 +85,6 @@ class CheckoutActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == BRAINTREE_REQUEST_CODE){
-            val results: DropInResult = data!!.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT)
-            Log.e("BRAINTREE", results.toString())
-            createTransaction(results.paymentMethodNonce!!.nonce)
         }
     }
 

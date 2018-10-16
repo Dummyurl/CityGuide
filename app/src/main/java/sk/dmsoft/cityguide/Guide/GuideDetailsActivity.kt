@@ -31,7 +31,6 @@ import sk.dmsoft.cityguide.Models.Rating
 import java.util.*
 import sk.dmsoft.cityguide.R.id.appBarLayout
 import kotlin.collections.ArrayList
-import com.paypal.android.sdk.onetouch.core.metadata.l
 import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatter.ofLocalizedDate

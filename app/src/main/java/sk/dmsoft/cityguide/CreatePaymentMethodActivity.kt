@@ -4,8 +4,6 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import com.braintreepayments.api.dropin.DropInRequest
-import com.braintreepayments.api.dropin.DropInResult
 import kotlinx.android.synthetic.main.activity_create_payment_method.*
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -41,8 +39,6 @@ class CreatePaymentMethodActivity : AppCompatActivity() {
             override fun onResponse(call: Call<CheckoutToken>?, response: Response<CheckoutToken>) {
                 if (response.code() == 200) {
                     token = response.body()!!.token
-                    val dropInRequest = DropInRequest().clientToken(token)
-                    startActivityForResult(dropInRequest.getIntent(this@CreatePaymentMethodActivity), BRAINTREE_REQUEST_CODE)
                 }
             }
         })
@@ -50,9 +46,6 @@ class CreatePaymentMethodActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == BRAINTREE_REQUEST_CODE){
-            val results: DropInResult = data!!.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT)
-            Log.e("BRAINTREE", results.toString())
-            savePaymentMethod(results.paymentMethodNonce!!.nonce)
         }
     }
 
