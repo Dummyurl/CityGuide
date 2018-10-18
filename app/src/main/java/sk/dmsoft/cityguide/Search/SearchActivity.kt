@@ -55,14 +55,15 @@ class SearchActivity : AppCompatActivity(), SearchRequestFragment.OnSearchTextIn
 
             override fun onResponse(call: Call<ArrayList<GuideListItem>>?, response: Response<ArrayList<GuideListItem>>?) {
                 if (response?.code() == 200) {
-                    searchResultsFragment.enterTransition = Fade()
-                    searchResultsFragment.exitTransition = Fade()
-                    searchResultsFragment.sharedElementEnterTransition = FragmentTransition()
-                    searchResultsFragment.sharedElementReturnTransition = FragmentTransition()
-                    searchRequestFragment.exitTransition = Fade()
+                    //searchResultsFragment.enterTransition = Fade()
+                    //searchResultsFragment.exitTransition = Fade()
+                    //searchResultsFragment.sharedElementEnterTransition = FragmentTransition()
+                    //searchResultsFragment.sharedElementReturnTransition = FragmentTransition()
+                    //searchRequestFragment.exitTransition = Fade()
                     searchResultsFragment.updateImage(place.id)
 
-                    replaceFragment(searchResultsFragment, R.id.fragment_holder, true, itemView.findViewById(R.id.city_image))
+                    val sharedView = itemView.findViewById<View>(R.id.city_image)
+                    replaceFragment(searchResultsFragment, R.id.fragment_holder, true, sharedView)
                     val guides = response.body()!!
                     searchResultsFragment.updateGuides(guides)
                 }
