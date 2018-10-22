@@ -35,6 +35,9 @@ import android.provider.SyncStateContract.Helpers.update
 import android.content.pm.PackageInfo
 import android.support.v4.app.FragmentActivity
 import android.util.Base64
+import com.microsoft.appcenter.AppCenter
+import com.microsoft.appcenter.analytics.Analytics
+import com.microsoft.appcenter.crashes.Crashes
 import sk.dmsoft.cityguide.Chat.ChatActivity
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
@@ -56,6 +59,9 @@ class SplashActivity : AppCompatActivity() {
         sk.dmsoft.cityguide.Commons.CurrencyConverter.init(this)
         api  = Api(this)
         db = DB(this)
+
+        AppCenter.start(application, "42231981-1764-48e2-b287-3d6859dcae68",
+                  Analytics::class.java, Crashes::class.java)
 
         PicassoCache.CreatePicassoCache(this)
 
