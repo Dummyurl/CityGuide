@@ -31,7 +31,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import kotlinx.android.synthetic.main.fragment_register_tourist.*
 import sk.dmsoft.cityguide.Account.External.Facebook
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import android.R.attr.data
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
 import android.util.Log
@@ -41,7 +40,7 @@ import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import sk.dmsoft.cityguide.Commons.addFragment
 import sk.dmsoft.cityguide.Commons.removeFragment
-import sk.dmsoft.cityguide.Models.CustomError
+import sk.dmsoft.cityguide.Models.CustomErrors
 
 
 class RegistrationActivity : AppCompatActivity(),
@@ -111,7 +110,7 @@ class RegistrationActivity : AppCompatActivity(),
                     pager.setCurrentItem(1, true)
                 }
                 else if (response.code() == 400){
-                    val errors = Gson().fromJson(response.errorBody()!!.charStream() , Array<CustomError>::class.java)
+                    val errors = Gson().fromJson(response.errorBody()!!.charStream() , CustomErrors::class.java).errors
                     if (errors.any{it.field == "Email"})
                         email_layout.error = errors.first { it.field == "Email" }.description
                     else
