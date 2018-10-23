@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.DragEvent
 import android.view.Gravity
 import android.view.View
+import com.microsoft.appcenter.analytics.Analytics
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.ResponseBody
 import org.joda.time.DateTime
@@ -33,6 +34,8 @@ import sk.dmsoft.cityguide.Search.SearchActivity
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+
+
 
 class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate {
 
@@ -130,6 +133,9 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
                 format.timeZone = TimeZone.getTimeZone("UTC")
                 AccountManager.lastReadNotificationTime = DateTime(format.format(Date()))
                 Log.e("Actual UTC time", AccountManager.lastReadNotificationTime.toString())
+                val properties = HashMap<String, String>()
+                properties["NotificationsCount"] = "$unreadNotifications"
+                Analytics.trackEvent("Show notifications", properties)
                 unreadNotifications = 0
                 setUnreadNotificationsText()
             }

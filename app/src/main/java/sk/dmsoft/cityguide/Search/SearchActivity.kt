@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.SeekBar
+import com.microsoft.appcenter.analytics.Analytics
 import kotlinx.android.synthetic.main.activity_search.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -21,10 +22,11 @@ import sk.dmsoft.cityguide.Models.Guides.GuideListItem
 import sk.dmsoft.cityguide.Models.Place
 import sk.dmsoft.cityguide.Models.Search.SearchInCity
 import sk.dmsoft.cityguide.Models.Search.SearchRequest
-import sk.dmsoft.cityguide.Models.Search.SearchResluts
+import sk.dmsoft.cityguide.Models.Search.SearchResults
 import sk.dmsoft.cityguide.R
 import sk.dmsoft.cityguide.Search.Fragments.SearchRequestFragment
 import sk.dmsoft.cityguide.Search.Fragments.SearchResultsFragment
+import java.util.HashMap
 
 class SearchActivity : AppCompatActivity(), SearchRequestFragment.OnSearchTextInserted, SearchResultsFragment.OnSearchResultsInteraction {
 
@@ -74,28 +76,24 @@ class SearchActivity : AppCompatActivity(), SearchRequestFragment.OnSearchTextIn
     }
 
     override fun onSearch(searchText: String) {
-        if (searchText == ""){
-            val results = SearchResluts()
-            results.places = db.GetPlaces()
-            searchRequestFragment.UpdateSearch(results)
-        }
-        else {
-            searchRequest.search = searchText
-            api.search(searchRequest).enqueue(object : Callback<SearchResluts> {
-                override fun onFailure(call: Call<SearchResluts>?, t: Throwable?) {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                }
+        searchRequest.search = searchText
 
-                override fun onResponse(call: Call<SearchResluts>?, response: Response<SearchResluts>) {
-                    if (response.code() == 200) {
-                        val results = response.body()!!
-                        Log.e("Search", results.toString())
-                        searchRequestFragment.UpdateSearch(results)
-                    }
-                }
+        val properties = HashMap<String, String>()
+        properties["searchQuery"] = searchText
+        Analytics.trackEvent("Search places", properties)
 
-            })
-        }
+        api.search(searchRequest).enqueue(object : Callback<SearchResults> {
+            override fun onFailure(call: Call<SearchResults>?, t: Throwable?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+            override fun onResponse(call: Call<SearchResults>?, response: Response<SearchResults>) {
+                if (response.code() == 200) {
+                    val results = response.body()!!
+                    Log.e("Search", results.toString())
+                    searchRequestFragment.UpdateSearch(results)
+                }
+            }
+        })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

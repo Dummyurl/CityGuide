@@ -1,19 +1,15 @@
 package sk.dmsoft.cityguide.Guide
 
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
 import android.support.design.widget.Snackbar
-import android.support.transition.TransitionListenerAdapter
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.transition.Transition
 import android.util.Log
 import sk.dmsoft.cityguide.R
 
 import kotlinx.android.synthetic.main.activity_guide_details.*
 import kotlinx.android.synthetic.main.create_proposal_bottom_sheet.*
 import okhttp3.ResponseBody
-import org.joda.time.DateTime
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,30 +18,18 @@ import sk.dmsoft.cityguide.Models.Guides.GuideDetails
 import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment
 import sk.dmsoft.cityguide.Api.DB
-import sk.dmsoft.cityguide.Commons.AccountManager
 import sk.dmsoft.cityguide.Commons.Adapters.RatingAdapter
 import sk.dmsoft.cityguide.Commons.AppSettings
 import sk.dmsoft.cityguide.Commons.load
 import sk.dmsoft.cityguide.Commons.loadCircle
-import sk.dmsoft.cityguide.Models.Rating
 import java.util.*
-import sk.dmsoft.cityguide.R.id.appBarLayout
-import kotlin.collections.ArrayList
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeFormatter.ofLocalizedDate
-import java.time.format.FormatStyle
 import android.view.ViewAnimationUtils
 import android.animation.Animator
-import android.opengl.ETC1.getHeight
-import android.opengl.ETC1.getWidth
 import android.support.design.widget.BottomSheetBehavior
 import android.view.View
-import android.view.ViewTreeObserver
-import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
 import android.view.animation.DecelerateInterpolator
-import org.joda.time.LocalDate
 import org.joda.time.LocalDateTime
 
 
@@ -56,7 +40,7 @@ class GuideDetailsActivity : AppCompatActivity() {
     lateinit var db: DB
     lateinit var startDateTimeFragment: SwitchDateTimeDialogFragment
     lateinit var endDateTimeFragment: SwitchDateTimeDialogFragment
-    var guideInfo: GuideDetails = GuideDetails()
+    var guide: GuideDetails = GuideDetails()
     var proposalRequest = ProposalRequest()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,8 +73,8 @@ class GuideDetailsActivity : AppCompatActivity() {
 
             override fun onResponse(call: Call<GuideDetails>?, response: Response<GuideDetails>?) {
                 if (response?.code() == 200){
-                    guideInfo = response.body()!!
-                    guide_name.text = "${guideInfo.firstName} ${guideInfo.secondName}"
+                    guide = response.body()!!
+                    guide_name.text = "${guide.firstName} ${guide.secondName}"
                     fillDetails()
                 }
             }
@@ -106,7 +90,7 @@ class GuideDetailsActivity : AppCompatActivity() {
                 }
 
                 override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
-                    if(response?.code() == 201){
+                    if(response?.code() == 200){
                         Snackbar.make(findViewById(android.R.id.content), "Proposal sended", Snackbar.LENGTH_LONG).show()
                         BottomSheetBehavior.from(bottom_sheet).state = BottomSheetBehavior.STATE_COLLAPSED
                     }
@@ -212,33 +196,33 @@ class GuideDetailsActivity : AppCompatActivity() {
     }
 
     fun fillDetails(){
-        city_image.load("${AppSettings.apiUrl}/places/photo/${guideInfo.place?.id}", {
+        city_image.load("${AppSettings.apiUrl}/places/photo/${guide.place?.id}", {
             supportStartPostponedEnterTransition()
         })
-        guide_about.text = guideInfo.about
+        guide_about.text = guide.about
 
-        user_name.text = "${guideInfo.firstName} ${guideInfo.secondName}"
-        place_name.text = guideInfo.place?.city
-        total_amount.text = "${guideInfo.salary}€"
-        hourly_rate.text = "${guideInfo.salary}€/h"
-        book_user.text = "Book ${guideInfo.firstName}"
+        user_name.text = "${guide.firstName} ${guide.secondName}"
+        place_name.text = guide.place?.city
+        total_amount.text = "${guide.salary}€"
+        hourly_rate.text = "${guide.guideInfo.salary}€/h"
+        book_user.text = "Book ${guide.firstName}"
 
-        total_hours.text = guideInfo.totalHours.toString()
-        total_proposals.text = guideInfo.totalProposals.toString()
+        total_hours.text = guide.totalHours.toString()
+        total_proposals.text = guide.totalProposals.toString()
 
         ratings_recycler.setHasFixedSize(true)
-        val ratingsAdapter = RatingAdapter(guideInfo.ratings)
+        val ratingsAdapter = RatingAdapter(guide.guideInfo.ratings)
         val linearLayout = LinearLayoutManager(this)
         ratings_recycler.layoutManager = linearLayout
         ratings_recycler.adapter = ratingsAdapter
         var sum = 0.0
-        guideInfo.ratings.forEach {
+        guide.guideInfo.ratings.forEach {
             sum += it.ratingStars
         }
 
-        customRatingBar.reload((sum/guideInfo.ratings.size))
+        customRatingBar.reload((sum/ guide.guideInfo.ratings.size))
 
-        user_rating.reload(if (sum == 0.0) (sum/guideInfo.ratings.size) else 3.0)
+        user_rating.reload(if (sum == 0.0) (sum/ guide.guideInfo.ratings.size) else 3.0)
 
         showRevealAnim()
     }

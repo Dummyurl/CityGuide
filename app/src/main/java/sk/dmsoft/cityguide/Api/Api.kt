@@ -1,9 +1,6 @@
 package sk.dmsoft.cityguide.Api
 
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
-import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.util.Log
@@ -17,8 +14,6 @@ import sk.dmsoft.cityguide.Models.*
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
 import java.io.File
 import java.util.concurrent.TimeUnit
-import android.provider.MediaStore
-import android.provider.DocumentsContract
 import sk.dmsoft.cityguide.Commons.AppSettings
 import sk.dmsoft.cityguide.Models.Account.*
 import sk.dmsoft.cityguide.Models.Guides.GuideDetails
@@ -27,9 +22,8 @@ import sk.dmsoft.cityguide.Models.Proposal.MeetingPoint
 import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
 import sk.dmsoft.cityguide.Models.Search.SearchInCity
 import sk.dmsoft.cityguide.Models.Search.SearchRequest
-import sk.dmsoft.cityguide.Models.Search.SearchResluts
+import sk.dmsoft.cityguide.Models.Search.SearchResults
 import com.google.gson.GsonBuilder
-import com.google.gson.Gson
 import sk.dmsoft.cityguide.Models.Proposal.CompletedProposal
 
 
@@ -166,7 +160,7 @@ class Api constructor(private val activity : Context? = null) {
         return api.confirmProposal(model.id)
     }
 
-    fun search(model: SearchRequest): Call<SearchResluts> {
+    fun search(model: SearchRequest): Call<SearchResults> {
         return api.search(model)
     }
 

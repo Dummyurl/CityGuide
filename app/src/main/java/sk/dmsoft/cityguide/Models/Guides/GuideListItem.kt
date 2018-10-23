@@ -11,6 +11,9 @@ class GuideListItem {
     var secondName: String = ""
     var interests : ArrayList<Interest> = ArrayList()
     var guideInfo: GuideInfo? = null
-    var RatingAvg: Double = 0.0
+    var ratingAvg: Double = 0.0
     var interestsString: String = ""
+    get() {
+        return interests.map { it.name }.joinToString(separator = " • ")
+    }
 }

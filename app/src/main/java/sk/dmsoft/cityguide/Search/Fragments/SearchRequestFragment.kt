@@ -14,11 +14,11 @@ import sk.dmsoft.cityguide.Api.DB
 import sk.dmsoft.cityguide.Commons.GridSpacingItemDecoration
 import sk.dmsoft.cityguide.Commons.Adapters.PlacesAdapter
 import sk.dmsoft.cityguide.Models.Place
-import sk.dmsoft.cityguide.Models.Search.SearchRequest
-import sk.dmsoft.cityguide.Models.Search.SearchResluts
+import sk.dmsoft.cityguide.Models.Search.SearchResults
 
 import sk.dmsoft.cityguide.R
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * A simple [Fragment] subclass.
@@ -73,8 +73,8 @@ class SearchRequestFragment : Fragment() {
         })
     }
 
-    fun UpdateSearch(model: SearchResluts){
-        placesAdapter.updateList(model.places)
+    fun UpdateSearch(model: SearchResults){
+        placesAdapter.updateList(model.countries.map {  it.places}.flatten() as ArrayList<Place>)
     }
 
     override fun onAttach(context: Context?) {

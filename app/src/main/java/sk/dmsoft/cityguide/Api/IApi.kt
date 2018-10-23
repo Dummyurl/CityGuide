@@ -15,7 +15,7 @@ import sk.dmsoft.cityguide.Models.Proposal.Proposal
 import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
 import sk.dmsoft.cityguide.Models.Search.SearchInCity
 import sk.dmsoft.cityguide.Models.Search.SearchRequest
-import sk.dmsoft.cityguide.Models.Search.SearchResluts
+import sk.dmsoft.cityguide.Models.Search.SearchResults
 
 /**
  * Created by Daniel on 13. 11. 2017.
@@ -102,7 +102,7 @@ interface IApi {
     fun getMeetigPoint(@Path("id") id: Int): Call<MeetingPoint>
 
     @POST("search")
-    fun search(@Body model: SearchRequest): Call<SearchResluts>
+    fun search(@Body model: SearchRequest): Call<SearchResults>
 
     @POST("guides")
     fun searchInCity(@Body model: SearchInCity): Call<ArrayList<GuideListItem>>
