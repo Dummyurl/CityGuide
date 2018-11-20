@@ -5,11 +5,14 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_registration_method.*
 import sk.dmsoft.cityguide.Account.Login.LoginActivity
+import sk.dmsoft.cityguide.Commons.addFragment
+import sk.dmsoft.cityguide.PrivacyPolicyFragment
 
 import sk.dmsoft.cityguide.R
 
@@ -50,9 +53,16 @@ class RegistrationMethodFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         login.setOnClickListener { startActivity(Intent(context, LoginActivity::class.java)) }
-        google_login.setOnClickListener { listener?.registerGoogleCallback() }
-        facebook_login.setOnClickListener { listener?.registerFacebookCallback() }
-        email_login.setOnClickListener { listener?.registerEmailCallback() }
+        google_login.setOnClickListener { openPrivacyFragment(PrivacyPolicyFragment.RegisterMethodEnum.Google) }
+        facebook_login.setOnClickListener { openPrivacyFragment(PrivacyPolicyFragment.RegisterMethodEnum.Facebook) }
+        email_login.setOnClickListener { openPrivacyFragment(PrivacyPolicyFragment.RegisterMethodEnum.Email) }
+    }
+
+
+    fun openPrivacyFragment(method: PrivacyPolicyFragment.RegisterMethodEnum){
+        val fragment = PrivacyPolicyFragment()
+        fragment.setRegisterMethodEnum(method)
+        (activity as AppCompatActivity).addFragment(fragment, android.R.id.content)
     }
 
     override fun onAttach(context: Context) {

@@ -88,5 +88,6 @@
     <string name="free_guiding">Free guiding</string>
     <string name="satellite">Satellite</string>
     <string name="map">Map</string>
+    <string name="agree_policy">I agree to Kaktus privacy policy</string>
 
 </resources>

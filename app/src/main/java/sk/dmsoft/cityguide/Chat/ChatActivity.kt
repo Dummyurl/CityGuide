@@ -93,6 +93,8 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
 
     var unreadMessagesCount = 0
 
+    var targetMenuItem: MenuItem? = null
+
     lateinit var db: DB
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -120,7 +122,7 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
 
         //user_photo.loadCircle("${AppSettings.apiUrl}/users/photo/$userId")
 
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
         switchStartSet()
 
         set_meeting_point.setOnClickListener { changeMeetingPoint() }
@@ -251,15 +253,17 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
         mapFragment.updateMode()
         isMapVisible = true
         map_fragment_wrapper.visibility = View.VISIBLE
-        switchable_chat_map.setImageResource(R.drawable.ic_message)
+        switchable_chat_map.setImageResource(if(proposal?.state == ProposalState.InProgress.value) R.mipmap.message_white else R.mipmap.message_grey)
         unreadMessagesCount = 0
+        targetMenuItem?.isVisible = true
         updateUnreadMessages()
     }
 
     override fun hideMap(){
         isMapVisible = false
         map_fragment_wrapper.visibility = View.GONE
-        switchable_chat_map.setImageResource(R.drawable.ic_map)
+        switchable_chat_map.setImageResource(if(proposal?.state == ProposalState.InProgress.value) R.mipmap.map_white else R.mipmap.map_grey)
+        targetMenuItem?.isVisible = false
         updateUnreadMessages()
     }
 
@@ -321,22 +325,24 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
             menuInflater.inflate(R.menu.chat_menu_active, menu)
         else
             menuInflater.inflate(R.menu.chat_menu, menu)
+        targetMenuItem = menu?.findItem(R.id.find_user)
+        if (!isMapVisible)
+            targetMenuItem?.isVisible = false
         return true
     }
 
     override fun onOptionsItemSelected(p0: MenuItem): Boolean {
         when (p0.itemId){
-            R.id.cancel_proposal -> { cancelProposal() }
             //R.id.share_location -> { goToMeetingPoint() }
             R.id.find_user -> { findUser() }
             R.id.show_map -> {
                 if (isMapVisible) {
                     hideMap()
-                    p0.icon = getDrawable(R.drawable.ic_map)
+                    p0.icon = getDrawable(R.mipmap.map_white)
                 }
                 else{
                     showMap()
-                    p0.icon = getDrawable(R.drawable.ic_chat)
+                    p0.icon = getDrawable(R.mipmap.message_white)
                 }
             }
         }
@@ -366,6 +372,7 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
         invalidateOptionsMenu()
         mapFragment.hideChangeMeetingPoint()
         toolbar.setBackgroundColor(0xff00C853.toInt())
+        appBarLayout.setBackgroundColor(0xff00C853.toInt())
         window.statusBarColor = 0xff00C853.toInt()
         waiting_toolbar_layout.visibility = View.GONE
         active_proposal.visibility = View.VISIBLE
@@ -396,6 +403,7 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
         chronometer2.start()
 
         per_hour.text = "${CurrencyConverter.convert(proposal!!.perHourSalary)}"
+        mapFragment.updateMode(MapMode.GoToMeetingPoint)
     }
 
     fun endProposal(){

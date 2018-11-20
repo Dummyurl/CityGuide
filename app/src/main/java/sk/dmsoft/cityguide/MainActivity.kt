@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
     lateinit var unconfirmedProposalsAdapter: UnconfirmedProposalsAdapter
     val editProposalFragment = EditProposalFragment()
     var unreadNotifications = 0
+    var isLoadLoopActive = true
 
     override fun onProposalChange(id: Int, proposal: ProposalRequest) {
         api.editProposal(id, proposal).enqueue(object: Callback<ResponseBody>{
@@ -146,11 +147,17 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
     }
 
     fun runLoadLoop(){
+        isLoadLoopActive = true
         Timer().scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
-                reloadProposals()
+                if (isLoadLoopActive)
+                    reloadProposals()
             }
-        }, 0, 15000)
+        }, 0, 30000)
+    }
+
+    fun stopLoadLoop(){
+        isLoadLoopActive = false
     }
 
     fun refreshToken(){
@@ -176,6 +183,11 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
     override fun onResume() {
         super.onResume()
         reloadProposals()
+    }
+
+    override fun onPause(){
+        super.onPause()
+        stopLoadLoop()
     }
 
     private fun initProposals(proposals: ArrayList<Proposal>) {
@@ -282,5 +294,10 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
             unread_notifications_count.visibility = View.VISIBLE
             unread_notifications_count.text = unreadNotifications.toString()
         }
+    }
+
+
+    fun openPrivacyFragment(){
+        addFragment(PrivacyPolicyFragment(), android.R.id.content)
     }
 }

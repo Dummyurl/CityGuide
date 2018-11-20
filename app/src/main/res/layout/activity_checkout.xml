@@ -30,6 +30,8 @@
         android:layout_marginStart="8dp"
         app:counterEnabled="true"
         app:counterMaxLength="500"
+        android:theme="@style/WhiteEditText"
+        app:counterTextAppearance="@color/gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ratingbar">
@@ -42,7 +44,9 @@
             android:layout_marginTop="8dp"
             android:ems="11"
             android:hint="@string/comment"
-            android:inputType="text" />
+            android:maxLines="3"
+            android:textColor="@color/white"
+            android:inputType="textMultiLine" />
 
     </android.support.design.widget.TextInputLayout>
 

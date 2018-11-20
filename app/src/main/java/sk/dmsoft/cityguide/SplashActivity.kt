@@ -154,6 +154,9 @@ class SplashActivity : AppCompatActivity() {
                     if (continueToMainScreen)
                         closeSplashScreen()
                 }
+                else {
+                    TODO("failed init, code ${response.code()}") //To change body of created functions use File | Settings | File Templates.
+                }
             }
         })
     }

@@ -41,6 +41,7 @@ import com.theartofdev.edmodo.cropper.CropImageView
 import sk.dmsoft.cityguide.Commons.addFragment
 import sk.dmsoft.cityguide.Commons.removeFragment
 import sk.dmsoft.cityguide.Models.CustomErrors
+import sk.dmsoft.cityguide.PrivacyPolicyFragment
 
 
 class RegistrationActivity : AppCompatActivity(),
@@ -51,7 +52,22 @@ class RegistrationActivity : AppCompatActivity(),
         Facebook.FacebookInterface,
         RegistrationMethodFragment.OnFragmentInteractionListener,
         SelectAccountTypeFragment.OnAccountTypeSelected,
-        RegisterGuideInfoFragment.OnRegistrationGuideInfo{
+        RegisterGuideInfoFragment.OnRegistrationGuideInfo,
+        PrivacyPolicyFragment.OnFragmentInteractionListener{
+
+
+    override fun onCancel(fragment: PrivacyPolicyFragment) {
+        removeFragment(fragment)
+    }
+
+    override fun OnPolicyAccepted(fragment: PrivacyPolicyFragment, method: PrivacyPolicyFragment.RegisterMethodEnum) {
+        removeFragment(fragment)
+        when (method){
+            PrivacyPolicyFragment.RegisterMethodEnum.Email -> registerEmailCallback()
+            PrivacyPolicyFragment.RegisterMethodEnum.Facebook -> registerFacebookCallback()
+            PrivacyPolicyFragment.RegisterMethodEnum.Google -> registerGoogleCallback()
+        }
+    }
 
     var guideMode = false
     var editMode = false
@@ -439,5 +455,6 @@ class RegistrationActivity : AppCompatActivity(),
             }
         })
     }
+
 
 }

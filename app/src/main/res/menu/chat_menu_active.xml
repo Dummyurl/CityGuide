@@ -3,12 +3,13 @@
 
     <item
         android:id="@+id/show_map"
-        android:icon="@drawable/ic_map"
+        android:icon="@mipmap/map_white"
         android:title="@string/show_map"
-        app:showAsAction="always"/>
+        app:showAsAction="always"
+        android:visible="true"/>
     <item
         android:id="@+id/find_user"
         android:title="@string/find_user"
-        android:icon="@drawable/target"
+        android:icon="@mipmap/target_white"
         app:showAsAction="always"/>
 </menu>

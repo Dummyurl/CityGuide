@@ -34,11 +34,7 @@ class CheckoutActivity : AppCompatActivity() {
         if (proposalId == 0){
             val proposalJson = intent.getStringExtra("PROPOSAL")
             proposal = Gson().fromJson(proposalJson, Proposal::class.java)
-            if (proposal!!.payment != null)
-            total_amount.text = CurrencyConverter.convert(proposal!!.payment!!.totalAmount)
-            user_name.text = "${proposal?.user?.firstName} ${proposal?.user?.secondName}"
-            total_hours.text = "${proposal!!.payment!!.totalHours}h"
-            user_photo.loadCircle("${AppSettings.apiUrl}/users/photo/${proposal?.user?.id}")
+            initProposal(proposal!!.id)
         }
         else {
             proposal = Proposal()
@@ -97,7 +93,7 @@ class CheckoutActivity : AppCompatActivity() {
             rating.comment = comment.text.toString()
         }
 
-        val transaction = TransactionRequest(nonce, proposal!!.id, rating)
+        val transaction = TransactionRequest(proposal!!.id, rating)
         api.createTransaction(transaction).enqueue(object: Callback<ResponseBody>{
             override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

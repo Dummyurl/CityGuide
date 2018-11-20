@@ -41,7 +41,7 @@ class GuidesAdapter(val activity: Activity, val guides: ArrayList<GuideListItem>
             salary.text = CurrencyConverter.convert(item.guideInfo?.salary!!)
             interests.text = item.interestsString
             if (item.ratingAvg != 0.0)
-                rating.text = "${item.ratingAvg}"
+                rating.text = "%.1f".format(item.ratingAvg)
             else
                 rating.text = "-"
 

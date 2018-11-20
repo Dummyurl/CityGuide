@@ -5,10 +5,8 @@ import sk.dmsoft.cityguide.Models.Guides.GuideDetails
 
 class Rating {
     var id = 0
-    var guideId = ""
-    var userId = ""
-    var userInfo : GuideDetails = GuideDetails()
+    var userInfo : GuideDetails? = null
     var ratingStars = 3.0
     var comment: String? = null
-    var date: String = DateTime().toString()
+    var date: String? = null
 }

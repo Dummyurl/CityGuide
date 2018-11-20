@@ -69,7 +69,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="8dp"
-                android:src="@drawable/ic_notifications_black"
+                android:src="@mipmap/bell_grey"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -88,8 +88,8 @@
                 android:id="@+id/open_profile"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginEnd="8dp"
-                android:src="@drawable/ic_account_circle_black"
+                android:layout_marginEnd="20dp"
+                android:src="@mipmap/user_grey"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -158,7 +158,8 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/proposals_recycler"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                tools:listitem="@layout/proposal_item"/>
 
         </android.support.v4.widget.SwipeRefreshLayout>
 

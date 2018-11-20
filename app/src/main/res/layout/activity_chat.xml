@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:paddingTop="24dp">
+            android:fitsSystemWindows="true">
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/waiting_toolbar_layout"
