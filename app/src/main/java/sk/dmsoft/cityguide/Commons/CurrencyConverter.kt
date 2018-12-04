@@ -15,7 +15,7 @@ object CurrencyConverter {
         catch (e: Exception){}
     }
 
-    fun convert(value: Double): String{
+    fun convert(value: Double, showFree: Boolean = true): String{
 
         val currency = currencies.find { it.id == AccountManager.currency }
         if (currency != null) {
@@ -23,7 +23,7 @@ object CurrencyConverter {
                 currency.symbolBefore = ""
             if (currency.symbolAfter == null)
                 currency.symbolAfter = ""
-            if (currency.rate * value < 0.1)
+            if (currency.rate * value < 0.1 && showFree)
                 return "FREE"
             return "${currency.symbolBefore}${(currency.rate.toBigDecimal() * value.toBigDecimal()).setScale(2)}${currency.symbolAfter}"
         }

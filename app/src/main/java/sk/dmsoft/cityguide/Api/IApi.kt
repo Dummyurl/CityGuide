@@ -69,10 +69,10 @@ interface IApi {
     fun getProposal(@Path("id") id: Int): Call<Proposal>
 
     @GET("proposals/completed/{page}")
-    fun getCompletedProposals(@Path("page") page: Int): Call<ArrayList<CompletedProposal>>
+    fun getCompletedProposals(@Path("page") page: Int): Call<ArrayList<Proposal>>
 
     @POST("proposals/completed/{page}")
-    fun getSpecifiedCompletedProposals(@Path("page") page: Int, @Body request: StatsRequest): Call<ArrayList<CompletedProposal>>
+    fun getSpecifiedCompletedProposals(@Path("page") page: Int, @Body request: StatsRequest): Call<ArrayList<Proposal>>
 
     @GET("proposals/unconfirmed")
     fun getUnconfirmedProposals(): Call<ArrayList<Proposal>>
@@ -94,6 +94,9 @@ interface IApi {
 
     @POST("proposals/end/{id}")
     fun endProposal(@Path("id") id: Int): Call<Proposal>
+
+    @PUT("proposals/reject/{id}")
+    fun rejectProposal(@Path("id") id: Int): Call<ResponseBody>
 
     @POST("proposals/meetingpoint/{id}")
     fun setMeetingPoint(@Path("id") id:Int, @Body meetingPoint: MeetingPoint): Call<ResponseBody>
@@ -121,6 +124,9 @@ interface IApi {
 
     @GET("interests")
     fun getInterests(): Call<ArrayList<Interest>>
+
+    @GET("languages")
+    fun getLanguages(): Call<ArrayList<Language>>
 
     @POST("checkout/paymentMethod")
     fun savePaymentMethod(@Body model: CreatePaymentMethodRequest): Call<ResponseBody>

@@ -29,7 +29,7 @@ class ProfileActivity : AppCompatActivity() {
     val userFields: Array<String> = arrayOf(
             "Personal Info",
             "Profile info",
-            "Interests"
+            "Interests and languages"
     )
 
     val guideFields: Array<String> = arrayOf(
@@ -41,7 +41,7 @@ class ProfileActivity : AppCompatActivity() {
     )
 
     val appSettingsFields: Array<String> = arrayOf(
-            "Change currency", "Change password"
+            "Change password"
     )
 
     val allAccountFields: ArrayList<String> = ArrayList()
@@ -63,6 +63,7 @@ class ProfileActivity : AppCompatActivity() {
             AccountManager.LogOut()
             startActivity(Intent(this, RegistrationActivity::class.java))
             db.DeleteSelectedInterests()
+            db.DeleteSelectedLanguages()
             api.logout().enqueue(object: Callback<ResponseBody>{
                 override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
                 }
@@ -86,9 +87,12 @@ class ProfileActivity : AppCompatActivity() {
             }
 
             else {
+                var variableAdd = 1
+                if (AccountManager.accountType == EAccountType.guide)
+                    variableAdd = 0
                 val intent = Intent(this@ProfileActivity, RegistrationActivity::class.java)
                 intent.putExtra("EDIT_MODE", true)
-                intent.putExtra("REGISTRATION_STEP", position + 1)
+                intent.putExtra("REGISTRATION_STEP", position + variableAdd)
                 startActivity(intent)
             }
         }
@@ -99,14 +103,14 @@ class ProfileActivity : AppCompatActivity() {
                     0 -> showAlertDialog {
                         setTitle("Add payment method")
                         positiveButton("Ok") {  } }
-                    1 -> showChangeCurrencyDialog()
-                    2 -> changePassword()
+                    //1 -> showChangeCurrencyDialog()
+                    1 -> changePassword()
                 }
             }
             else {
                 when (position) {
-                    0 -> showChangeCurrencyDialog()
-                    1 -> changePassword()
+                    //0 -> showChangeCurrencyDialog()
+                    0 -> changePassword()
                 }
             }
         }

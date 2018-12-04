@@ -26,11 +26,18 @@ import java.util.*
 import java.text.SimpleDateFormat
 import android.view.ViewAnimationUtils
 import android.animation.Animator
+import android.graphics.Rect
 import android.support.design.widget.BottomSheetBehavior
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.DecelerateInterpolator
 import org.joda.time.LocalDateTime
+import android.view.Window.ID_ANDROID_CONTENT
+import android.app.Activity
+import android.util.DisplayMetrics
+import sk.dmsoft.cityguide.Commons.CurrencyConverter
+import java.math.RoundingMode
+import java.text.DecimalFormat
 
 
 class GuideDetailsActivity : AppCompatActivity() {
@@ -47,8 +54,6 @@ class GuideDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_guide_details)
         setSupportActionBar(toolbar)
-
-        BottomSheetBehavior.from(bottom_sheet).state = BottomSheetBehavior.STATE_EXPANDED
 
         api = Api(this)
         db = DB(this)
@@ -93,6 +98,7 @@ class GuideDetailsActivity : AppCompatActivity() {
                     if(response?.code() == 200){
                         Snackbar.make(findViewById(android.R.id.content), "Proposal sended", Snackbar.LENGTH_LONG).show()
                         BottomSheetBehavior.from(bottom_sheet).state = BottomSheetBehavior.STATE_COLLAPSED
+                        send_proposal.isEnabled = false
                     }
                 }
 
@@ -189,21 +195,37 @@ class GuideDetailsActivity : AppCompatActivity() {
                     Snackbar.make(findViewById(android.R.id.content), "You can only plan to the future!", Snackbar.LENGTH_LONG).show()
                     send_proposal.isEnabled = false
                 }
-                else -> send_proposal.isEnabled = true
+                else -> {
+                    send_proposal.isEnabled = true
+                    calcPrice()
+                }
             }
         }
         catch (e: Exception){}
     }
 
+    fun calcPrice(){
+        val locale2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+        val startDate = locale2.parse(proposalRequest.start)
+        val endDate = locale2.parse(proposalRequest.end)
+        val millis = endDate.time - startDate.time
+
+        val df = DecimalFormat("#")
+        df.roundingMode = RoundingMode.CEILING
+
+        val hours = df.format(millis / 1000 / 60 / 60.0).toInt()
+        total_amount.text = CurrencyConverter.convert(hours * guide.guideInfo.salary)
+    }
+
     fun fillDetails(){
-        city_image.load("${AppSettings.apiUrl}/places/photo/${guide.place?.id}", {
+        city_image.load("${AppSettings.apiUrl}/places/photo/${guide.place?.id}") {
             supportStartPostponedEnterTransition()
-        })
+        }
         guide_about.text = guide.about
 
         user_name.text = "${guide.firstName} ${guide.secondName}"
         place_name.text = guide.place?.city
-        total_amount.text = "${guide.salary}€"
+        total_amount.text = "${guide.guideInfo.salary}€"
         hourly_rate.text = "${guide.guideInfo.salary}€/h"
         book_user.text = "Book ${guide.firstName}"
 
@@ -219,6 +241,8 @@ class GuideDetailsActivity : AppCompatActivity() {
         guide.guideInfo.ratings.forEach {
             sum += it.ratingStars
         }
+
+        user_interests.text = guide.interestsString
 
         customRatingBar.reload((sum/ guide.guideInfo.ratings.size))
 
@@ -251,8 +275,12 @@ class GuideDetailsActivity : AppCompatActivity() {
             }
 
             override fun onAnimationEnd(p0: Animator?) {
+                val displayMetrics = DisplayMetrics();
+                windowManager.defaultDisplay.getMetrics(displayMetrics);
+                val screenHeight = displayMetrics.heightPixels
+                bottom_sheet_content.layoutParams.height = screenHeight - statusBarHeight()
+                bottom_sheet_content.requestLayout()
                 BottomSheetBehavior.from(bottom_sheet).state = BottomSheetBehavior.STATE_COLLAPSED
-
             }
 
             override fun onAnimationCancel(p0: Animator?) {
@@ -292,6 +320,21 @@ class GuideDetailsActivity : AppCompatActivity() {
         toolbar.animate().alpha(0f).setDuration(300).withEndAction {
             super.onBackPressed()
         }
+    }
+
+
+
+    fun statusBarHeight(): Int {
+        val rectangle = Rect()
+        val window = window
+        window.decorView.getWindowVisibleDisplayFrame(rectangle)
+
+        var softNavBar = 0
+        val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            softNavBar = resources.getDimensionPixelSize(resourceId)
+        }
+        return rectangle.top + softNavBar
     }
 
 }

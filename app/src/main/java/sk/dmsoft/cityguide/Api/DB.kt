@@ -20,7 +20,8 @@ class DB (val context: Context) {
     }
 
     fun GetCountries(): ArrayList<Country> {
-        return pultusORM.find(Country()) as ArrayList<Country>
+        val c = pultusORM.find(Country()) as ArrayList<Country>
+        return c
     }
 
     fun SavePlaces(items: ArrayList<Place>){
@@ -45,6 +46,16 @@ class DB (val context: Context) {
         }
     }
 
+    fun SaveLanguages(items: ArrayList<Language>){
+        items.forEach {
+            pultusORM.save(it)
+        }
+    }
+
+    fun GetLanguages(): ArrayList<Language>{
+        return pultusORM.find(Language()) as ArrayList<Language>
+    }
+
     fun GetInterests(): ArrayList<Interest>{
         return pultusORM.find(Interest()) as ArrayList<Interest>
     }
@@ -56,12 +67,28 @@ class DB (val context: Context) {
         }
     }
 
+    fun SaveSelectedLanguages(items: ArrayList<SelectedLanguage>){
+        Drop(SelectedLanguage())
+        items.forEach {
+            pultusORM.save(it)
+        }
+    }
+
     fun GetSelectedInterests(): ArrayList<SelectedInterest>{
-        return pultusORM.find(SelectedInterest()) as ArrayList<SelectedInterest>
+        val i = pultusORM.find(SelectedInterest()) as ArrayList<SelectedInterest>
+        return i
+    }
+
+    fun GetSelectedLanguages(): ArrayList<SelectedLanguage>{
+        return pultusORM.find(SelectedLanguage()) as ArrayList<SelectedLanguage>
     }
 
     fun DeleteSelectedInterests(){
         Drop(SelectedInterest())
+    }
+
+    fun DeleteSelectedLanguages(){
+        Drop(SelectedLanguage())
     }
 
     fun SaveCurrencies(items: ArrayList<Currency>){

@@ -52,8 +52,7 @@ class Api constructor(private val activity : Context? = null) {
                     .connectTimeout(30, TimeUnit.SECONDS)
 
 
-            if (AccountManager.accessToken != "")
-                clientBuilder.addInterceptor(AuthenticationInterceptor())
+            clientBuilder.addInterceptor(AuthenticationInterceptor())
 
             val client = clientBuilder.build()
 
@@ -136,11 +135,11 @@ class Api constructor(private val activity : Context? = null) {
         return api.getProposals()
     }
 
-    fun getCompletedProposals(page: Int): Call<ArrayList<CompletedProposal>>{
+    fun getCompletedProposals(page: Int): Call<ArrayList<Proposal>>{
         return api.getCompletedProposals((page))
     }
 
-    fun getSpecifiedCompletedProposals(page: Int, request: StatsRequest): Call<ArrayList<CompletedProposal>>{
+    fun getSpecifiedCompletedProposals(page: Int, request: StatsRequest): Call<ArrayList<Proposal>>{
         return api.getSpecifiedCompletedProposals(page, request)
     }
 
@@ -204,6 +203,10 @@ class Api constructor(private val activity : Context? = null) {
         return api.endProposal(id)
     }
 
+    fun rejectProposal(id: Int): Call<ResponseBody>{
+        return api.rejectProposal(id)
+    }
+
     fun getCheckoutToken(): Call<CheckoutToken>{
         return api.getCheckoutToken()
     }
@@ -214,6 +217,10 @@ class Api constructor(private val activity : Context? = null) {
 
     fun getInterests(): Call<ArrayList<Interest>>{
         return api.getInterests()
+    }
+
+    fun getLanguages(): Call<ArrayList<Language>>{
+        return api.getLanguages()
     }
 
     fun savePaymentMethod(model: CreatePaymentMethodRequest): Call<ResponseBody>{
@@ -264,7 +271,7 @@ class AuthenticationInterceptor() : Interceptor {
             Log.e("Interceptor", "ACCESS TOKEN bearer ${AccountManager.accessToken}")
             // Add authorization header with updated authorization value to intercepted request
             val authorisedRequest = originalRequest.newBuilder()
-                    .header("Authorization", "bearer " + AccountManager.accessToken)
+                    .header("Authorization", if (AccountManager.accessToken != "") "bearer " + AccountManager.accessToken else "")
                     .build()
         return chain.proceed(authorisedRequest)
     }

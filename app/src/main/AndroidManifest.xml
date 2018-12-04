@@ -16,7 +16,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:largeHeap="true">
         <activity
             android:name=".SplashActivity"
             android:screenOrientation="portrait"
@@ -40,7 +41,8 @@
         <activity
             android:name=".Account.Registration.RegistrationActivity"
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_registration" />
+            android:label="@string/title_activity_registration"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".Search.SearchActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"

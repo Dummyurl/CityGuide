@@ -38,6 +38,7 @@ import android.util.Base64
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.Crashes
+import kotlinx.android.synthetic.main.fragment_register_step1.*
 import sk.dmsoft.cityguide.Chat.ChatActivity
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
@@ -60,13 +61,15 @@ class SplashActivity : AppCompatActivity() {
         api  = Api(this)
         db = DB(this)
 
-        AppCenter.start(application, "42231981-1764-48e2-b287-3d6859dcae68",
-                  Analytics::class.java, Crashes::class.java)
+        if (!BuildConfig.DEBUG)
+            AppCenter.start(application, "42231981-1764-48e2-b287-3d6859dcae68",
+                Analytics::class.java, Crashes::class.java)
 
         PicassoCache.CreatePicassoCache(this)
 
         init()
         getInterests()
+        getLanguages()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             createNotificationChannel()
@@ -145,8 +148,12 @@ class SplashActivity : AppCompatActivity() {
                         saveCurrencies(initResponse.currencyRates)
 
                     if (initResponse.countries.size > 0) {
+                        val places: ArrayList<Place> = initResponse.countries.map { it.places!! }.flatten() as ArrayList<Place>
+                        places.forEach { place ->
+                            val countryId = initResponse.countries.filter { it.places!!.contains(place) }.first().id
+                            place.countryId = countryId
+                        }
                         saveCountries(initResponse.countries)
-                        val places: ArrayList<Place> = initResponse.countries.map { it.places }.flatten() as ArrayList<Place>
                         if (places.any())
                             savePlaces(places)
                     }
@@ -173,6 +180,22 @@ class SplashActivity : AppCompatActivity() {
                     db.SaveInterests(response.body()!!)
                 }
             }
+        })
+    }
+
+    fun getLanguages(){
+        api.getLanguages().enqueue(object: Callback<ArrayList<Language>>{
+            override fun onFailure(call: Call<ArrayList<Language>>, t: Throwable) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onResponse(call: Call<ArrayList<Language>>, response: Response<ArrayList<Language>>) {
+                if (response.isSuccessful){
+                    db.Drop(Language())
+                    db.SaveLanguages(response.body()!!)
+                }
+            }
+
         })
     }
 

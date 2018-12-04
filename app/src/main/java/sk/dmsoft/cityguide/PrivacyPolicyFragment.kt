@@ -60,6 +60,7 @@ class PrivacyPolicyFragment : Fragment() {
         scroll_down_fab.setOnClickListener { scrollDown() }
         next.setOnClickListener { nextClicked() }
         cancel.setOnClickListener { cancelClicked() }
+        next.isEnabled = false
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -68,7 +69,6 @@ class PrivacyPolicyFragment : Fragment() {
         privacy_scroll_view.setOnScrollChangeListener { p0, p1, p2, p3, p4 ->
             val diff = privacy_web_view.bottom -( privacy_scroll_view.height + p2)
             if (diff < 5) {
-                allowAgree()
                 scroll_down_fab.visibility = View.GONE
             }
             else

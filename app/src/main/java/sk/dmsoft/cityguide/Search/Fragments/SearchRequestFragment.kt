@@ -74,7 +74,7 @@ class SearchRequestFragment : Fragment() {
     }
 
     fun UpdateSearch(model: SearchResults){
-        placesAdapter.updateList(model.countries.map {  it.places}.flatten() as ArrayList<Place>)
+        placesAdapter.updateList(model.countries.map {  it.places!!}.flatten() as ArrayList<Place>)
     }
 
     override fun onAttach(context: Context?) {

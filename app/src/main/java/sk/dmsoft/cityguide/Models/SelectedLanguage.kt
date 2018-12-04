@@ -1,8 +1,8 @@
 package sk.dmsoft.cityguide.Models
 
-class SelectedInterest {
+class SelectedLanguage{
     var id = 0
-    var interest = "interest"
+    val lang = "language"
 
     constructor(_id: Int){
         id = _id

@@ -37,12 +37,12 @@ class StatisticsActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
         val locale2 = SimpleDateFormat("dd.MM.yyy")
 
         if (isStartPicker){
-            statsRequest.from = DateTime(p1, p2, p3, 0, 0).toString()
+            statsRequest.from = DateTime(p1, p2 +1, p3, 0, 0).toString()
             date_from.setText(locale2.format( Date(p1-1900, p2, p3)))
             updateStats()
         }
         else {
-            statsRequest.to = DateTime(p1, p2, p3, 0, 0).toString()
+            statsRequest.to = DateTime(p1, p2 +1, p3, 0, 0).toString()
             date_to.setText(locale2.format( Date(p1-1900, p2, p3)))
             updateStats()
         }
@@ -71,12 +71,12 @@ class StatisticsActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
             }
         })
 
-        api.getCompletedProposals(0).enqueue(object: Callback<ArrayList<CompletedProposal>> {
-            override fun onFailure(call: Call<ArrayList<CompletedProposal>>?, t: Throwable?) {
+        api.getCompletedProposals(0).enqueue(object: Callback<ArrayList<Proposal>> {
+            override fun onFailure(call: Call<ArrayList<Proposal>>?, t: Throwable?) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
-            override fun onResponse(call: Call<ArrayList<CompletedProposal>>?, response: Response<ArrayList<CompletedProposal>>?) {
+            override fun onResponse(call: Call<ArrayList<Proposal>>?, response: Response<ArrayList<Proposal>>?) {
                 if (response?.code() == 200){
                     initRecyclerView(response.body()!!)
                 }
@@ -93,12 +93,12 @@ class StatisticsActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
     }
 
     fun showStats(stats: Stats){
-        total_earned.text = CurrencyConverter.convert(stats.totalEarned)
+        total_earned.text = CurrencyConverter.convert(stats.totalEarned, false)
         total_proposals.text = stats.totalProposals.toString()
     }
 
 
-    fun initRecyclerView(proposals: ArrayList<CompletedProposal>){
+    fun initRecyclerView(proposals: ArrayList<Proposal>){
         try {
             completed_proposals_recycler.setHasFixedSize(true)
             adapter = CompletedProposalsAdapter(this, proposals)
@@ -108,7 +108,7 @@ class StatisticsActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
             completed_proposals_recycler.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
             val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
             val locale = SimpleDateFormat("dd.MM.yyyy")
-            val mappedDates = proposals.map { dateFormat.parse(it.proposal.realStart) }
+            val mappedDates = proposals.map { dateFormat.parse(it.realStart) }
             date_from.setText(locale.format(mappedDates.min()))
             date_to.setText(locale.format(Date()))
             statsRequest.from = dateFormat.format(mappedDates.min())
@@ -117,7 +117,7 @@ class StatisticsActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
         catch (e: Exception){}
     }
 
-    fun updateRecyclerView(proposals: ArrayList<CompletedProposal>){
+    fun updateRecyclerView(proposals: ArrayList<Proposal>){
         adapter.update(proposals)
     }
 
@@ -163,12 +163,12 @@ class StatisticsActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
             }
         })
 
-        api.getSpecifiedCompletedProposals(0, statsRequest).enqueue(object: Callback<ArrayList<CompletedProposal>> {
-            override fun onFailure(call: Call<ArrayList<CompletedProposal>>?, t: Throwable?) {
+        api.getSpecifiedCompletedProposals(0, statsRequest).enqueue(object: Callback<ArrayList<Proposal>> {
+            override fun onFailure(call: Call<ArrayList<Proposal>>?, t: Throwable?) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
-            override fun onResponse(call: Call<ArrayList<CompletedProposal>>?, response: Response<ArrayList<CompletedProposal>>?) {
+            override fun onResponse(call: Call<ArrayList<Proposal>>?, response: Response<ArrayList<Proposal>>?) {
                 if (response?.code() == 200){
                     updateRecyclerView(response.body()!!)
                 }

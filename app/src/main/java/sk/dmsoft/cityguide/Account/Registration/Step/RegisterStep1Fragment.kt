@@ -55,7 +55,8 @@ class RegisterStep1Fragment : Fragment(), DatePickerDialog.OnDateSetListener {
         super.onViewCreated(view, savedInstanceState)
         datePickerDialog = DatePickerDialog(context, this, 2018, 1, 1)
 
-        val countriesAdapter = ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, db.GetCountries().filter { it.name != null }.map { it.name })
+        val countries = db.GetCountries()
+        val countriesAdapter = ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, countries.map { it.name })
         countriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         countries_spinner.adapter = countriesAdapter
         val placesAdapter = ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, db.GetPlaces().filter { (it.countryId == 0)}.map { it.city } )

@@ -16,6 +16,6 @@ class UserInfo {
     var interests : ArrayList<Interest> = ArrayList()
     var interestsString: String = ""
         get() {
-            return interests.map { it.name }.joinToString(separator = " • ")
+            return if (interests.any()) interests.filter { it != null }.map { it.name }.joinToString(separator = " • ") else ""
         }
 }

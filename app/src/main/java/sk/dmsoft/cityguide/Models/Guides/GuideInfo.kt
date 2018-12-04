@@ -5,4 +5,6 @@ import sk.dmsoft.cityguide.Models.Rating
 class GuideInfo {
     var salary: Double = 0.0
     var ratings: ArrayList<Rating> = ArrayList()
+    var paypalEmail = ""
+    var estimatedTime = 0
 }

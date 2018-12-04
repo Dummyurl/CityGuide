@@ -10,8 +10,8 @@ android {
         applicationId "sk.dmsoft.cityguide"
         minSdkVersion 22
         targetSdkVersion 26
-        versionCode 15
-        versionName "1.0.14"
+        versionCode 19
+        versionName "1.0.18"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

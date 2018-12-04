@@ -1,5 +1,7 @@
 package sk.dmsoft.cityguide.Models
 
+import ninja.sakib.pultusorm.annotations.Ignore
+
 /**
  * Created by Daniel on 15. 11. 2017.
  */
@@ -12,5 +14,6 @@ class Country {
 
     var id: Int = 0
     var name: String = ""
-    var places: ArrayList<Place> = ArrayList()
+    @Ignore
+    var places: ArrayList<Place>? = ArrayList()
 }

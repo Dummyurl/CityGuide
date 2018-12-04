@@ -45,6 +45,9 @@ class ProposalsAdapter(val activity: Activity, val proposals: ArrayList<Proposal
                 place_name.text = item.place?.city
                 guide_photo.loadCircle("${AppSettings.apiUrl}users/photo/${item.user.id}")
                 interests.text = item.user.interestsString
+
+                if (item.meetingPoint == null)
+                    meetingpoint_info.text = context.resources.getText(R.string.meetingpoint_not_set)
             }
 
             setOnClickListener {

@@ -35,7 +35,7 @@
     <string name="notification_click">Tap here to proceed</string>
     <string name="notifications">Notifications</string>
     <string name="change_proposal">Edit</string>
-    <string name="confirm_proposal">Confirm</string>
+    <string name="confirm_proposal">Accept</string>
     <string name="title_activity_chat">ChatActivity</string>
     <string name="cancel">Cancel</string>
     <string name="set_meeting_point">Set meeting point</string>
@@ -82,12 +82,16 @@
     <string name="waiting">Waiting for user</string>
     <string name="from">From</string>
     <string name="total_earned">Total earned</string>
-    <string name="explorings">Explorings</string>
+    <string name="explorings">Tours</string>
     <string name="to">To</string>
     <string name="sort_by_interests">Sort by interests</string>
     <string name="free_guiding">Free guiding</string>
     <string name="satellite">Satellite</string>
     <string name="map">Map</string>
     <string name="agree_policy">I agree to Kaktus privacy policy</string>
+    <string name="reject">Reject</string>
+    <string name="select_languages">Select languages</string>
+    <string name="meetingpoint_set">Meeting point has been set</string>
+    <string name="meetingpoint_not_set">Meeting point not set</string>
 
 </resources>

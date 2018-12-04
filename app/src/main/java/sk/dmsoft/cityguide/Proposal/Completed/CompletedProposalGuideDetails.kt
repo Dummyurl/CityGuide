@@ -3,6 +3,7 @@ package sk.dmsoft.cityguide.Proposal.Completed
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import kotlinx.android.synthetic.main.activity_completed_proposal_guide_details.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -40,7 +41,12 @@ class CompletedProposalGuideDetails : AppCompatActivity() {
 
             override fun onResponse(call: Call<Proposal>?, response: Response<Proposal>) {
                 if (response.isSuccessful){
-                    total_amount.text = CurrencyConverter.convert(response.body()!!.payment!!.totalAmount)
+                    if (response.body()!!.perHourSalary < 0.1){
+                        congratulations_text.text = "Thanks for your free tour!"
+                        total_amount.visibility = View.GONE
+                    }
+                    else
+                        total_amount.text = CurrencyConverter.convert(response.body()!!.payment!!.totalAmount)
                 }
             }
         })

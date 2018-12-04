@@ -11,6 +11,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.fragment_register_guide_info.*
 import sk.dmsoft.cityguide.Api.DB
+import sk.dmsoft.cityguide.Commons.AccountManager
 import sk.dmsoft.cityguide.Commons.CurrencyConverter
 import sk.dmsoft.cityguide.Models.Account.RegistrationGuideInfo
 import sk.dmsoft.cityguide.Models.Guides.GuideDetails
@@ -44,7 +45,14 @@ class RegisterGuideInfoFragment : Fragment() {
 
         val db = DB(activity!!)
 
-        val currenciesAdapter = ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, db.GetCurrencies().map { it.id })
+        val currencies = db.GetCurrencies().map { it.id } as ArrayList
+
+        if (AccountManager.currency != "") {
+            currencies.remove(AccountManager.currency)
+            currencies.add(0, AccountManager.currency)
+        }
+
+        val currenciesAdapter = ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, currencies)
         currenciesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         currencies_spinner.adapter = currenciesAdapter
 
@@ -52,7 +60,8 @@ class RegisterGuideInfoFragment : Fragment() {
             override fun onNothingSelected(p0: AdapterView<*>?) { }
 
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                currencyRate = db.GetCurrencies()[p2].rate
+                currencyRate = db.GetCurrencies().first { it.id == currencies[p2] }.rate
+                AccountManager.currency = currencies[p2]
             }
 
         }
@@ -89,7 +98,11 @@ class RegisterGuideInfoFragment : Fragment() {
     }
 
     fun init(info: GuideDetails){
-        salary?.setText(info.salary.toString())
+        salary?.setText(info.guideInfo.salary.toString())
+        if (info.guideInfo.salary == 0.0)
+            free_guiding_cb.isChecked = true
+        paypal_email?.setText(info.guideInfo.paypalEmail)
+        estimated_picker?.value = info.guideInfo.estimatedTime
     }
 
     override fun onAttach(context: Context?) {

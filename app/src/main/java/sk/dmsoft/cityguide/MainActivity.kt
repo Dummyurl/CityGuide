@@ -1,16 +1,19 @@
 package sk.dmsoft.cityguide
 
 import android.content.Intent
+import android.graphics.Rect
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.LinearLayoutManager
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.DragEvent
 import android.view.Gravity
 import android.view.View
 import com.microsoft.appcenter.analytics.Analytics
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_edit_proposal.*
 import okhttp3.ResponseBody
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
@@ -54,7 +57,7 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
 
             override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
                 if(response?.code() == 200){
-
+                    reloadProposals()
                 }
             }
 
@@ -69,8 +72,22 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
 
             override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
                 if(response?.code() == 200){
-
+                    reloadProposals()
                 }
+            }
+
+        })
+    }
+
+    override fun onProposalrejected(id: Int) {
+        api.rejectProposal(id).enqueue(object: Callback<ResponseBody>{
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.code() == 200)
+                    reloadProposals()
             }
 
         })
@@ -299,5 +316,13 @@ class MainActivity : AppCompatActivity(), EditProposalFragment.OnProposalUpdate 
 
     fun openPrivacyFragment(){
         addFragment(PrivacyPolicyFragment(), android.R.id.content)
+    }
+
+
+    fun statusBarHeight(): Int {
+        val rectangle = Rect()
+        val window = window
+        window.decorView.getWindowVisibleDisplayFrame(rectangle)
+        return rectangle.top
     }
 }

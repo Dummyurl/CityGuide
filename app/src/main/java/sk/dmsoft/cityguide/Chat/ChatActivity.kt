@@ -158,6 +158,7 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
 
     override fun onRestart() {
         super.onRestart()
+        getProposal()
         if (!wsClient.connection.isOpen)
             connectWebsocket()
     }
@@ -437,7 +438,7 @@ class ChatActivity : AppCompatActivity(), ChatFragment.OnChatInteractionListener
     override fun onBackPressed() {
         if (isMapVisible)
             hideMap()
-        else
+        else if (proposal!!.state != ProposalState.InProgress.value)
             super.onBackPressed()
     }
 

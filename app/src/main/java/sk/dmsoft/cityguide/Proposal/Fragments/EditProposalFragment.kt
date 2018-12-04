@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.BottomSheetBehavior
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,14 +13,18 @@ import android.view.ViewGroup
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment
 import kotlinx.android.synthetic.main.fragment_edit_proposal.*
 import org.joda.time.DateTime
+import org.joda.time.LocalDateTime
 import org.joda.time.format.DateTimeFormatter
 import sk.dmsoft.cityguide.Api.DB
 import sk.dmsoft.cityguide.Commons.AppSettings
+import sk.dmsoft.cityguide.Commons.CurrencyConverter
 import sk.dmsoft.cityguide.Commons.loadCircle
 import sk.dmsoft.cityguide.Models.Proposal.Proposal
 import sk.dmsoft.cityguide.Models.Proposal.ProposalRequest
 
 import sk.dmsoft.cityguide.R
+import java.math.RoundingMode
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -39,6 +44,11 @@ class EditProposalFragment : Fragment() {
     var proposalRequest: ProposalRequest = ProposalRequest()
     lateinit var db: DB
 
+    var defaultStart = ""
+    var defaultEnd = ""
+
+    var dateChanged = false
+
     val isSheetVisible: Boolean
         get() {
             return bottomSheet.state == BottomSheetBehavior.STATE_EXPANDED
@@ -57,26 +67,36 @@ class EditProposalFragment : Fragment() {
         initDatePickers()
 
         bottomSheet = BottomSheetBehavior.from(edit_proposal_sheet)
-        edit_proposal.setOnClickListener {
+        reject_proposal.setOnClickListener {
             hide()
-            mListener?.onProposalChange(proposal.id, proposalRequest)
+            mListener?.onProposalrejected(proposal.id)
         }
         confirm_proposal.setOnClickListener {
             hide()
+            if (dateChanged)
+                mListener?.onProposalChange(proposal.id, proposalRequest)
+            else
             mListener?.onProposalConfirm(proposal)
         }
     }
 
     fun setProposal(proposal: Proposal){
+        val locale = SimpleDateFormat("dd.MM.yyyy HH:mm")
         this.proposal = proposal
         proposalRequest.start = proposal.start
         proposalRequest.end = proposal.end
-        start_date.setText(DateTime(proposal.start).toLocalDateTime().toString())
-        end_date.setText(DateTime(proposal.start).toLocalDateTime().toString())
+        val startDate = DateTime(proposal.start)
+        val endDate = DateTime(proposal.end)
+        start_date.setText("${startDate.dayOfMonth}.${startDate.monthOfYear}.${startDate.year} ${startDate.hourOfDay}:${startDate.minuteOfHour}")
+        end_date.setText("${endDate.dayOfMonth}.${endDate.monthOfYear}.${endDate.year} ${endDate.hourOfDay}:${endDate.minuteOfHour}")
         user_name.text = "${proposal.user.firstName} ${proposal.user.secondName}"
+        user_interests.text = proposal.user.interestsString
         place_name.text = proposal.place?.city
         user_photo.loadCircle("${AppSettings.apiUrl}/users/photo/${proposal.user.id}")
-        total_amount.text = "${proposal.perHourSalary}€"
+        calcPrice()
+
+        defaultStart = proposal.start
+        defaultEnd = proposal.end
     }
 
     fun hide(){
@@ -108,9 +128,10 @@ class EditProposalFragment : Fragment() {
         startDateTimeFragment.setOnButtonClickListener(object: SwitchDateTimeDialogFragment.OnButtonClickListener{
             override fun onPositiveButtonClick(date: Date) {
                 val locale = SimpleDateFormat("dd.MM.yyyy HH:mm")
-                val locale2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                val locale2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm")
                 start_date.setText(locale.format(date))
-                proposalRequest.start = locale2.format(date)
+                proposalRequest.start = locale2.format(date)+":00"
+                checkDateValidity()
             }
 
             override fun onNegativeButtonClick(p0: Date?) {
@@ -134,9 +155,10 @@ class EditProposalFragment : Fragment() {
         endDateTimeFragment.setOnButtonClickListener(object: SwitchDateTimeDialogFragment.OnButtonClickListener{
             override fun onPositiveButtonClick(date: Date) {
                 val locale = SimpleDateFormat("dd.MM.yyyy HH:mm")
-                val locale2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                val locale2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm")
                 end_date.setText(locale.format(date))
-                proposalRequest.end = locale2.format(date)
+                proposalRequest.end = locale2.format(date)+":00"
+                checkDateValidity()
             }
 
             override fun onNegativeButtonClick(p0: Date?) {
@@ -148,6 +170,56 @@ class EditProposalFragment : Fragment() {
             if (b)
                 endDateTimeFragment.show(activity!!.supportFragmentManager, "dialog_end")
         }
+    }
+
+
+    fun checkDateValidity(){
+        try {
+            val locale2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm")
+            val actualDate = LocalDateTime().toDate()
+            val startDate = locale2.parse(proposalRequest.start)
+            when {
+                locale2.parse(proposalRequest.end) < locale2.parse(proposalRequest.start) -> {
+                    Snackbar.make(edit_proposal_sheet, "Start date has to be sooner than end date", Snackbar.LENGTH_LONG).show()
+                    confirm_proposal.isEnabled = false
+                }
+                startDate < actualDate -> {
+                    Snackbar.make(edit_proposal_sheet, "You can only plan to the future!", Snackbar.LENGTH_LONG).show()
+                    confirm_proposal.isEnabled = false
+                }
+                else -> {
+                    switchAcceptEdit()
+                    calcPrice()
+                    confirm_proposal.isEnabled = true
+                }
+            }
+        }
+        catch (e: Exception){}
+    }
+
+    fun calcPrice(){
+        val locale2 = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+        val startDate = locale2.parse(proposalRequest.start)
+        val endDate = locale2.parse(proposalRequest.end)
+        val millis = endDate.time - startDate.time
+
+        val df = DecimalFormat("#")
+        df.roundingMode = RoundingMode.CEILING
+
+        val hours = df.format(millis / 1000 / 60 / 60.0).toInt()
+        total_amount.text = CurrencyConverter.convert(hours * proposal.perHourSalary)
+    }
+
+    fun switchAcceptEdit(){
+        if (proposalRequest.start == defaultStart && proposalRequest.end == defaultEnd){
+            confirm_proposal.text = resources.getText(R.string.confirm_proposal)
+            dateChanged = false
+        }
+        else{
+            confirm_proposal.text = resources.getText(R.string.change_proposal)
+            dateChanged = true
+        }
+
     }
 
     override fun onDetach() {
@@ -168,5 +240,6 @@ class EditProposalFragment : Fragment() {
         // TODO: Update argument type and name
         fun onProposalChange(id: Int, proposal: ProposalRequest)
         fun onProposalConfirm(proposal: Proposal)
+        fun onProposalrejected(id: Int)
     }
 }// Required empty public constructor
